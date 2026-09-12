@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Large binary files / documents
+*.pdf
+
+# OS & IDE metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Scratch & Prompt files
+SKILLUI.md
