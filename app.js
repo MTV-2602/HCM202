@@ -53,7 +53,9 @@ const Deck = (function () {
 
     // Chặng 1: Thảo (3.1.1)
     lv1: {
-      clues: [false, false, false, false]
+      clues: [false, false, false, false],
+      quizStatus: { 1: null, 2: null, 3: null, 4: null },
+      currentCardPage: { 1: 0, 2: 0, 3: 0, 4: 0 }
     },
 
     // Chặng 2: Thịnh (3.1.2)
@@ -86,64 +88,237 @@ const Deck = (function () {
   // --- DỮ LIỆU CHẶNG 1: BẢN ĐỒ TƯ LIỆU LỊCH SỬ (THẢO - 3.1.1) ---
   const HOTSPOTS = {
     1: {
-      badge: "ĐIỂM TƯ LIỆU 01 // NĂM 1919 • KHÁT VỌNG ĐỘC LẬP",
+      badge: "ĐIỂM TƯ LIỆU 01 // NĂM 1919 • QUYỀN THIÊNG LIÊNG",
       img: "assets/images/hotspot1_1919.jpg",
       caption: "Bản Yêu sách của nhân dân An Nam (1919) — Nguyễn Ái Quốc tại Hội nghị Versailles",
       quote: "“Cái mà tôi cần nhất trên đời này là đồng bào tôi được tự do, Tổ quốc tôi được độc lập.” — Hồ Chí Minh",
-      question: "Theo tư tưởng Hồ Chí Minh, 'độc lập, tự do' có ý nghĩa như thế nào đối với mọi dân tộc?",
+      question: "Theo tư tưởng Hồ Chí Minh được thể hiện qua các sự kiện từ năm 1919 đến 1965, “độc lập, tự do” có ý nghĩa như thế nào đối với dân tộc Việt Nam?",
       options: [
-        { key: "A", text: "Là mục tiêu tạm thời, có thể nhân nhượng nếu đổi lại một số lợi ích kinh tế." },
-        { key: "B", text: "Là quyền thiêng liêng, bất khả xâm phạm của tất cả các dân tộc trên thế giới.", correct: true },
-        { key: "C", text: "Là đặc quyền chỉ dành riêng cho các cường quốc đế quốc phương Tây." }
+        { key: "A", text: "Độc lập, tự do là quyền cơ bản của mọi dân tộc, nhưng có thể được giới hạn trong những trường hợp cần thiết để bảo đảm hòa bình." },
+        { key: "B", text: "Độc lập, tự do là quyền thiêng liêng và bất khả xâm phạm của mọi dân tộc, vì vậy không dân tộc nào có quyền tước đoạt quyền ấy của dân tộc khác.", correct: true },
+        { key: "C", text: "Độc lập, tự do là quyền tự nhiên của mọi dân tộc, nhưng chỉ trở thành hiện thực khi được một quốc gia có chủ quyền chính thức công nhận." },
+        { key: "D", text: "Độc lập, tự do là quyền chính trị của mỗi dân tộc, được bảo đảm chủ yếu thông qua việc xây dựng một nhà nước độc lập và có đủ sức mạnh quân sự." }
       ],
-      storyTitle: "BÀI HỌC LỊCH SỬ: QUYỀN THIÊNG LIÊNG BẤT KHẢ XÂM PHẠM",
-      storyText: "Từ Bản Yêu sách 8 điểm năm 1919 đến Tuyên ngôn Độc lập 1945 và Lời kêu gọi năm 1966 ('Không có gì quý hơn độc lập, tự do'), Hồ Chí Minh khẳng định độc lập dân tộc là quyền tự nhiên, thiêng liêng, vô giá và bất khả xâm phạm của mọi dân tộc.",
-      clue: "MANH MỐI 01: Độc lập tự do là quyền thiêng liêng, bất khả xâm phạm của mọi dân tộc."
+      clue: "MANH MỐI 01: Độc lập tự do là quyền thiêng liêng, bất khả xâm phạm của mọi dân tộc.",
+      cardPages: [
+        {
+          partTitle: "Phần 1: Khát khao của dân tộc & Bản Yêu sách 1919",
+          cards: [
+            {
+              title: "1. KHÁT KHAO CỦA DÂN TỘC VIỆT NAM",
+              body: `<p>Lịch sử dựng nước và giữ nước gắn liền với truyền thống yêu nước nồng nàn, anh dũng đấu tranh chống giặc ngoại xâm.</p><p>Đó là khát khao to lớn cháy bỏng: luôn mong muốn có độc lập cho dân tộc, tự do cho nhân dân.</p><blockquote>“Cái mà tôi cần nhất trên đời này là đồng bào tôi được tự do, Tổ quốc tôi được độc lập.”<br>— Hồ Chí Minh</blockquote>`
+            },
+            {
+              title: "2. BẢN YÊU SÁCH CỦA NHÂN DÂN AN NAM (1919)",
+              body: `<p>Hồ Chí Minh gửi tới Hội nghị Vécxây (Pháp) Bản Yêu sách của nhân dân An Nam gồm 8 điểm.</p><p><strong>Hai nội dung chính:</strong></p><ul><li>• Đòi quyền bình đẳng về pháp lý.</li><li>• Đòi các quyền tự do, dân chủ cho người Đông Dương.</li></ul><p>→ <em>Dù không được chấp nhận, đây là lần đầu tiên tư tưởng về quyền của các dân tộc thuộc địa, đặc biệt là quyền bình đẳng và tự do, được hình thành rõ nét.</em></p>`
+            }
+          ]
+        },
+        {
+          partTitle: "Phần 2: Những giá trị phổ quát & Chánh cương vắn tắt 1930",
+          cards: [
+            {
+              title: "3. NHỮNG GIÁ TRỊ PHỔ QUÁT",
+              body: `<p>Hồ Chí Minh kế thừa và phát triển những giá trị về quyền con người, quyền tự do và bình đẳng trong:</p><ul><li>• Tuyên ngôn Độc lập của cách mạng Mỹ (1776).</li><li>• Tuyên ngôn Nhân quyền và Dân quyền của cách mạng Pháp (1791).</li></ul><p>Từ đó khẳng định chân lý:</p><blockquote>“Tất cả các dân tộc trên thế giới đều sinh ra bình đẳng, dân tộc nào cũng có quyền sống, quyền sung sướng và quyền tự do… Đó là những lẽ phải không ai chối cãi được.”</blockquote><p>→ <strong>Quyền dân tộc là những quyền thiêng liêng, bất biến và không thể bị xâm phạm.</strong></p>`
+            },
+            {
+              title: "4. CHÁNH CƯƠNG VẮN TẮT CỦA ĐẢNG (1930)",
+              body: `<p><strong>Mục tiêu chính trị cốt lõi của Đảng (1930):</strong></p><ul><li>a) Đánh đổ đế quốc chủ nghĩa Pháp và bọn phong kiến tay sai.</li><li>b) Làm cho nước Nam được hoàn toàn độc lập.</li></ul><p>→ <em>Độc lập dân tộc chính thức trở thành mục tiêu chính trị hàng đầu, xuyên suốt đường lối cách mạng của Đảng.</em></p>`
+            }
+          ]
+        },
+        {
+          partTitle: "Phần 3: Tuyên ngôn Độc lập 1945 & Hai cuộc kháng chiến bảo vệ nền độc lập",
+          cards: [
+            {
+              title: "5. TUYÊN NGÔN ĐỘC LẬP (1945)",
+              body: `<p>Hồ Chí Minh tuyên bố trước quốc dân đồng bào và toàn thế giới:</p><blockquote>“Nước Việt Nam có quyền được hưởng tự do và độc lập, và sự thực đã trở thành một nước tự do và độc lập.”</blockquote><p>Đồng thời đanh thép khẳng định ý chí:</p><blockquote>“Toàn thể dân Việt Nam quyết đem tất cả tinh thần và lực lượng, tính mệnh và của cải để giữ vững quyền tự do và độc lập ấy.”</blockquote><p>→ <em>Độc lập không chỉ là quyền thiêng liêng, mà còn phải được bảo vệ bằng ý chí và hành động của toàn dân.</em></p>`
+            },
+            {
+              title: "6. HAI CUỘC KHÁNG CHIẾN BẢO VỆ ĐỘC LẬP",
+              body: `<p>Ý chí bảo vệ độc lập được thể hiện quật cường qua hai cuộc kháng chiến:</p><p><strong>Kháng chiến chống Pháp (1946):</strong></p><blockquote>“Nhân dân chúng tôi thành thật mong muốn hòa bình. Nhưng cũng kiên quyết chiến đấu đến cùng để bảo vệ quyền thiêng liêng nhất: toàn vẹn lãnh thổ cho Tổ quốc và độc lập cho đất nước.”</blockquote><p><strong>Kháng chiến chống Mỹ (19/12/1946 & Lời kêu gọi 1966):</strong></p><blockquote>“Không! Chúng ta thà hy sinh tất cả, chứ nhất định không chịu mất nước, nhất định không chịu làm nô lệ.”</blockquote>`
+            }
+          ]
+        },
+        {
+          partTitle: "Phần 4: Chân lý thời đại 'Không có gì quý hơn độc lập, tự do'",
+          cards: [
+            {
+              single: true,
+              title: "7. CHIẾN TRANH VÀ CÔNG LÝ",
+              body: `<p>Năm 1965, đế quốc Mỹ đẩy mạnh chiến tranh xâm lược, tiến hành “Chiến tranh cục bộ” ở miền Nam và leo thang phá hoại miền Bắc.</p><p>Trong hoàn cảnh thử thách cam go đó, Chủ tịch Hồ Chí Minh nêu lên chân lý bất hủ của thời đại:</p><blockquote>“Không có gì quý hơn độc lập, tự do.”</blockquote><p>→ <em>Dưới ngọn cờ chân lý ấy, nhân dân Việt Nam đã anh dũng chiến đấu, đánh thắng đế quốc Mỹ, buộc Mỹ phải ký Hiệp định Paris (1973), cam kết tôn trọng các quyền dân tộc cơ bản của Việt Nam và rút quân về nước.</em></p>`
+            }
+          ]
+        },
+        {
+          isPanoramic: true,
+          partTitle: "Đúc kết tri thức: Bức tranh toàn cảnh",
+          cards: [
+            {
+              panoramic: true,
+              title: "BỨC TRANH TOÀN CẢNH: QUYỀN THIÊNG LIÊNG BẤT KHẢ XÂM PHẠM",
+              body: `<p style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #166534;">Độc lập, tự do theo tư tưởng Hồ Chí Minh:</p><ul><li>✓ <strong>Là quyền thiêng liêng, bất khả xâm phạm</strong> của mọi dân tộc trên thế giới.</li><li>✓ <strong>Là mục tiêu, lý tưởng chiến đấu</strong> cao cả của Đảng và nhân dân Việt Nam.</li><li>✓ <strong>Là giá trị tinh thần vĩnh hằng</strong>, gắn liền với tư tưởng Hồ Chí Minh – hiện thân của khát vọng độc lập, tự do.</li></ul><span class="clue-tag">MANH MỐI 01: Độc lập tự do là quyền thiêng liêng, bất khả xâm phạm của mọi dân tộc.</span>`
+            }
+          ]
+        }
+      ]
     },
     2: {
-      badge: "ĐIỂM TƯ LIỆU 02 // NĂM 1945 • HẠNH PHÚC DÂN SINH",
+      badge: "ĐIỂM TƯ LIỆU 02 // NĂM 1945 • TỰ DO & HẠNH PHÚC",
       img: "assets/images/hotspot2_1945.jpg",
-      caption: "Diệt giặc đói, giặc dốt — Phong trào Bình dân học vụ sau Cách mạng Tháng Tám 1945",
+      caption: "Bác Hồ thăm lớp Bình dân học vụ (1945) — Diệt giặc đói, diệt giặc dốt, chăm lo hạnh phúc nhân dân",
       quote: "“Nước độc lập mà dân không hưởng hạnh phúc tự do, thì độc lập cũng chẳng có nghĩa lý gì.” — Hồ Chí Minh (1945)",
       question: "Chủ tịch Hồ Chí Minh đặt ra yêu cầu cấp bách nào ngay sau khi đất nước giành được độc lập?",
       options: [
-        { key: "A", text: "Chờ đợi kinh tế vĩ mô phát triển ổn định rồi mới quan tâm đến đời sống người nghèo." },
-        { key: "B", text: "Làm cho dân có ăn, làm cho dân có mặc, làm cho dân có chỗ ở và được học hành.", correct: true },
-        { key: "C", text: "Tập trung xây dựng bộ máy hành chính công quyền trước, tạm gác an sinh của dân." }
+        { key: "A", text: "Bảo đảm việc làm, thu nhập và điều kiện sinh hoạt ổn định cho nhân dân trong quá trình xây dựng đất nước." },
+        { key: "B", text: "Làm cho dân có ăn, có mặc, có chỗ ở và được học hành.", correct: true },
+        { key: "C", text: "Bảo đảm nhân dân được tự do, có quyền làm chủ và có điều kiện tham gia xây dựng chính quyền." },
+        { key: "D", text: "Khôi phục sản xuất, phát triển kinh tế và cải thiện đời sống vật chất của nhân dân." }
       ],
-      storyTitle: "BÀI HỌC LỊCH SỬ: ĐỘC LẬP PHẢI GẮN VỚI HẠNH PHÚC CỦA NHÂN DÂN",
-      storyText: "Chủ nghĩa xã hội và độc lập theo Bác không hề trừu tượng: Độc lập phải biến thành cơm ăn, áo mặc, nhà ở, học hành và quyền tự do hạnh phúc thiết thực cho nhân dân.",
-      clue: "MANH MỐI 02: Độc lập phải gắn liền với cơm ăn, áo mặc, học hành và hạnh phúc nhân dân."
+      clue: "MANH MỐI 02: Độc lập phải gắn liền với tự do, cơm ăn, áo mặc và hạnh phúc nhân dân.",
+      cardPages: [
+        {
+          partTitle: "Phần 1: Nền tảng tư tưởng & Mục tiêu Cách mạng 1930",
+          cards: [
+            {
+              title: "1. “TAM DÂN” VÀ QUYỀN TỰ DO, BÌNH ĐẲNG",
+              body: `<p>Hồ Chí Minh đánh giá cao học thuyết <strong>“Tam dân”</strong> của Tôn Trung Sơn:</p><ul><li>• Dân tộc độc lập</li><li>• Dân quyền tự do</li><li>• Dân sinh hạnh phúc</li></ul><p>Dựa trên tư tưởng về tự do và bình đẳng, Người khẳng định:</p><blockquote>“Dân tộc Việt Nam đương nhiên cũng phải được tự do và bình đẳng về quyền lợi.”</blockquote><span class="clue-tag">CLUE: Độc lập dân tộc phải gắn với tự do của nhân dân.</span>`
+            },
+            {
+              title: "2. MỤC TIÊU CÁCH MẠNG 1930",
+              body: `<p>Trong <em>Chánh cương vắn tắt của Đảng (1930)</em>, mục tiêu cách mạng không chỉ hướng tới độc lập, mà còn gắn với quyền lợi thiết thực của nhân dân:</p><ul><li>• Thủ tiêu các thứ quốc trái.</li><li>• Chia ruộng đất của đế quốc cho dân cày nghèo.</li><li>• Bỏ sưu thuế cho dân cày nghèo.</li><li>• Thi hành luật ngày làm 8 giờ.</li></ul><span class="clue-tag">CLUE: Độc lập phải gắn với quyền lợi của nhân dân.</span>`
+            }
+          ]
+        },
+        {
+          partTitle: "Phần 2: Độc lập gắn liền hạnh phúc & Ham muốn tột bậc của Bác",
+          cards: [
+            {
+              title: "3. ĐỘC LẬP PHẢI MANG LẠI HẠNH PHÚC",
+              body: `<p>Sau Cách mạng tháng Tám năm 1945, đất nước còn trong hoàn cảnh đói rét, mù chữ cùng vô vàn khó khăn.</p><p>Hồ Chí Minh đã khẳng định một quan điểm mang tính bản chất:</p><blockquote>“Nước độc lập mà dân không hưởng hạnh phúc tự do, thì độc lập cũng chẳng có nghĩa lý gì.”</blockquote><p>Người yêu cầu thực hiện ngay 4 nhiệm vụ cấp bách:</p><ul><li>• Làm cho dân có ăn.</li><li>• Làm cho dân có mặc.</li><li>• Làm cho dân có chỗ ở.</li><li>• Làm cho dân có học hành.</li></ul><span class="clue-tag">CLUE: Độc lập phải hướng tới hạnh phúc của nhân dân.</span>`
+            },
+            {
+              title: "4. HAM MUỐN TỘT BẬC CỦA CHỦ TỊCH HỒ CHÍ MINH",
+              body: `<p><strong>Tâm huyết cả đời của Bác:</strong></p><p>Trong suốt cuộc đời hoạt động vì nước vì dân, Người luôn bộc bạch:</p><blockquote>“Tôi chỉ có một sự ham muốn, ham muốn tột bậc là làm sao cho nước ta được hoàn toàn độc lập, dân ta được hoàn toàn tự do, đồng bào ai cũng có cơm ăn áo mặc, ai cũng được học hành.”</blockquote>`
+            }
+          ]
+        },
+        {
+          isPanoramic: true,
+          partTitle: "Đúc kết tri thức: Bức tranh toàn cảnh",
+          cards: [
+            {
+              panoramic: true,
+              title: "BỨC TRANH TOÀN CẢNH: TỰ DO & HẠNH PHÚC DÂN SINH",
+              body: `<p style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #166534;">Luận điểm trọng tâm của Chủ tịch Hồ Chí Minh:</p><ul><li>✓ <strong>Độc lập dân tộc phải gắn liền với tự do, cơm ăn, áo mặc và hạnh phúc thiết thực của nhân dân</strong> ("dân hưởng hạnh phúc tự do").</li><li>✓ Độc lập không phải là danh xưng trừu tượng mà phải biến thành hiện thực cuộc sống: ấm no, hạnh phúc, được học hành và được làm chủ.</li></ul><span class="clue-tag">MANH MỐI 02: Độc lập phải gắn liền với cơm ăn, áo mặc, học hành và hạnh phúc nhân dân.</span>`
+            }
+          ]
+        }
+      ]
     },
     3: {
-      badge: "ĐIỂM TƯ LIỆU 03 // BẢN CHẤT • ĐỘC LẬP TRIỆT ĐỂ",
-      img: "assets/images/hotspot3_puppet.jpg",
-      caption: "Vạch trần chiêu bài độc lập giả hiệu của thực dân và chính phủ bù nhìn thời thuộc địa",
-      quote: "“Độc lập mà không có quyền tự quyết ngoại giao, quân đội riêng, tài chính riêng... thì độc lập đó chẳng có ý nghĩa gì.”",
+      badge: "ĐIỂM TƯ LIỆU 03 // BẢN CHẤT • ĐỘC LẬP HOÀN TOÀN, TRIỆT ĐỂ",
+      img: "assets/images/116092019102930.jpg?v=20260913_2",
+      caption: "Mít tinh ngày 19/8/1945 tại Nhà hát Lớn Hà Nội — Giành chính quyền, xóa bỏ chính quyền bù nhìn, khẳng định nền độc lập thực sự",
+      quote: "“Độc lập mà không có quyền tự quyết ngoại giao, quân đội riêng, tài chính riêng... thì độc lập đó chẳng có ý nghĩa gì.” — Hồ Chí Minh",
       question: "Tiêu chí của một nền độc lập dân tộc thực sự theo tư tưởng Hồ Chí Minh là gì?",
       options: [
-        { key: "A", text: "Chỉ cần chính phủ do người bản xứ đứng tên dù ngoại bang kiểm soát toàn bộ tài chính, quân sự." },
-        { key: "B", text: "Phải hoàn toàn, triệt để trên mọi phương diện: tự quyết ngoại giao, quân đội riêng và tài chính riêng.", correct: true },
-        { key: "C", text: "Chấp nhận sự bảo hộ quân sự và can thiệp nội bộ của các thế lực đế quốc bên ngoài." }
+        { key: "A", text: "Có chính phủ do người Việt Nam thành lập và tự quản lý các vấn đề đối nội, còn quốc phòng, tài chính và ngoại giao có thể phụ thuộc vào nước ngoài." },
+        { key: "B", text: "Nền độc lập phải được bảo đảm một cách thực sự, hoàn toàn và triệt để trên mọi phương diện, trong đó dân tộc phải có quyền tự quyết về ngoại giao, quân đội và tài chính riêng.", correct: true },
+        { key: "C", text: "Giành được chủ quyền về chính trị là yếu tố quyết định; các lĩnh vực kinh tế, quân sự và ngoại giao có thể chấp nhận sự chi phối của nước ngoài nếu vẫn duy trì được chính phủ bản xứ." },
+        { key: "D", text: "Độc lập chủ yếu thể hiện ở việc chấm dứt ách thống trị trực tiếp của thực dân, còn việc duy trì sự bảo hộ hoặc hỗ trợ quân sự, tài chính từ nước ngoài không làm mất đi bản chất của nền độc lập." }
       ],
-      storyTitle: "BÀI HỌC LỊCH SỬ: KIÊN QUYẾT BÁC BỎ 'ĐỘC LẬP GIẢ HIỆU'",
-      storyText: "Bác chỉ rõ: Độc lập dân tộc phải là nền độc lập thực sự, hoàn toàn và triệt để. Tuyệt đối không chấp nhận các hình thức thỏa hiệp hay chiêu bài 'độc lập bánh vẽ' do ngoại bang giật dây.",
-      clue: "MANH MỐI 03: Độc lập phải thực sự, hoàn toàn và triệt để, kiên quyết chống độc lập giả hiệu."
+      clue: "MANH MỐI 03: Độc lập phải thực sự, hoàn toàn và triệt để, kiên quyết chống độc lập giả hiệu.",
+      cardPages: [
+        {
+          partTitle: "Phần 1: Nhận diện 'Độc lập giả hiệu'",
+          cards: [
+            {
+              title: "1. CHIÊU BÀI MỊ DÂN CỦA ĐẾ QUỐC",
+              body: `<p><strong>Nội dung:</strong> Trong quá trình xâm lược, thực dân đế quốc thường dùng chiêu bài mị dân xảo trá, thành lập các "chính phủ bù nhìn" bản xứ.</p><p><strong>Bản chất:</strong> Chúng tuyên truyền cái gọi là "độc lập tự do giả hiệu" nhằm che đậy bản chất ăn cướp và giết người của chúng ở các nước thuộc địa.</p>`
+            },
+            {
+              title: "2. TIÊU CHÍ CỦA MỘT NỀN ĐỘC LẬP THỰC SỰ",
+              body: `<p><strong>Nội dung:</strong> Theo Hồ Chí Minh, độc lập phải là độc lập <strong>thực sự, hoàn toàn và triệt để</strong> trên tất cả các lĩnh vực.</p><p><strong>Luận điểm cốt lõi:</strong></p><blockquote>“Độc lập mà người dân không có quyền tự quyết về ngoại giao, không có quân đội riêng, không có nền tài chính riêng... thì độc lập đó chẳng có ý nghĩa gì.”</blockquote>`
+            }
+          ]
+        },
+        {
+          partTitle: "Phần 2: Thực tiễn bảo vệ nền độc lập",
+          cards: [
+            {
+              single: true,
+              title: "3. BẢO VỆ NỀN ĐỘC LẬP SAU CÁCH MẠNG THÁNG TÁM (1945)",
+              body: `<p><strong>Bối cảnh lịch sử:</strong> Đất nước sau Cách mạng tháng Tám gặp vô vàn khó khăn, thử thách ngặt nghèo trong tình trạng “thù trong giặc ngoài”.</p><p><strong>Hành động kiên quyết:</strong> Để bảo vệ nền độc lập thật sự mới giành được, Hồ Chí Minh và Chính phủ Việt Nam Dân chủ Cộng hòa đã sử dụng nhiều biện pháp kiên quyết, linh hoạt — đặc biệt là sách lược ngoại giao tài tình nhằm bảo vệ vững chắc nền độc lập của đất nước.</p>`
+            }
+          ]
+        },
+        {
+          isPanoramic: true,
+          partTitle: "Đúc kết tri thức: Bức tranh toàn cảnh",
+          cards: [
+            {
+              panoramic: true,
+              title: "BỨC TRANH TOÀN CẢNH: ĐỘC LẬP HOÀN TOÀN & TRIỆT ĐỂ",
+              body: `<p style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #166534;">Chân lý bảo vệ chủ quyền của Bác:</p><ul><li>✓ <strong>Độc lập dân tộc phải là nền độc lập thực sự, hoàn toàn và triệt để trên mọi lĩnh vực</strong> (tự quyết ngoại giao, quân đội riêng, tài chính riêng).</li><li>✓ <strong>Kiên quyết chống độc lập giả hiệu</strong> và mọi chiêu bài bù nhìn do các thế lực ngoại bang áp đặt.</li></ul><span class="clue-tag">MANH MỐI 03: Độc lập phải thực sự, hoàn toàn và triệt để, kiên quyết chống độc lập giả hiệu.</span>`
+            }
+          ]
+        }
+      ]
     },
     4: {
-      badge: "ĐIỂM TƯ LIỆU 04 // TOÀN VẸN • THỐNG NHẤT NON SÔNG",
+      badge: "ĐIỂM TƯ LIỆU 04 // TOÀN VẸN • THỐNG NHẤT & TOÀN VẸN",
       img: "assets/images/hotspot4_unification.jpg",
       caption: "Khát vọng non sông liền một dải — Đôi bờ Hiền Lương & Thư gửi đồng bào Nam Bộ (1946)",
-      quote: "“Đồng bào Nam Bộ là dân nước Việt Nam. Sông có thể cạn, núi có thể mòn, song chân lý đó không bao giờ thay đổi!”",
+      quote: "“Đồng bào Nam Bộ là dân nước Việt Nam. Sông có thể cạn, núi có thể mòn, song chân lý đó không bao giờ thay đổi!” — Hồ Chí Minh",
+      videoSrc: "assets/images/video.mp4",
       question: "Tư tưởng xuyên suốt, bất biến của Hồ Chí Minh về lãnh thổ và sự thống nhất quốc gia là gì?",
       options: [
-        { key: "A", text: "Chấp nhận chia cắt hai miền để phát triển hai thể chế kinh tế độc lập lâu dài." },
-        { key: "B", text: "Nước Việt Nam là một, dân tộc Việt Nam là một; kiên quyết bảo vệ toàn vẹn lãnh thổ Tổ quốc.", correct: true },
-        { key: "C", text: "Phụ thuộc vào sự phân định ranh giới từ các hiệp định của các nước lớn." }
+        { key: "A", text: "Độc lập dân tộc là mục tiêu trước hết; vấn đề thống nhất đất nước có thể được giải quyết sau khi mỗi miền hoàn thành nhiệm vụ phát triển kinh tế – xã hội riêng." },
+        { key: "B", text: "Nước Việt Nam là một, dân tộc Việt Nam là một; độc lập dân tộc phải gắn liền với thống nhất đất nước và bảo vệ vững chắc chủ quyền, toàn vẹn lãnh thổ.", correct: true },
+        { key: "C", text: "Việc thống nhất đất nước cần được thực hiện trên cơ sở tôn trọng sự phân chia lãnh thổ được xác lập bởi các hiệp định quốc tế và tương quan lực lượng giữa các nước." },
+        { key: "D", text: "Độc lập dân tộc là điều kiện tiên quyết, còn thống nhất lãnh thổ là mục tiêu lâu dài có thể điều chỉnh tùy theo hoàn cảnh chính trị và quan hệ quốc tế." }
       ],
-      storyTitle: "BÀI HỌC LỊCH SỬ: THỐNG NHẤT TỔ QUỐC VÀ TOÀN VẸN LÃNH THỔ",
-      storyText: "Độc lập dân tộc không thể tách rời sự toàn vẹn lãnh thổ. Bắc Nam sum họp một nhà, 'Nam Bộ là máu của máu Việt Nam, thịt của thịt Việt Nam'. Độc lập chỉ trọn vẹn khi non sông thu về một mối.",
-      clue: "MANH MỐI 04: Độc lập dân tộc phải gắn liền với thống nhất Tổ quốc và toàn vẹn lãnh thổ."
+      clue: "MANH MỐI 04: Độc lập dân tộc phải gắn liền với thống nhất Tổ quốc và toàn vẹn lãnh thổ.",
+      cardPages: [
+        {
+          partTitle: "Phần 1: Âm mưu chia cắt của kẻ thù & Lập trường của Bác",
+          cards: [
+            {
+              title: "1. ÂM MƯU 'CHIA ĐỂ TRỊ' CỦA KẺ THÙ",
+              body: `<p>Lịch sử dân tộc luôn đối mặt với âm mưu xâm lược và chia cắt đất nước:</p><ul><li>• <em>Thực dân Pháp:</em> Chia nước ta ra ba kỳ với chế độ cai trị riêng, sau đó bày ra "Nam Kỳ tự trị".</li><li>• <em>Sau Cách mạng Tháng Tám:</em> Miền Bắc bị quân Tưởng Giới Thạch chiếm đóng, miền Nam bị thực dân Pháp xâm lược.</li></ul>`
+            },
+            {
+              title: "2. KHẲNG ĐỊNH NAM BỘ LÀ MỘT BỘ PHẬN CỦA VIỆT NAM",
+              body: `<p>Trong <em>Thư gửi đồng bào Nam Bộ (1946)</em>, Hồ Chí Minh khẳng định Nam Bộ là một bộ phận máu thịt của Việt Nam, không thể tách rời khỏi Tổ quốc:</p><blockquote>“Đồng bào Nam Bộ là dân nước Việt Nam. Sông có thể cạn, núi có thể mòn, song chân lý đó không bao giờ thay đổi.”</blockquote>`
+            }
+          ]
+        },
+        {
+          partTitle: "Phần 2: Kiên trì thống nhất Tổ quốc & Niềm tin tất thắng",
+          cards: [
+            {
+              title: "3. ĐẤU TRANH SAU HIỆP ĐỊNH GIƠNEVƠ (1954)",
+              body: `<p>Khi đất nước tạm thời bị chia cắt làm hai miền theo vĩ tuyến 17, Hồ Chí Minh tiếp tục kiên trì lãnh đạo toàn dân đấu tranh để thống nhất Tổ quốc.</p><p>Tuyên bố bất hủ (Tháng 2/1958):</p><blockquote>“Nước Việt Nam là một, dân tộc Việt Nam là một.”</blockquote>`
+            },
+            {
+              title: "4. NIỀM TIN VÀO SỰ THỐNG NHẤT NƯỚC NHÀ",
+              body: `<p>Trong bản <em>Di chúc</em> thiêng liêng, Hồ Chí Minh thể hiện niềm tin tuyệt đối vào thắng lợi của cách mạng và sự thống nhất nước nhà:</p><blockquote>“Đế quốc Mỹ nhất định phải cút khỏi nước ta. Tổ quốc ta nhất định sẽ thống nhất. Đồng bào Nam, Bắc nhất định sẽ sum họp một nhà.”</blockquote><p><strong>Kết luận:</strong> Độc lập dân tộc gắn liền với thống nhất Tổ quốc và toàn vẹn lãnh thổ là tư tưởng xuyên suốt trong cuộc đời hoạt động cách mạng của Hồ Chí Minh.</p>`
+            }
+          ]
+        },
+        {
+          isPanoramic: true,
+          partTitle: "Đúc kết tri thức: Bức tranh toàn cảnh",
+          cards: [
+            {
+              panoramic: true,
+              title: "BỨC TRANH TOÀN CẢNH: THỐNG NHẤT & TOÀN VẸN LÃNH THỔ",
+              body: `<p style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #166534;">Chân lý lịch sử bất biến:</p><ul><li>✓ <strong>Độc lập dân tộc phải gắn liền với thống nhất Tổ quốc và toàn vẹn lãnh thổ từ Nam ra Bắc.</strong></li><li>✓ Nước Việt Nam là một, dân tộc Việt Nam là một; non sông thu về một mối là quy luật tất yếu và khát vọng cháy bỏng của toàn thể nhân dân Việt Nam.</li></ul><span class="clue-tag">MANH MỐI 04: Độc lập dân tộc phải gắn liền với thống nhất Tổ quốc và toàn vẹn lãnh thổ.</span>`
+            }
+          ]
+        }
+      ]
     }
   };
 
@@ -359,6 +534,12 @@ const Deck = (function () {
       if (index < 0 || index >= State.totalSlides) return;
       AudioFX.click();
 
+      // Dừng phát mọi video khi chuyển slide
+      const allVideos = document.querySelectorAll('video');
+      allVideos.forEach(v => {
+        if (!v.paused) v.pause();
+      });
+
       // Cập nhật hash trên thanh địa chỉ URL
       if (window.location.hash !== `#slide-${index}`) {
         history.replaceState(null, null, `#slide-${index}`);
@@ -372,6 +553,13 @@ const Deck = (function () {
       State.currentSlide = index;
       const newSlide = document.getElementById(`slide-${index}`);
       if (newSlide) newSlide.classList.add('active');
+
+      // Tôn vinh hình ảnh Bác Hồ: Khi ở trang bìa hiển thị nền rõ nét, các trang sau chuyển mờ nhẹ
+      if (index === 0) {
+        document.body.classList.add('slide-0-active');
+      } else {
+        document.body.classList.remove('slide-0-active');
+      }
 
       // Cập nhật số trang hiển thị
       const counterEl = document.getElementById('slide-counter-text');
@@ -451,7 +639,42 @@ const Deck = (function () {
     closeModal(id) {
       AudioFX.click();
       const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
+      if (el) {
+        el.style.display = 'none';
+        const vids = el.querySelectorAll('video');
+        vids.forEach(v => {
+          if (!v.paused) v.pause();
+        });
+      }
+    },
+
+    // Điều khiển video thông minh
+    toggleVideoPlay(videoId) {
+      const vid = document.getElementById(videoId);
+      const btn = document.getElementById('btn-video-toggle');
+      const status = document.getElementById('video-status-text');
+      if (!vid) return;
+
+      if (vid.paused) {
+        vid.play().catch(() => {});
+        if (btn) btn.textContent = 'Tạm dừng video';
+        if (status) status.textContent = 'Đang phát video tư liệu lịch sử';
+      } else {
+        vid.pause();
+        if (btn) btn.textContent = 'Phát tiếp video';
+        if (status) status.textContent = 'Đã tạm dừng video';
+      }
+    },
+
+    restartVideo(videoId) {
+      const vid = document.getElementById(videoId);
+      if (!vid) return;
+      vid.currentTime = 0;
+      vid.play().catch(() => {});
+      const btn = document.getElementById('btn-video-toggle');
+      const status = document.getElementById('video-status-text');
+      if (btn) btn.textContent = 'Tạm dừng video';
+      if (status) status.textContent = 'Đang phát lại từ đầu';
     },
 
     // =============================================================
@@ -462,15 +685,27 @@ const Deck = (function () {
       const modal = document.getElementById('lv1-modal');
       if (!modal) return;
       modal.style.display = 'flex';
+      State.lv1.currentCardPage[id] = 0;
       this.renderHotspotStep(id, 1);
     },
 
-    renderHotspotStep(hpId, step) {
+    renderHotspotStep(hpId, step, cardPageIdx) {
+      // Tự động tạm dừng bất kỳ video nào đang phát khi đổi bước
+      const oldVideos = document.querySelectorAll('#m1-content video');
+      oldVideos.forEach(v => {
+        if (!v.paused) v.pause();
+      });
+
       const data = HOTSPOTS[hpId];
       const badgeEl = document.getElementById('m1-badge');
       if (badgeEl) badgeEl.textContent = data.badge;
       const content = document.getElementById('m1-content');
       if (!content) return;
+
+      if (typeof cardPageIdx !== 'undefined') {
+        State.lv1.currentCardPage[hpId] = cardPageIdx;
+      }
+      const currentCardIdx = State.lv1.currentCardPage[hpId] || 0;
 
       const stepPills = `
         <div class="modal-step-flow">
@@ -482,21 +717,68 @@ const Deck = (function () {
 
       // MÀN HÌNH 1: QUAN SÁT TƯ LIỆU LỊCH SỬ
       if (step === 1) {
-        content.innerHTML = `
-          ${stepPills}
+        let mediaHtml = `
           <div class="inspect-img-wrap">
             <img src="${data.img}" alt="${data.caption}" class="inspect-img">
           </div>
-          <div style="font-style: italic; font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; text-align: center;">
-            📸 <strong>Tư liệu lịch sử:</strong> ${data.caption}
+        `;
+        if (data.videoSrc) {
+          mediaHtml = `
+            <div class="video-smart-card" style="background: #0B0F19; border-radius: 8px; overflow: hidden; margin-bottom: 14px; border: 2px solid var(--border-dark); box-shadow: var(--shadow-sm);">
+              <video id="hotspot-video-player" playsinline preload="metadata" controls style="width: 100%; max-height: 400px; display: block; background: #000; cursor: pointer;" onclick="Deck.toggleVideoPlay('hotspot-video-player')">
+                <source src="${data.videoSrc}" type="video/mp4">
+                Trình duyệt không hỗ trợ phát video MP4.
+              </video>
+              <div class="video-smart-toolbar" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; background: #1E293B; border-top: 1px solid #334155;">
+                <button type="button" id="btn-video-toggle" class="btn btn-primary" style="font-size: 13px; font-weight: 700; padding: 6px 16px; background: var(--accent-orange); color: #000; border-color: #000; box-shadow: 2px 2px 0px #000;" onclick="Deck.toggleVideoPlay('hotspot-video-player')">
+                  Phát video
+                </button>
+                <span id="video-status-text" style="font-size: 13px; color: #CBD5E1; font-weight: 600; flex: 1; text-align: center;">
+                  Bấm để bật hoặc tạm dừng video
+                </span>
+                <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px; background: #334155; color: #FFF; border-color: #475569;" onclick="Deck.restartVideo('hotspot-video-player')">
+                  Xem lại từ đầu
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        content.innerHTML = `
+          ${stepPills}
+          ${mediaHtml}
+          <div style="font-style: italic; font-size: 13.5px; color: var(--text-secondary); margin-bottom: 12px; text-align: center;">
+            <strong>Tư liệu lịch sử:</strong> ${data.caption}
           </div>
-          <div class="k-content-quote" style="font-size: 15px; margin-bottom: 18px; background: #FAF9F6; padding: 12px 16px; border-radius: 8px; border-left: 4px solid var(--accent-pink);">
+          <div class="k-content-quote" style="font-size: 15px; margin-bottom: 18px; background: #FAF9F6; padding: 14px 18px; border-radius: 8px; border-left: 4px solid var(--accent-pink); line-height: 1.55;">
             ${data.quote}
           </div>
-          <button class="btn btn-primary btn-full" onclick="Deck.renderHotspotStep(${hpId}, 2)">
-            🔍 [ BẮT ĐẦU THỬ THÁCH NHẬN THỨC (BƯỚC 2) ➔ ]
+          <button class="btn btn-primary btn-full btn-large" onclick="Deck.renderHotspotStep(${hpId}, 2)">
+            [ BẮT ĐẦU THỬ THÁCH NHẬN THỨC (BƯỚC 2) ➔ ]
           </button>
         `;
+
+        if (data.videoSrc) {
+          setTimeout(() => {
+            const vid = document.getElementById('hotspot-video-player');
+            const btn = document.getElementById('btn-video-toggle');
+            const status = document.getElementById('video-status-text');
+            if (vid && btn && status) {
+              vid.onplay = () => {
+                btn.textContent = 'Tạm dừng video';
+                status.textContent = 'Đang phát video tư liệu lịch sử';
+              };
+              vid.onpause = () => {
+                btn.textContent = 'Phát tiếp video';
+                status.textContent = 'Đã tạm dừng video';
+              };
+              vid.onended = () => {
+                btn.textContent = 'Phát lại video';
+                status.textContent = 'Video đã kết thúc';
+              };
+            }
+          }, 50);
+        }
       }
       // MÀN HÌNH 2: THỬ THÁCH NHANH KIỂM TRA NHẬN THỨC
       else if (step === 2) {
@@ -504,42 +786,100 @@ const Deck = (function () {
         data.options.forEach(opt => {
           optionsHtml += `
             <button class="stage-opt-btn" onclick="Deck.answerHotspot(${hpId}, ${opt.correct || false}, this)">
-              <span class="brutal-badge badge-black">${opt.key}</span>
-              <span>${opt.text}</span>
+              <span class="brutal-badge badge-black" style="font-size: 13px; padding: 3px 8px;">${opt.key}</span>
+              <span style="flex: 1;">${opt.text}</span>
             </button>
           `;
         });
 
         content.innerHTML = `
           ${stepPills}
-          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px; background: #F9FAFB; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px;">
-            <img src="${data.img}" alt="Thumb" style="width: 70px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #000;">
-            <div style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.4;">
-              <strong>Câu hỏi nhận thức lịch sử:</strong><br>${data.caption}
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; background: #F9FAFB; padding: 12px 16px; border: 1.5px solid var(--border-color); border-radius: 8px;">
+            <img src="${data.img}" alt="Thumb" style="width: 80px; height: 55px; object-fit: cover; border-radius: 4px; border: 1.5px solid #000; flex-shrink: 0;">
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.45;">
+              <strong>Tư liệu tham chiếu:</strong> ${data.caption}
             </div>
           </div>
-          <h4 style="font-size: 16px; font-weight: 800; margin-bottom: 14px; line-height: 1.4;">${data.question}</h4>
+          <h4 style="font-size: 16.5px; font-weight: 800; margin-bottom: 16px; line-height: 1.45; color: var(--text-primary);">${data.question}</h4>
           <div class="stage-options-grid">${optionsHtml}</div>
           <div id="hp-fb" style="display: none; margin-top: 14px;"></div>
         `;
       }
-      // MÀN HÌNH 3: ĐÚC KẾT BÀI HỌC & NHẬN THẺ MANH MỐI
+      // MÀN HÌNH 3: ĐÚC KẾT BÀI HỌC (CARD VIEW PAGINATION)
       else if (step === 3) {
+        const pages = data.cardPages;
+        const page = pages[currentCardIdx] || pages[0];
+        const isLastPage = currentCardIdx === pages.length - 1;
+
+        let cardsHtml = '';
+        if (page.cards && page.cards.length > 0) {
+          page.cards.forEach(card => {
+            const extraClass = card.panoramic ? 'panoramic' : (card.single ? 'single' : '');
+            cardsHtml += `
+              <div class="story-card-item ${extraClass}">
+                <h4>${card.title}</h4>
+                <div class="story-card-body">${card.body}</div>
+              </div>
+            `;
+          });
+        }
+
+        let actionBtnHtml = '';
+        if (isLastPage) {
+          const isCorrect = State.lv1.quizStatus[hpId] === true;
+          if (isCorrect) {
+            actionBtnHtml = `
+              <div style="margin-top: 16px;">
+                <button class="btn btn-primary btn-full btn-large" onclick="Deck.collectClue(${hpId})">
+                  [ LƯU VÀO SỔ TAY TƯ TƯỞNG & HOÀN THÀNH ➔ ]
+                </button>
+              </div>
+            `;
+          } else {
+            actionBtnHtml = `
+              <div style="margin-top: 16px; background: #FEF3C7; border: 2px solid #D97706; border-radius: 8px; padding: 14px 18px; text-align: left;">
+                <div style="font-weight: 800; color: #92400E; margin-bottom: 6px; font-size: 14px;">
+                  [CHÚ Ý] BẠN CẦN KIỂM CHỨNG LẠI THỬ THÁCH NHẬN THỨC!
+                </div>
+                <p style="font-size: 13px; color: #78350F; line-height: 1.5; margin-bottom: 12px;">
+                  Ở Bước 2, bạn chưa chọn đúng đáp án chuẩn mực. Giờ đây sau khi đã nghiên cứu toàn bộ nội dung bài học, hãy quay lại thử sức câu hỏi trắc nghiệm một lần nữa để chính thức giải mã manh mối nhé!
+                </p>
+                <button class="btn btn-primary btn-full" onclick="Deck.renderHotspotStep(${hpId}, 2)">
+                  [ THỬ SỨC LẠI CÂU TRẮC NGHIỆM ĐỂ MỞ KHÓA MANH MỐI ➔ ]
+                </button>
+              </div>
+            `;
+          }
+        }
+
+        const prevBtn = currentCardIdx > 0
+          ? `<button class="btn btn-secondary" onclick="Deck.renderHotspotStep(${hpId}, 3, ${currentCardIdx - 1})">◀ Quay lại</button>`
+          : `<button class="btn btn-secondary" onclick="Deck.renderHotspotStep(${hpId}, 2)">◀ Quay lại câu hỏi</button>`;
+
+        const nextBtn = !isLastPage
+          ? `<button class="btn btn-primary" onclick="Deck.renderHotspotStep(${hpId}, 3, ${currentCardIdx + 1})">Tiếp theo (Next) ➔</button>`
+          : '';
+
         content.innerHTML = `
           ${stepPills}
-          <div class="story-card-box">
-            <div class="story-card-title">📖 ${data.storyTitle}</div>
-            <div class="story-card-text">${data.storyText}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; background: #FFF; padding: 8px 14px; border: 1.5px solid var(--border-color); border-radius: 8px;">
+            <span style="font-size: 13.5px; font-weight: 800; color: #B91C1C; font-family: var(--font-display);">
+              ${page.partTitle || 'NỘI DUNG BÀI HỌC'}
+            </span>
+            <span class="story-stepper-text">Trang ${currentCardIdx + 1} / ${pages.length}</span>
           </div>
 
-          <div style="background: var(--accent-green); border: 2px solid #166534; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; box-shadow: 3px 3px 0px #000;">
-            <strong style="color: #14532D; font-size: 12px; display: block; font-family: var(--font-display); margin-bottom: 4px;">TRI THỨC MỞ KHÓA THÀNH CÔNG:</strong>
-            <span style="font-size: 14px; font-weight: 700; color: #064E3B;">${data.clue}</span>
+          <div class="story-cards-grid">
+            ${cardsHtml}
           </div>
 
-          <button class="btn btn-primary btn-full btn-large" onclick="Deck.collectClue(${hpId})">
-            🏆 [ LƯU VÀO SỔ TAY TƯ TƯỞNG & HOÀN THÀNH ➔ ]
-          </button>
+          <div class="story-nav-bar">
+            ${prevBtn}
+            <span class="story-stepper-text">Bước ${currentCardIdx + 1} / ${pages.length}</span>
+            ${nextBtn}
+          </div>
+
+          ${actionBtnHtml}
         `;
       }
     },
@@ -548,25 +888,44 @@ const Deck = (function () {
       const fb = document.getElementById('hp-fb');
       if (!fb) return;
 
+      // Lưu trạng thái trả lời của người dùng
+      State.lv1.quizStatus[hpId] = isCorrect;
+
+      // Gỡ trạng thái cũ khỏi tất cả các nút
+      const allBtns = document.querySelectorAll('.stage-opt-btn');
+      allBtns.forEach(b => {
+        b.classList.remove('correct');
+        b.classList.remove('wrong');
+      });
+
       if (isCorrect) {
         AudioFX.success();
         btnEl.classList.add('correct');
         fb.className = 'stage-feedback-box';
         fb.style.display = 'block';
+        fb.style.background = '#F0FDF4';
+        fb.style.borderColor = '#16A34A';
         fb.innerHTML = `
-          <strong>CHÍNH XÁC! ✓</strong> Nhận thức của bạn hoàn toàn chuẩn xác theo tư tưởng Hồ Chí Minh.<br>
-          <button class="btn btn-primary" style="margin-top: 10px; width: 100%;" onclick="Deck.renderHotspotStep(${hpId}, 3)">
-            📖 TIẾP TỤC: XEM ĐÚC KẾT BÀI HỌC & MANH MỐI (BƯỚC 3) ➔
+          <strong style="color: #166534; font-size: 14px; display: block; margin-bottom: 6px;">✓ Chính xác! Bạn đã tìm ra manh mối quan trọng.</strong>
+          <span style="color: #14532D; font-size: 13px;">Hãy cùng khám phá nội dung bài học để hiểu rõ hơn nhé!</span>
+          <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="Deck.renderHotspotStep(${hpId}, 3, 0)">
+            TIẾP TỤC: KHÁM PHÁ BÀI HỌC (BƯỚC 3) ➔
           </button>
         `;
       } else {
         AudioFX.error();
         btnEl.classList.add('wrong');
         fb.className = 'stage-feedback-box';
-        fb.style.background = '#FEE2E2';
+        fb.style.background = '#FEF2F2';
         fb.style.borderColor = '#DC2626';
         fb.style.display = 'block';
-        fb.innerHTML = `<strong>CHƯA CHÍNH XÁC!</strong> Hãy suy ngẫm lại dựa trên nguyên lý độc lập, tự do đích thực của Chủ tịch Hồ Chí Minh.`;
+        fb.innerHTML = `
+          <strong style="color: #991B1B; font-size: 14px; display: block; margin-bottom: 6px;">Chưa phải đáp án này!</strong>
+          <span style="color: #7F1D1D; font-size: 13px;">Đừng lo, manh mối vẫn còn đó. Hãy khám phá bài học, rồi quay lại thử sức một lần nữa nhé!</span>
+          <button class="btn btn-primary" style="margin-top: 12px; width: 100%; background: #DC2626; border-color: #991B1B;" onclick="Deck.renderHotspotStep(${hpId}, 3, 0)">
+            TIẾP TỤC: KHÁM PHÁ BÀI HỌC ĐỂ TÌM MANH MỐI ➔
+          </button>
+        `;
       }
     },
 
@@ -621,7 +980,7 @@ const Deck = (function () {
           <img src="${data.img}" alt="${data.caption}" class="inspect-img">
         </div>
         <div style="font-style: italic; font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; text-align: center;">
-          📸 <strong>Tư liệu lịch sử:</strong> ${data.caption}
+          <strong>Tư liệu lịch sử:</strong> ${data.caption}
         </div>
       `;
 
@@ -706,7 +1065,7 @@ const Deck = (function () {
         fb.className = 'stage-feedback-box';
         fb.style.display = 'block';
         fb.innerHTML = `
-          <strong>LUẬN CỨ HOÀN TOÀN CHUẨN XÁC! 🏆</strong><br>
+          <strong>LUẬN CỨ HOÀN TOÀN CHUẨN XÁC! ✓</strong><br>
           <div style="margin-top: 4px; font-size: 13px; color: #166534;">${data.summary}</div>
           <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="Deck.confirmStrategyChoice(${nodeId})">
             XÁC NHẬN VÀO BẢNG CHIẾN LƯỢC ➔
@@ -741,7 +1100,7 @@ const Deck = (function () {
         const btn = document.getElementById('btn-reveal-strategy');
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = 'CÔNG BỐ TOÀN VĂN HỆ THỐNG CHIẾN LƯỢC (5/5) ▶';
+          btn.innerHTML = 'CÔNG BỐ TOÀN VĂN HỆ THỐNG CHIẾN LƯỢC (5/5) ➔';
         }
       }
     },
@@ -856,10 +1215,10 @@ const Deck = (function () {
         this.setBars(0, 0, 0, 0);
         if (actionBtn) {
           actionBtn.className = 'btn btn-secondary btn-full';
-          actionBtn.innerHTML = '⏳ CẦN PHÂN BỔ VỪA ĐÚNG 100 ĐNL ĐỂ XÁC NHẬN';
+          actionBtn.innerHTML = 'CẦN PHÂN BỔ VỪA ĐÚNG 100 ĐNL ĐỂ XÁC NHẬN';
         }
         if (leftBuildBtn) {
-          leftBuildBtn.innerHTML = '⚙️ [ XÁC NHẬN MÔ HÌNH XÃ HỘI (0/100 ĐNL) ▶ ]';
+          leftBuildBtn.innerHTML = '[ XÁC NHẬN MÔ HÌNH XÃ HỘI (0/100 ĐNL) ➔ ]';
         }
         return;
       }
@@ -887,88 +1246,88 @@ const Deck = (function () {
 
         if (actionBtn) {
           actionBtn.className = 'btn btn-secondary btn-full';
-          actionBtn.innerHTML = `⏳ CẦN PHÂN BỔ VỪA ĐÚNG 100 ĐNL (ĐANG CÓ: ${total}/100)`;
+          actionBtn.innerHTML = `CẦN PHÂN BỔ VỪA ĐÚNG 100 ĐNL (ĐANG CÓ: ${total}/100)`;
         }
         if (leftBuildBtn) {
-          leftBuildBtn.innerHTML = `⚙️ [ XÁC NHẬN MÔ HÌNH XÃ HỘI (${total}/100 ĐNL) ▶ ]`;
+          leftBuildBtn.innerHTML = `[ XÁC NHẬN MÔ HÌNH XÃ HỘI (${total}/100 ĐNL) ➔ ]`;
         }
         return;
       }
 
       // 3. Đúng 100 ĐNL: Đánh giá Ma trận Đánh đổi
       if (eco >= 55) {
-        title.textContent = 'XÃ HỘI TĂNG TRƯỞNG NÓNG — PHÂN HÓA GIAI CẤP';
+        title.textContent = 'DỒN HẾT CHO KINH TẾ — BỎ QUÊN CÔNG BẰNG XÃ HỘI';
         badge.className = 'sim-status-badge failed';
-        badge.textContent = 'MÔ HÌNH THẤT BẠI ✕ (CẢNH BÁO ĐÁNH ĐỔI)';
-        desc.innerHTML = '<strong>Hệ quả thực tiễn:</strong> Sản lượng vật chất tăng nhanh nhưng phát sinh bất công giàu nghèo gay gắt, đạo đức xã hội suy đồi, nhân dân mất quyền làm chủ thực chất.<br><em>Trái với tư tưởng Bác: Trong CNXH, kinh tế phải đi liền với công bằng và tiến bộ xã hội.</em>';
+        badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
+        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Của cải làm ra nhiều nhưng người giàu thì ngày càng giàu, người nghèo thì chịu thiệt thòi; thiếu công bằng xã hội, đạo đức và tình nghĩa giữa con người bị xem nhẹ khi ai nấy chỉ mải chạy theo tiền bạc.<br><em><strong>Lời Bác dạy:</strong> Kinh tế phải phát triển vững vàng, nhưng thành quả làm ra phải đem lại ấm no cho tất cả mọi người, chứ không thể để số ít giàu sang còn đa số chịu vất vả.</em>';
         this.setBars(35, 95, 25, 30);
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
-          actionBtn.innerHTML = '✕ MÔ HÌNH MẤT CÂN ĐỐI — HÃY ĐIỀU CHỈNH LẠI';
+          actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '⚠️ [ XÃ HỘI TĂNG TRƯỞNG NÓNG (THẤT BẠI) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ DỒN TIỀN LÀM KINH TẾ (CHƯA ĐẠT) ]';
       }
       else if (soc >= 55) {
-        title.textContent = 'XÃ HỘI BÌNH QUÂN NGHÈO KHỔ — TRIỆT TIÊU ĐỘNG LỰC';
+        title.textContent = 'CHƯA LÀM ĐÃ LO CHIA ĐỀU — CÙNG NHAU NGHÈO ĐI';
         badge.className = 'sim-status-badge failed';
-        badge.textContent = 'MÔ HÌNH THẤT BẠI ✕ (CẢNH BÁO ĐÁNH ĐỔI)';
-        desc.innerHTML = '<strong>Hệ quả thực tiễn:</strong> Cào bằng phúc lợi khi chưa có cơ sở vật chất kỹ thuật hiện đại sẽ dẫn tới chia đều sự nghèo nàn và triệt tiêu động lực lao động sáng tạo của nhân dân.<br><em>Trái với tư tưởng Bác: Muốn an sinh bền vững, trước hết phải phát triển lực lượng sản xuất hiện đại.</em>';
+        badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
+        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Khi chưa làm ra nhiều của cải mà đã lo chia đều tiền của và trợ cấp. Người chăm chỉ cũng hưởng bằng người lười biếng, sinh ra thói ỷ lại, người tài không còn động lực phấn đấu, cuối cùng đất nước cạn kiệt ngân sách và cùng nhau nghèo đi.<br><em><strong>Lời Bác dạy:</strong> Bác khẳng định nguyên tắc công bằng rất rõ ràng: "Làm nhiều hưởng nhiều, làm ít hưởng ít, không làm không hưởng". Phải cùng nhau lao động sản xuất tạo ra của cải trước thì mới có cái để chăm lo cuộc sống ấm no cho dân.</em>';
         this.setBars(50, 20, 40, 45);
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
-          actionBtn.innerHTML = '✕ MÔ HÌNH MẤT CÂN ĐỐI — HÃY ĐIỀU CHỈNH LẠI';
+          actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '⚠️ [ XÃ HỘI BÌNH QUÂN NGHÈO KHỔ (THẤT BẠI) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ CHƯA LÀM ĐÃ LO CHIA ĐỀU (CHƯA ĐẠT) ]';
       }
       else if (pol >= 55) {
-        title.textContent = 'XÃ HỘI QUAN LIÊU HÀNH CHÍNH GIÁO ĐIỀU';
+        title.textContent = 'BỘ MÁY QUẢN LÝ QUÁ CỒNG KỀNH — XA RỜI NGƯỜI DÂN';
         badge.className = 'sim-status-badge failed';
-        badge.textContent = 'MÔ HÌNH THẤT BẠI ✕ (CẢNH BÁO ĐÁNH ĐỔI)';
-        desc.innerHTML = '<strong>Hệ quả thực tiễn:</strong> Bộ máy hành chính cồng kềnh, mệnh lệnh quan liêu bao cấp triệt tiêu quyền làm chủ thực chất và năng lực sáng tạo của quần chúng nhân dân.<br><em>Trái với tư tưởng Bác: Chủ nghĩa xã hội là sự nghiệp sáng tạo của chính quần chúng nhân dân.</em>';
+        badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
+        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Tiêu tốn quá nhiều tiền của vào bộ máy quản lý bàn giấy cồng kềnh. Cán bộ xa dân, chỉ biết ngồi phòng lạnh ra lệnh áp đặt từ trên xuống mà không lắng nghe dân, làm thui chột tinh thần chủ động và sáng tạo của người dân.<br><em><strong>Lời Bác dạy:</strong> Bác căn dặn: "Cán bộ là người đầy tớ phục vụ nhân dân, chứ không phải quan cách mạng để đè đầu cưỡi cổ dân". Xã hội muốn phát triển thì mọi việc phải để người dân tự giác bàn bạc, thực hiện và kiểm tra.</em>';
         this.setBars(45, 25, 35, 25);
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
-          actionBtn.innerHTML = '✕ MÔ HÌNH MẤT CÂN ĐỐI — HÃY ĐIỀU CHỈNH LẠI';
+          actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '⚠️ [ XÃ HỘI QUAN LIÊU HÀNH CHÍNH (THẤT BẠI) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ BỘ MÁY QUẢN LÝ CỒNG KỀNH (CHƯA ĐẠT) ]';
       }
       else if (cul >= 55) {
-        title.textContent = 'XÃ HỘI DUY TÂM — THIẾU NỀN TẢNG VẬT CHẤT';
+        title.textContent = 'CHỈ NÓI ĐẠO LÝ SUÔNG — THIẾU CƠM ĂN ÁO MẶC';
         badge.className = 'sim-status-badge failed';
-        badge.textContent = 'MÔ HÌNH THẤT BẠI ✕ (CẢNH BÁO ĐÁNH ĐỔI)';
-        desc.innerHTML = '<strong>Hệ quả thực tiễn:</strong> Quá chú trọng tinh thần nhưng thiếu cơ sở vật chất kinh tế vững chắc để bảo đảm cơm no áo ấm thực tế cho đồng bào.';
+        badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
+        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Suốt ngày chỉ mở lớp học lý thuyết và kêu gọi đạo đức suông nhưng bỏ quên việc làm ăn sản xuất. Khi người dân còn đói ăn, thiếu mặc thì những lời đạo lý suông không thể giúp cuộc sống tốt đẹp hơn.<br><em><strong>Lời Bác dạy:</strong> Bác nhắc nhở chân lý rất mộc mạc: "Có thực mới vực được đạo" — Muốn nhân dân tin tưởng và yên tâm xây dựng đời sống mới, trước hết chính quyền phải lo cho dân có đủ cơm ăn, áo ấm và chỗ ở đàng hoàng.</em>';
         this.setBars(40, 20, 85, 35);
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
-          actionBtn.innerHTML = '✕ MÔ HÌNH MẤT CÂN ĐỐI — HÃY ĐIỀU CHỈNH LẠI';
+          actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '⚠️ [ XÃ HỘI DUY TÂM THIẾU VẬT CHẤT (THẤT BẠI) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ CHỈ NÓI ĐẠO LÝ SUÔNG (CHƯA ĐẠT) ]';
       }
       else if (eco >= 20 && eco <= 40 && pol >= 15 && pol <= 35 && cul >= 15 && cul <= 30 && soc >= 20 && soc <= 35) {
-        title.textContent = 'MÔ HÌNH XÃ HỘI HÀI HÒA THEO CHUẨN MỰC HỒ CHÍ MINH';
+        title.textContent = 'MÔ HÌNH HÀI HÒA THEO ĐÚNG TƯ TƯỞNG BÁC HỒ';
         badge.className = 'sim-status-badge success';
-        badge.textContent = 'THÀNH CÔNG RỰC RỠ ✓';
-        desc.innerHTML = '<strong>Chuẩn mực Hồ Chí Minh:</strong> Phát triển đồng bộ 4 phương diện! Nhân dân làm chủ về chính trị, Lực lượng sản xuất hiện đại và chế độ công hữu, Văn hóa đạo đức mới soi đường quốc dân, và An sinh hạnh phúc ấm no cho toàn dân.';
+        badge.textContent = 'XUẤT SẮC: PHÁT TRIỂN TOÀN DIỆN & BỀN VỮNG ✓';
+        desc.innerHTML = '<strong>Bài học cốt lõi từ Bác:</strong> Phát triển đất nước phải kết hợp nhịp nhàng cả 4 mặt:<br>• <strong>Chính trị:</strong> Nhân dân thực sự làm chủ, chính quyền gần gũi và vì dân phục vụ.<br>• <strong>Kinh tế:</strong> Lao động sản xuất giỏi để đất nước giàu có, no đủ của cải.<br>• <strong>Văn hóa:</strong> Mở mang trường học, nâng cao hiểu biết và sống có đạo đức.<br>• <strong>Xã hội:</strong> Công bằng, chăm lo y tế, giúp đỡ người nghèo, không ai bị bỏ rơi.';
         this.setBars(90, 85, 85, 95);
         if (actionBtn) {
           actionBtn.className = 'btn btn-primary btn-full';
-          actionBtn.innerHTML = '🎉 XÁC NHẬN MÔ HÌNH ĐẠT CHUẨN ➔ TIẾN VÀO CHẶNG 4 ▶';
+          actionBtn.innerHTML = 'XÁC NHẬN MÔ HÌNH ĐẠT CHUẨN ➔ TIẾN VÀO CHẶNG 4 ➔';
         }
         if (leftBuildBtn) {
-          leftBuildBtn.innerHTML = '🎉 [ MÔ HÌNH ĐẠT CHUẨN HCM ➔ TIẾN BƯỚC ▶ ]';
+          leftBuildBtn.innerHTML = '[ MÔ HÌNH HÀI HÒA THEO BÁC ➔ TIẾN BƯỚC ➔ ]';
         }
       }
       else {
-        title.textContent = 'MÔ HÌNH CHƯA CÂN BẰNG TỐI ƯU';
+        title.textContent = 'MÔ HÌNH CHƯA CÂN BẰNG HỢP LÝ';
         badge.className = 'sim-status-badge pending';
-        badge.textContent = 'CẦN ĐIỀU CHỈNH ✕';
-        desc.innerHTML = 'Tỷ lệ giữa 4 trụ cột chưa đạt được sự hài hòa tối ưu theo quan điểm Hồ Chí Minh. Gợi ý: Kinh tế đóng vai trò nền tảng vật chất (khoảng 25–35 ĐNL), kết hợp cân đối với Dân chủ chính trị (20–30 ĐNL), Văn hóa (15–25 ĐNL) và An sinh xã hội (20–30 ĐNL).';
+        badge.textContent = 'CẦN ĐIỀU CHỈNH LẠI ✕';
+        desc.innerHTML = 'Bốn trụ cột đang bị lệch. Gợi ý từ Bác Hồ: Hãy đầu tư Kinh tế làm nền tảng (khoảng 25–35 điểm), giữ Chính trị dân chủ vì dân (20–30 điểm), bồi dưỡng Văn hóa con người (15–25 điểm) và chăm lo Đời sống xã hội (20–30 điểm).';
         this.setBars(Math.min(pol + 20, 75), Math.min(eco + 20, 75), Math.min(cul + 20, 75), Math.min(soc + 20, 75));
         if (actionBtn) {
           actionBtn.className = 'btn btn-secondary btn-full';
-          actionBtn.innerHTML = '⚠️ CHƯA HÀI HÒA — HÃY ĐIỀU CHỈNH LẠI TỶ LỆ';
+          actionBtn.innerHTML = 'CHƯA CÂN BẰNG — HÃY ĐIỀU CHỈNH LẠI TỶ LỆ';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '⚠️ [ CHƯA CÂN BẰNG — CẦN ĐIỀU CHỈNH ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ CHƯA CÂN BẰNG — CẦN ĐIỀU CHỈNH ]';
       }
     },
 
@@ -982,7 +1341,7 @@ const Deck = (function () {
         const rem = 100 - total;
         if (errBanner) {
           errBanner.style.display = 'block';
-          errBanner.innerHTML = `⚠️ Tổng điểm đang là <strong>${total}/100 ĐNL</strong>. Bạn cần phân bổ vừa đúng 100 ĐNL trước khi chốt! (${rem > 0 ? 'Còn thiếu ' + rem : 'Đang vượt quá ' + Math.abs(rem)} ĐNL)`;
+          errBanner.innerHTML = `[CHÚ Ý] Tổng điểm đang là <strong>${total}/100 ĐNL</strong>. Bạn cần phân bổ vừa đúng 100 ĐNL trước khi chốt! (${rem > 0 ? 'Còn thiếu ' + rem : 'Đang vượt quá ' + Math.abs(rem)} ĐNL)`;
         }
         return;
       }
@@ -995,7 +1354,7 @@ const Deck = (function () {
         AudioFX.error();
         if (errBanner) {
           errBanner.style.display = 'block';
-          errBanner.innerHTML = `⚠️ Mô hình hiện tại chưa đạt chuẩn hài hòa Hồ Chí Minh! Hãy quan sát phân tích ở bảng bên phải và điều chỉnh lại.`;
+          errBanner.innerHTML = `[CHÚ Ý] Mô hình hiện tại chưa đạt chuẩn hài hòa Hồ Chí Minh! Hãy quan sát phân tích ở bảng bên phải và điều chỉnh lại.`;
         }
       }
     },
@@ -1049,7 +1408,7 @@ const Deck = (function () {
             <div class="ch-img-wrap">
               <img src="${data.img}" alt="${data.caption}" class="ch-img">
             </div>
-            <div class="ch-caption">📸 ${data.caption}</div>
+            <div class="ch-caption">${data.caption}</div>
           </div>
           <div class="challenge-stage-main">
             <div class="challenge-stage-context" style="margin-bottom: 12px;">${data.desc}</div>
@@ -1155,7 +1514,7 @@ const Deck = (function () {
         banner.style.background = '#FEF3C7';
         banner.style.borderColor = '#D97706';
         banner.style.color = '#92400E';
-        banner.innerHTML = `👉 <strong>ĐÃ CHỌN THẺ [${card.code}: ${card.title}]</strong>. Mời bạn bấm vào 1 trong 4 ô Mắt xích bên trên để ghép vào!`;
+        banner.innerHTML = `<strong>ĐÃ CHỌN THẺ [${card.code}: ${card.title}]</strong>. Mời bạn bấm vào 1 trong 4 ô Mắt xích bên trên để ghép vào!`;
       }
     },
 
@@ -1177,7 +1536,7 @@ const Deck = (function () {
           banner.style.background = '#FEF3C7';
           banner.style.borderColor = '#D97706';
           banner.style.color = '#92400E';
-          banner.innerHTML = `⚠️ <strong>HÃY CHỌN MẢNH GHÉP TRƯỚC!</strong> Bấm vào 1 thẻ ở ngân hàng bên dưới, sau đó bấm vào ô Mắt xích này để thử ghép!`;
+          banner.innerHTML = `<strong>HÃY CHỌN MẢNH GHÉP TRƯỚC!</strong> Bấm vào 1 thẻ ở ngân hàng bên dưới, sau đó bấm vào ô Mắt xích này để thử ghép!`;
         }
         return;
       }
@@ -1209,7 +1568,7 @@ const Deck = (function () {
           banner.style.background = '#DCFCE7';
           banner.style.borderColor = '#16A34A';
           banner.style.color = '#14532D';
-          banner.innerHTML = `🎉 <strong>GHÉP CHUẨN XÁC!</strong> Thẻ [${card.code}: ${card.title}] đã khớp hoàn hảo vào ${slotEl.querySelector('.slot-role-title').textContent}!`;
+          banner.innerHTML = `<strong>GHÉP CHUẨN XÁC! ✓</strong> Thẻ [${card.code}: ${card.title}] đã khớp hoàn hảo vào ${slotEl.querySelector('.slot-role-title').textContent}!`;
         }
 
         // Kiểm tra xem đã đủ 4/4 ô chưa
@@ -1218,7 +1577,7 @@ const Deck = (function () {
           AudioFX.fanfare();
           document.querySelectorAll('.chain-slot-card').forEach(s => s.classList.add('all-connected-glow'));
           if (banner) {
-            banner.innerHTML = `🏆 <strong>XUẤT SẮC! TOÀN BỘ 4 MẮT XÍCH BIỆN CHỨNG ĐÃ ĐƯỢC KẾT NỐI HOÀN HẢO!</strong>`;
+            banner.innerHTML = `<strong>XUẤT SẮC! TOÀN BỘ 4 MẮT XÍCH BIỆN CHỨNG ĐÃ ĐƯỢC KẾT NỐI HOÀN HẢO! ✓</strong>`;
           }
           const ultimateDest = document.getElementById('ultimate-dest');
           if (ultimateDest) {
@@ -1237,7 +1596,7 @@ const Deck = (function () {
           banner.style.background = '#FEE2E2';
           banner.style.borderColor = '#DC2626';
           banner.style.color = '#991B1B';
-          banner.innerHTML = `❌ <strong>CHƯA ĐÚNG LOGIC BIỆN CHỨNG!</strong> Thẻ "<strong>${card.title}</strong>" không thể đặt vào mắt xích này. Hãy suy ngẫm vai trò: Tiền đề xuất phát, Con đường, Mục tiêu hay Thực tiễn?`;
+          banner.innerHTML = `<strong>CHƯA ĐÚNG LOGIC BIỆN CHỨNG!</strong> Thẻ "<strong>${card.title}</strong>" không thể đặt vào mắt xích này. Hãy suy ngẫm vai trò: Tiền đề xuất phát, Con đường, Mục tiêu hay Thực tiễn?`;
         }
       }
     },
