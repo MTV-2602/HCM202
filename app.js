@@ -51,24 +51,25 @@ const Deck = (function () {
     currentSlide: 0,
     totalSlides: 14,
 
-    // Chặng 1: Thảo (3.1.1)
+    // Chặng 1: My
     lv1: {
       clues: [false, false, false, false],
       quizStatus: { 1: null, 2: null, 3: null, 4: null },
-      currentCardPage: { 1: 0, 2: 0, 3: 0, 4: 0 }
+      currentCardPage: { 1: 0, 2: 0, 3: 0, 4: 0 },
+      hasVisitedStep3: { 1: false, 2: false, 3: false, 4: false }
     },
 
-    // Chặng 2: Thịnh (3.1.2)
+    // Chặng 2: Thịnh
     lv2: {
       choices: {}
     },
 
-    // Chặng 3: Vinh (3.2.1)
+    // Chặng 3: Vinh
     lv3: {
       pol: 0, eco: 0, cul: 0, soc: 0, built: false
     },
 
-    // Chặng 4: Tân (3.2.2)
+    // Chặng 4: Tân
     lv4: {
       currentIdx: 1
     },
@@ -78,14 +79,14 @@ const Deck = (function () {
       pollSelected: null
     },
 
-    // Slide 11: Ghép nối chuỗi biện chứng
+    // Slide 11: Ghép nối chuỗi logic (Puzzle)
     chain: {
       selectedCardId: null,
       slots: { 1: null, 2: null, 3: null, 4: null }
     }
   };
 
-  // --- DỮ LIỆU CHẶNG 1: BẢN ĐỒ TƯ LIỆU LỊCH SỬ (THẢO - 3.1.1) ---
+  // --- DỮ LIỆU CHẶNG 1: BẢN ĐỒ TƯ LIỆU LỊCH SỬ (MY) ---
   const HOTSPOTS = {
     1: {
       badge: "ĐIỂM TƯ LIỆU 01 // NĂM 1919 • QUYỀN THIÊNG LIÊNG",
@@ -166,7 +167,7 @@ const Deck = (function () {
     2: {
       badge: "ĐIỂM TƯ LIỆU 02 // NĂM 1945 • TỰ DO & HẠNH PHÚC",
       img: "assets/images/hotspot2_1945.jpg",
-      caption: "Bác Hồ thăm lớp Bình dân học vụ (1945) — Diệt giặc đói, diệt giặc dốt, chăm lo hạnh phúc nhân dân",
+      caption: "Hình ảnh tư liệu về đời sống nhân dân thời kỳ sau Cách mạng Tháng Tám 1945 với nạn đói, nạn mù chữ",
       quote: "“Nước độc lập mà dân không hưởng hạnh phúc tự do, thì độc lập cũng chẳng có nghĩa lý gì.” — Hồ Chí Minh (1945)",
       question: "Chủ tịch Hồ Chí Minh đặt ra yêu cầu cấp bách nào ngay sau khi đất nước giành được độc lập?",
       options: [
@@ -218,7 +219,7 @@ const Deck = (function () {
     },
     3: {
       badge: "ĐIỂM TƯ LIỆU 03 // BẢN CHẤT • ĐỘC LẬP HOÀN TOÀN, TRIỆT ĐỂ",
-      img: "assets/images/116092019102930.jpg?v=20260913_2",
+      img: "assets/images/hotspot3_nhahatlon_1945.jpg?v=20260913_2",
       caption: "Mít tinh ngày 19/8/1945 tại Nhà hát Lớn Hà Nội — Giành chính quyền, xóa bỏ chính quyền bù nhìn, khẳng định nền độc lập thực sự",
       quote: "“Độc lập mà không có quyền tự quyết ngoại giao, quân đội riêng, tài chính riêng... thì độc lập đó chẳng có ý nghĩa gì.” — Hồ Chí Minh",
       question: "Tiêu chí của một nền độc lập dân tộc thực sự theo tư tưởng Hồ Chí Minh là gì?",
@@ -268,10 +269,10 @@ const Deck = (function () {
     },
     4: {
       badge: "ĐIỂM TƯ LIỆU 04 // TOÀN VẸN • THỐNG NHẤT & TOÀN VẸN",
-      img: "assets/images/hotspot4_unification.jpg",
+      img: "assets/images/hotspot4_thongnhat_1975.jpg?v=20260913_2",
       caption: "Khát vọng non sông liền một dải — Đôi bờ Hiền Lương & Thư gửi đồng bào Nam Bộ (1946)",
       quote: "“Đồng bào Nam Bộ là dân nước Việt Nam. Sông có thể cạn, núi có thể mòn, song chân lý đó không bao giờ thay đổi!” — Hồ Chí Minh",
-      videoSrc: "assets/images/video.mp4",
+      videoSrc: "assets/images/hotspot4_video_thongnhat_1975.mp4",
       question: "Tư tưởng xuyên suốt, bất biến của Hồ Chí Minh về lãnh thổ và sự thống nhất quốc gia là gì?",
       options: [
         { key: "A", text: "Độc lập dân tộc là mục tiêu trước hết; vấn đề thống nhất đất nước có thể được giải quyết sau khi mỗi miền hoàn thành nhiệm vụ phát triển kinh tế – xã hội riêng." },
@@ -323,96 +324,350 @@ const Deck = (function () {
   };
 
   // --- DỮ LIỆU CHẶNG 2: BẢNG QUYẾT SÁCH CHIẾN LƯỢC (THỊNH - 3.1.2) ---
+  // Mỗi quyết sách gồm: 1 Câu hỏi kiểm tra nhận thức + Đúng 1 Trang bài học toàn diện (chuẩn giáo trình Tư tưởng HCM)
   const STRATEGIES = {
     1: {
       name: "CON ĐƯỜNG // CÁCH MẠNG VÔ SẢN",
       img: "assets/images/strat1_tours1920.jpg",
-      caption: "Nguyễn Ái Quốc tại Đại hội Tours (12/1920) — Tìm ra con đường cứu nước theo cách mạng vô sản",
-      q1: "Việt Nam nên lựa chọn con đường cứu nước nào để giải phóng dân tộc triệt để?",
-      opts1: [
-        { key: "A", text: "Con đường phong kiến (tiêu biểu như phong trào Cần Vương)" },
-        { key: "B", text: "Con đường dân chủ tư sản (tiêu biểu như phong trào Đông Du, Duy Tân)" },
+      caption: "Nguyễn Ái Quốc tại Đại hội Tours (12/1920) — Bỏ phiếu tán thành Quốc tế III, tìm ra con đường cứu nước theo cách mạng vô sản",
+      q: "Trước sự bế tắc của các phong trào yêu nước cũ, Hồ Chí Minh đã lựa chọn con đường cứu nước nào để giải phóng dân tộc triệt để?",
+      options: [
+        { key: "A", text: "Con đường phong kiến (tiêu biểu như phong trào Cần Vương, khởi nghĩa Yên Thế)" },
+        { key: "B", text: "Con đường dân chủ tư sản (tiêu biểu như phong trào Đông Du của Phan Bội Châu, Duy Tân của Phan Châu Trinh)" },
         { key: "C", text: "Con đường cách mạng vô sản (gắn độc lập dân tộc với chủ nghĩa xã hội)", correct: true }
       ],
-      q2: "Luận cứ giải thích cốt lõi của Hồ Chí Minh cho sự lựa chọn con đường cách mạng vô sản?",
-      opts2: [
-        { key: "A", text: "Các con đường phong kiến, tư sản đều bế tắc và thất bại; chỉ có CMVS mới giải phóng triệt để cả dân tộc, giai cấp và con người.", correct: true },
-        { key: "B", text: "Chỉ vì phong trào cộng sản quốc tế yêu cầu mà không xuất phát từ điều kiện cụ thể của Việt Nam." },
-        { key: "C", text: "Muốn dựa hoàn toàn vào viện trợ quân sự trực tiếp của nước ngoài." }
-      ],
-      summary: "Đường lối: Cách mạng vô sản — Giải phóng dân tộc triệt để gắn liền với CNXH"
+      summary: "Đường lối: Cách mạng vô sản — Giải phóng dân tộc triệt để gắn liền với CNXH",
+      lesson: {
+        badge: "BÀI HỌC CỐT LÕI // 1 TRANG TOÀN DIỆN",
+        title: "Bối cảnh lịch sử, Quá trình khảo sát & Sự lựa chọn con đường Cách mạng vô sản",
+        html: `
+          <div class="strat-grid-2col">
+            <!-- CỘT 1: BỐI CẢNH VÀ KHẢO SÁT THẾ GIỚI -->
+            <div class="strat-card-box soft-amber">
+              <h4>1. BỐI CẢNH LỊCH SỬ & KHỦNG HOẢNG ĐƯỜNG LỐI</h4>
+              <ul>
+                <li>Cuối thế kỷ XIX – đầu thế kỷ XX: Việt Nam bị thực dân Pháp xâm lược và áp đặt ách thống trị hà khắc.</li>
+                <li>Nhiều phong trào yêu nước diễn ra sôi nổi nhưng <strong>đều không thành công</strong> (phong trào Cần Vương, khởi nghĩa Yên Thế, Đông Du, Duy Tân...).</li>
+                <li>Điều đó cho thấy: Cách mạng Việt Nam đang rơi vào tình trạng <strong>khủng hoảng sâu sắc về đường lối cứu nước và lực lượng lãnh đạo</strong>.</li>
+              </ul>
+              
+              <h4 style="margin-top: 14px;">2. HỒ CHÍ MINH TÌM KIẾM CON ĐƯỜNG CỨU NƯỚC</h4>
+              <ul>
+                <li>Hồ Chí Minh không chấp nhận những con đường cứu nước cũ mà chủ động tìm hiểu các cuộc cách mạng trên thế giới.</li>
+                <li>Người từng tìm hiểu cách mạng tư sản ở phương Tây (Mỹ, Pháp) nhưng nhận thấy:</li>
+              </ul>
+              <div class="strat-quote-box">
+                <div class="strat-quote-text">“Cách mạng tư sản không giải quyết triệt để vấn đề giải phóng người lao động và các dân tộc thuộc địa.”</div>
+              </div>
+            </div>
+
+            <!-- CỘT 2: BƯỚC NGOẶT 1917 & LUẬN CƯƠNG LÊNIN 1920 -->
+            <div class="strat-card-box soft-green">
+              <h4>3. ẢNH HƯỞNG CỦA CÁCH MẠNG THÁNG MƯỜI NGA (1917)</h4>
+              <p>Năm 1917, Cách mạng Tháng Mười Nga thắng lợi — sự kiện này có ảnh hưởng sâu sắc đến việc Hồ Chí Minh lựa chọn con đường cứu nước. Người nhận thấy cách mạng Nga hướng tới 4 mục tiêu giải phóng chân chính:</p>
+              <div class="strat-flow-pills" style="margin: 8px 0;">
+                <span class="strat-flow-node">TỰ DO</span>
+                <span class="strat-flow-arrow">•</span>
+                <span class="strat-flow-node">BÌNH ĐẲNG</span>
+                <span class="strat-flow-arrow">•</span>
+                <span class="strat-flow-node">GIẢI PHÓNG NGƯỜI LAO ĐỘNG</span>
+                <span class="strat-flow-arrow">•</span>
+                <span class="strat-flow-node highlight">GIẢI PHÓNG DÂN TỘC BỊ ÁP BỨC</span>
+              </div>
+
+              <h4 style="margin-top: 14px;">4. BƯỚC NGOẶT LỊCH SỬ NĂM 1920</h4>
+              <p>Năm 1920, sau khi đọc <em>Sơ thảo lần thứ nhất những luận cương về vấn đề dân tộc và vấn đề thuộc địa</em> của V.I. Lênin, Hồ Chí Minh đã tìm thấy con đường giải phóng dân tộc:</p>
+              <div class="strat-quote-box green-quote">
+                <div class="strat-quote-text">“Muốn cứu nước và giải phóng dân tộc không có con đường nào khác con đường cách mạng vô sản.”</div>
+                <div class="strat-quote-author">— HỒ CHÍ MINH</div>
+              </div>
+              <p style="font-size: 13px; color: #065F46; margin: 0;"><em>Tháng 12/1920 tại Đại hội Tours (Pháp), Người bỏ phiếu tán thành Quốc tế III, trở thành người cộng sản Việt Nam đầu tiên.</em></p>
+            </div>
+          </div>
+        `,
+        takeaway: "“Muốn cứu nước và giải phóng dân tộc không có con đường nào khác con đường cách mạng vô sản.” — Đây là sự lựa chọn lịch sử đúng đắn duy nhất, gắn độc lập dân tộc với chủ nghĩa xã hội, giải phóng triệt để dân tộc và nhân dân lao động.",
+        speech: "Bối cảnh cuối thế kỷ XIX - đầu thế kỷ XX, đất nước ta bị thực dân Pháp đô hộ. Hàng loạt phong trào yêu nước theo ngọn cờ phong kiến hay dân chủ tư sản đều thất bại vì khủng hoảng đường lối và lực lượng lãnh đạo. Bác Hồ không đi theo lối mòn cũ mà sang phương Tây khảo sát. Nhận thấy cách mạng tư sản không giải quyết triệt để vấn đề giải phóng người lao động, lại chứng kiến Cách mạng Tháng Mười Nga năm 1917 hướng tới tự do, bình đẳng và giải phóng dân tộc thuộc địa, đặc biệt sau khi đọc Luận cương của Lênin năm 1920, Người đã khẳng định: 'Muốn cứu nước và giải phóng dân tộc không có con đường nào khác con đường cách mạng vô sản'."
+      }
     },
+
     2: {
       name: "LỰC LƯỢNG // ĐẠI ĐOÀN KẾT TOÀN DÂN",
       img: "assets/images/strat2_doanket.jpg",
       caption: "Khối đại đoàn kết toàn dân tộc — Cách mạng là sự nghiệp của toàn dân, lấy liên minh công - nông làm gốc",
-      q1: "Lực lượng của cách mạng giải phóng dân tộc theo Hồ Chí Minh bao gồm những ai?",
-      opts1: [
-        { key: "A", text: "Chỉ riêng giai cấp công nhân công nghiệp" },
-        { key: "B", text: "Toàn thể nhân dân, toàn dân tộc, lấy liên minh CÔNG - NÔNG làm gốc", correct: true },
-        { key: "C", text: "Chỉ gồm tầng lớp sĩ phu và nhân sĩ trí thức tinh hoa" }
+      q: "Lực lượng của cách mạng giải phóng dân tộc theo Hồ Chí Minh bao gồm những ai?",
+      options: [
+        { key: "A", text: "Chỉ gồm giai cấp công nhân và tầng lớp trí thức tinh hoa trong xã hội" },
+        { key: "B", text: "Toàn dân tộc, toàn thể nhân dân yêu nước; trong đó lấy CÔNG – NÔNG làm gốc cách mạng", correct: true },
+        { key: "C", text: "Dựa chủ yếu vào tầng lớp địa chủ phong kiến và tư sản dân tộc" }
       ],
-      q2: "Luận cứ lý giải sâu sắc nhất của Người về lực lượng cách mạng trong tác phẩm 'Đường cách mệnh'?",
-      opts2: [
-        { key: "A", text: "Cách mạng là sự nghiệp của toàn dân chúng, không phải việc của một hai người anh hùng cá nhân.", correct: true },
-        { key: "B", text: "Chỉ cần kêu gọi tinh thần yêu nước tự phát mà không cần xây dựng khối liên minh công nông vững chắc." },
-        { key: "C", text: "Chờ đợi sự giúp đỡ của lực lượng quân tình nguyện bên ngoài." }
-      ],
-      summary: "Lực lượng: Toàn thể dân tộc, lấy liên minh công - nông làm gốc rễ nền tảng"
+      summary: "Lực lượng: Toàn thể dân tộc, lấy liên minh công - nông làm gốc rễ nền tảng",
+      lesson: {
+        badge: "BÀI HỌC CỐT LÕI // 1 TRANG TOÀN DIỆN",
+        title: "Cơ sở lý luận, Khối đại đoàn kết toàn dân & Vai trò nền tảng gốc rễ của Công – Nông",
+        html: `
+          <div class="strat-grid-2col">
+            <!-- CỘT 1: CƠ SỞ LÝ LUẬN & QUAN ĐIỂM HỒ CHÍ MINH -->
+            <div class="strat-card-box soft-amber">
+              <h4>1. CƠ SỞ LÝ LUẬN MÁC – LÊNIN</h4>
+              <p>Chủ nghĩa Mác – Lênin khẳng định: <strong>Cách mạng là sự nghiệp của quần chúng nhân dân.</strong> V.I. Lênin nhấn mạnh rằng nếu không có sự đồng tình, ủng hộ của đại đa số nhân dân lao động thì cách mạng không thể thành công.</p>
+
+              <h4>2. QUAN ĐIỂM CỦA HỒ CHÍ MINH</h4>
+              <p>Hồ Chí Minh kế thừa và phát triển quan điểm trên. Người khẳng định:</p>
+              <div class="strat-quote-box green-quote">
+                <div class="strat-quote-text">“Cách mệnh là việc chung cả dân chúng chứ không phải việc một hai người.”</div>
+                <div class="strat-quote-author">— HỒ CHÍ MINH (ĐƯỜNG KÁCH MỆNH)</div>
+              </div>
+              <p style="margin: 6px 0;">Và: <strong>“Có dân là có tất cả.”</strong> Do đó, cách mạng giải phóng dân tộc phải đi theo quy trình chặt chẽ:</p>
+              <div class="strat-flow-pills" style="margin: 8px 0;">
+                <span class="strat-flow-node">TẬP HỢP</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node">GIÁC NGỘ</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node">TỔ CHỨC</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node highlight">ĐOÀN KẾT TOÀN DÂN</span>
+              </div>
+            </div>
+
+            <!-- CỘT 2: LỰC LƯỢNG TOÀN DÂN & CÔNG NÔNG LÀ GỐC -->
+            <div class="strat-card-box soft-green">
+              <h4>3. LỰC LƯỢNG CÁCH MẠNG TOÀN DIỆN</h4>
+              <p>Lực lượng cách mạng bao gồm: <strong>Giai cấp công nhân, nông dân, tiểu tư sản, trí thức, trung nông</strong> và các tầng lớp, lực lượng yêu nước khác. Trong <em>Sách lược vắn tắt</em>, Hồ Chí Minh chủ trương liên lạc, tập hợp và tranh thủ các lực lượng có thể tham gia hoặc ủng hộ cách mạng.</p>
+
+              <h4>4. CÔNG – NÔNG LÀ NỀN TẢNG ("GỐC CÁCH MỆNH")</h4>
+              <p>Mặc dù lực lượng cách mạng là toàn dân, Hồ Chí Minh đặc biệt nhấn mạnh:</p>
+              <div class="strat-quote-box">
+                <div class="strat-quote-text">“Công nông là người chủ cách mệnh... là gốc cách mệnh.”</div>
+                <div class="strat-quote-author">— HỒ CHÍ MINH</div>
+              </div>
+              <strong style="font-size: 13px; color: #065F46; display: block; margin-top: 6px;">VÌ SAO CÔNG – NÔNG LÀ GỐC?</strong>
+              <ul style="margin-top: 4px;">
+                <li>Công nhân và nông dân là <strong>lực lượng đông đảo nhất</strong> trong xã hội.</li>
+                <li><strong>Bị áp bức, bóc lột nặng nề nhất</strong> dưới ách thực dân - phong kiến.</li>
+                <li>Có <strong>tinh thần đấu tranh mạnh mẽ, kiên quyết</strong> và triệt để nhất.</li>
+                <li>Có <strong>lợi ích gắn bó sống còn</strong> với sự nghiệp giải phóng dân tộc.</li>
+              </ul>
+            </div>
+          </div>
+        `,
+        takeaway: "Cách mạng giải phóng dân tộc là sự nghiệp của toàn dân tộc (Tập hợp → Giác ngộ → Tổ chức → Đoàn kết toàn dân), quy tụ mọi lực lượng yêu nước nhưng đặt vững chắc trên nền tảng liên minh Công – Nông làm gốc rễ.",
+        speech: "Về lực lượng cách mạng: Bác kế thừa luận điểm Mác – Lênin rằng cách mạng là sự nghiệp của quần chúng nhân dân. Người khẳng định 'Cách mệnh là việc chung cả dân chúng chứ không phải việc một hai người' và 'Có dân là có tất cả'. Vì vậy, cách mạng phải đi qua 4 bước: Tập hợp, Giác ngộ, Tổ chức và Đoàn kết toàn dân. Trong khối toàn dân đó, Bác chỉ rõ 'Công nông là gốc cách mệnh' vì họ đông đảo nhất, bị áp bức bóc lột nặng nề nhất, có tinh thần đấu tranh kiên quyết nhất và có lợi ích gắn bó trực tiếp với sự nghiệp cách mạng."
+      }
     },
+
     3: {
       name: "LÃNH ĐẠO // ĐẢNG CỘNG SẢN VIỆT NAM",
       img: "assets/images/strat3_duongkachmenh.jpg",
       caption: "Tác phẩm Đường Kách Mệnh (1927) — 'Cách mệnh trước hết phải có Đảng cách mệnh để trong thì vận động, ngoài thì liên lạc'",
-      q1: "Lực lượng chính trị nào giữ vai trò lãnh đạo cách mạng giải phóng dân tộc Việt Nam?",
-      opts1: [
-        { key: "A", text: "Một ủy ban cố vấn quân sự độc lập" },
-        { key: "B", text: "Đảng Cộng sản Việt Nam — đội tiền phong của giai cấp công nhân và nhân dân lao động", correct: true },
-        { key: "C", text: "Các hội đồng hương và hội đoàn tự phát" }
+      q: "Lực lượng chính trị nào giữ vai trò tổ chức, lãnh đạo cách mạng giải phóng dân tộc Việt Nam?",
+      options: [
+        { key: "A", text: "Đảng Cộng sản Việt Nam — đội tiên phong của giai cấp công nhân, nhân dân lao động và dân tộc Việt Nam", correct: true },
+        { key: "B", text: "Một mặt trận dân chủ do các tầng lớp tư sản và tiểu tư sản trí thức thay nhau điều hành" },
+        { key: "C", text: "Phong trào tự phát của quần chúng nhân dân không cần đến một chính đảng lãnh đạo" }
       ],
-      q2: "Luận điểm bất hủ trong tác phẩm 'Đường cách mệnh' (1927) lý giải điều này?",
-      opts2: [
-        { key: "A", text: "“Cách mệnh trước hết phải có Đảng cách mệnh, để trong thì vận động và tổ chức dân chúng, ngoài thì liên lạc với vô sản...”", correct: true },
-        { key: "B", text: "Không cần có Đảng vì phong trào tự phát của quần chúng sẽ tự khắc giành thắng lợi." },
-        { key: "C", text: "Đảng chỉ cần thành lập sau khi đất nước đã giành được độc lập hoàn toàn." }
-      ],
-      summary: "Lãnh đạo: Đảng Cộng sản Việt Nam — Đội tiền phong giác ngộ và tổ chức quần chúng"
+      summary: "Lãnh đạo: Đảng Cộng sản Việt Nam — Đội tiền phong giác ngộ và tổ chức quần chúng",
+      lesson: {
+        badge: "BÀI HỌC CỐT LÕI // 1 TRANG TOÀN DIỆN",
+        title: "Vai trò tổ chức, lãnh đạo của Đảng & Bản chất sáng tạo của Đảng ở Việt Nam",
+        html: `
+          <div class="strat-grid-2col">
+            <!-- CỘT 1: VAI TRÒ SỐNG CÒN CỦA ĐẢNG THEO MÁC-LÊNIN & HỒ CHÍ MINH -->
+            <div class="strat-card-box soft-blue">
+              <h4>1. THEO CHỦ NGHĨA MÁC – LÊNIN</h4>
+              <p>Giai cấp công nhân muốn hoàn thành sứ mệnh lịch sử cần có <strong>một chính đảng cách mạng</strong>. Đảng có nhiệm vụ thực hiện quy trình lãnh đạo khoa học:</p>
+              <div class="strat-flow-pills" style="margin: 8px 0;">
+                <span class="strat-flow-node">GIÁC NGỘ</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node">TẬP HỢP</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node">TỔ CHỨC</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node">HUẤN LUYỆN</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node highlight">ĐƯA ĐẤU TRANH</span>
+              </div>
+
+              <h4>2. HỒ CHÍ MINH VẬN DỤNG VÀO VIỆT NAM</h4>
+              <p>Trong tác phẩm <em>Đường Kách Mệnh</em> (1927), Người đặt câu hỏi cốt tử: <strong>“Cách mệnh trước hết phải có cái gì?”</strong> Và trả lời: <strong>“Trước hết phải có đảng cách mệnh...”</strong></p>
+              <div class="strat-quote-box green-quote">
+                <div class="strat-quote-text">“Đảng có vững cách mệnh mới thành công, cũng như người cầm lái có vững thuyền mới chạy.”</div>
+                <div class="strat-quote-author">— HỒ CHÍ MINH (1927)</div>
+              </div>
+              <p style="font-size: 13px; line-height: 1.5; margin-top: 6px;"><strong>Vai trò của Đảng:</strong> Đảng không thay thế quần chúng tiến hành cách mạng, mà Đảng <em>tổ chức + giác ngộ + lãnh đạo + phát huy sức mạnh của quần chúng</em>.</p>
+            </div>
+
+            <!-- CỘT 2: ĐIỂM SÁNG TẠO ĐẶC BIỆT CỦA ĐẢNG TẠI VIỆT NAM -->
+            <div class="strat-card-box soft-amber">
+              <h4>3. BẢN CHẤT SÁNG TẠO CỦA ĐẢNG Ở VIỆT NAM</h4>
+              <p>Trong điều kiện Việt Nam là một nước thuộc địa phong kiến, Hồ Chí Minh phát triển quan niệm sáng tạo về Đảng:</p>
+              <ul style="margin-bottom: 10px;">
+                <li><strong>① Là đội tiên phong của giai cấp công nhân:</strong> Mang bản chất của giai cấp công nhân.</li>
+                <li><strong>② Đồng thời là đội tiên phong của nhân dân lao động:</strong> Gắn bó mật thiết với lợi ích của nhân dân.</li>
+                <li><strong>③ Gắn bó với toàn thể dân tộc:</strong> Đặt lợi ích của dân tộc và sự nghiệp giải phóng dân tộc ở vị trí quan trọng.</li>
+              </ul>
+
+              <h4>4. ĐIỂM ĐẶC BIỆT — ĐẠI HỘI II CỦA ĐẢNG (1951)</h4>
+              <p>Tại Đại hội đại biểu toàn quốc lần thứ II của Đảng (1951), Hồ Chí Minh khẳng định luận điểm bất hủ:</p>
+              <div class="strat-quote-box">
+                <div class="strat-quote-text">“Đảng Lao động Việt Nam là đảng của giai cấp công nhân và nhân dân lao động, cho nên nó phải là đảng của dân tộc Việt Nam.”</div>
+                <div class="strat-quote-author">— BÁO CÁO CHÍNH TRỊ TẠI ĐẠI HỘI II (1951)</div>
+              </div>
+            </div>
+          </div>
+        `,
+        takeaway: "Quần chúng là chủ thể của cách mạng. Đảng Cộng sản Việt Nam là lực lượng lãnh đạo, tổ chức và định hướng cách mạng — vừa là đảng của giai cấp công nhân, nhân dân lao động, vừa là đảng của toàn thể dân tộc Việt Nam.",
+        speech: "Về lực lượng lãnh đạo: Bác khẳng định theo lý luận Mác - Lênin, phong trào cách mạng muốn thắng lợi thì trước hết phải có một chính đảng cách mạng để giác ngộ, tập hợp, tổ chức, huấn luyện và đưa quần chúng đấu tranh. Trong 'Đường Kách Mệnh' (1927), Bác ví Đảng như người cầm lái có vững thuyền mới chạy. Đảng không thay thế quần chúng mà lãnh đạo và phát huy sức mạnh quần chúng. Đặc biệt, xuất phát từ một nước thuộc địa phong kiến, Bác sáng tạo chỉ rõ: Đảng ta không chỉ là đội tiên phong của giai cấp công nhân mà còn là của nhân dân lao động và của toàn thể dân tộc Việt Nam, như lời khẳng định tại Đại hội II năm 1951."
+      }
     },
+
     4: {
       name: "PHƯƠNG PHÁP // BẠO LỰC CÁCH MẠNG",
       img: "assets/images/strat4_vnttgpq.jpg",
       caption: "Đội Việt Nam Tuyên truyền Giải phóng quân (1944) — Bạo lực cách mạng kết hợp đấu tranh chính trị và vũ trang",
-      q1: "Phương pháp chủ yếu để đập tan bạo lực phản cách mạng hung hãn của thực dân?",
-      opts1: [
-        { key: "A", text: "Sử dụng bạo lực cách mạng: Kết hợp nhuần nhuyễn đấu tranh CHÍNH TRỊ và VŨ TRANG", correct: true },
-        { key: "B", text: "Thương lượng đàm phán thuần túy, tuyệt đối không dùng lực lượng vũ trang" },
-        { key: "C", text: "Khủng bố cá nhân nhắm vào các quan chức thực dân đơn lẻ" }
+      q: "Phương pháp chủ yếu để đập tan bạo lực phản cách mạng của thực dân, giành lấy và bảo vệ chính quyền?",
+      options: [
+        { key: "A", text: "Kêu gọi lòng nhân đạo của chính quyền thực dân và chỉ sử dụng đấu tranh nghị trường" },
+        { key: "B", text: "Sử dụng bạo lực cách mạng: Kết hợp chặt chẽ giữa đấu tranh chính trị và đấu tranh vũ trang", correct: true },
+        { key: "C", text: "Sử dụng phương pháp khủng bố cá nhân đơn lẻ để tiêu diệt các quan chức thực dân" }
       ],
-      q2: "Bác Hồ giải thích mối quan hệ biện chứng giữa đấu tranh chính trị và vũ trang như thế nào?",
-      opts2: [
-        { key: "A", text: "Đấu tranh chính trị của quần chúng là cơ sở, là gốc để xây dựng và phát triển lực lượng vũ trang.", correct: true },
-        { key: "B", text: "Vũ trang là tất cả, không cần quan tâm đến công tác giác ngộ chính trị quần chúng." },
-        { key: "C", text: "Chính trị và vũ trang hoàn toàn độc lập và bài xích lẫn nhau." }
-      ],
-      summary: "Phương pháp: Bạo lực cách mạng — Kết hợp chặt chẽ đấu tranh chính trị và vũ trang"
+      summary: "Phương pháp: Bạo lực cách mạng — Kết hợp chặt chẽ đấu tranh chính trị và vũ trang",
+      lesson: {
+        badge: "BÀI HỌC CỐT LÕI // 1 TRANG TOÀN DIỆN",
+        title: "Tính tất yếu của Bạo lực cách mạng & Bảng đối chiếu Hai lực lượng, Hai hình thức đấu tranh",
+        html: `
+          <!-- KHỐI 1: CƠ SỞ LÝ LUẬN & TÍNH TẤT YẾU TẠI VIỆT NAM -->
+          <div class="strat-grid-2col" style="margin-bottom: 12px;">
+            <div class="strat-card-box soft-blue">
+              <h4>1. CƠ SỞ LÝ LUẬN MÁC – LÊNIN</h4>
+              <p style="margin: 0; line-height: 1.55;">C. Mác và Ph. Ăngghen chỉ ra vai trò của <strong>bạo lực cách mạng</strong> trong việc phá bỏ chế độ cũ và mở đường cho chế độ mới. V.I. Lênin phát triển quan điểm này và khẳng định tính tất yếu của bạo lực cách mạng trong cách mạng vô sản.</p>
+            </div>
+
+            <div class="strat-card-box soft-amber">
+              <h4>2. HỒ CHÍ MINH VẬN DỤNG VÀO VIỆT NAM</h4>
+              <p style="font-size: 13px; margin-bottom: 6px;">Thực dân, đế quốc sử dụng quân sự, đàn áp, bóc lột, khủng bố, tước đoạt quyền tự do, dân chủ để duy trì thuộc địa. Hồ Chí Minh nhận định:</p>
+              <div class="strat-quote-box" style="margin-bottom: 6px;">
+                <div class="strat-quote-text">“Bản thân chế độ thực dân đã là một hình thức bạo lực của kẻ mạnh đối với kẻ yếu.”</div>
+              </div>
+              <p style="font-size: 13px; margin: 0;">Vì vậy Người khẳng định: <strong>“Cần dùng bạo lực cách mạng chống lại bạo lực phản cách mạng, giành lấy chính quyền và bảo vệ chính quyền.”</strong></p>
+            </div>
+          </div>
+
+          <!-- KHỐI 2: BẢNG ĐỐI CHIẾU HAI LỰC LƯỢNG & HAI HÌNH THỨC -->
+          <div class="strat-card-box soft-green">
+            <h4 style="margin-bottom: 8px;">3. HAI LỰC LƯỢNG VÀ HAI HÌNH THỨC ĐẤU TRANH CHỦ YẾU</h4>
+            <p style="font-size: 13px; margin-bottom: 10px;">Theo Hồ Chí Minh, bạo lực cách mạng được thực hiện thông qua hai lực lượng và hai hình thức đấu tranh phối hợp hữu cơ:</p>
+            
+            <table class="strat-table">
+              <thead>
+                <tr>
+                  <th style="width: 22%;">LỰC LƯỢNG</th>
+                  <th style="width: 26%;">HÌNH THỨC</th>
+                  <th style="width: 52%;">VAI TRÒ VÀ Ý NGHĨA CỐT LÕI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Lực lượng chính trị</strong></td>
+                  <td><strong>Đấu tranh chính trị</strong> (quần chúng nhân dân)</td>
+                  <td>
+                    • Giác ngộ và tập hợp nhân dân, tạo sức mạnh chính trị.<br>
+                    • Mở rộng phong trào, xây dựng cơ sở và lực lượng cách mạng.<br>
+                    • <strong>Là cơ sở, nền tảng vững chắc cho việc xây dựng lực lượng vũ trang.</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Lực lượng vũ trang</strong></td>
+                  <td><strong>Đấu tranh vũ trang</strong> (quân đội, dân quân du kích)</td>
+                  <td>
+                    • Tiêu diệt lực lượng quân sự của đối phương, làm thất bại âm mưu thôn tính.<br>
+                    • Che chở, mở đường cho phong trào chính trị quần chúng.<br>
+                    • <strong>Góp phần quyết định trong việc kết thúc chiến tranh.</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `,
+        takeaway: "Bạo lực cách mạng theo tư tưởng Hồ Chí Minh là bạo lực của quần chúng nhân dân, dùng bạo lực cách mạng đập tan bạo lực phản cách mạng; kết hợp chặt chẽ giữa đấu tranh chính trị làm nền tảng với đấu tranh vũ trang giữ vai trò quyết định.",
+        speech: "Về phương pháp cách mạng: C. Mác, Ăngghen và Lênin đều chỉ rõ vai trò tất yếu của bạo lực cách mạng. Tại Việt Nam, thực dân Pháp duy trì ách thống trị bằng đàn áp quân sự và khủng bố. Bác nhận định 'Bản thân chế độ thực dân đã là một hình thức bạo lực của kẻ mạnh đối với kẻ yếu'. Do đó, Người khẳng định dứt khoát phải dùng bạo lực cách mạng chống lại bạo lực phản cách mạng. Bạo lực cách mạng được Bác triển khai qua 2 lực lượng và 2 hình thức: Đấu tranh chính trị của quần chúng là cơ sở nền tảng, và Đấu tranh vũ trang giữ vai trò quyết định kết thúc chiến tranh."
+      }
     },
+
     5: {
       name: "TÍNH CHỦ ĐỘNG // KHẢ NĂNG THẮNG TRƯỚC",
       img: "assets/images/strat5_leparia.jpg",
       caption: "Báo Le Paria (Người cùng khổ - 1922) — Luận điểm sáng tạo: Cách mạng thuộc địa có thể chủ động thắng trước chính quốc",
-      q1: "Cách mạng thuộc địa có cần thụ động chờ đợi cách mạng vô sản ở chính quốc nổ ra trước không?",
-      opts1: [
-        { key: "A", text: "Có, vì thuộc địa chỉ là bộ phận phụ thuộc hoàn toàn vào chính quốc" },
-        { key: "B", text: "Không! Thuộc địa có thể chủ động tiến hành và có khả năng giành thắng lợi trước chính quốc", correct: true },
-        { key: "C", text: "Chỉ tiến hành các cuộc bãi công nhỏ đòi cải thiện quyền lợi sinh hoạt" }
+      q: "Cách mạng giải phóng dân tộc ở thuộc địa có mối quan hệ như thế nào với cách mạng vô sản ở chính quốc?",
+      options: [
+        { key: "A", text: "Phụ thuộc hoàn toàn vào chính quốc, chỉ có thể nổ ra và thắng lợi sau khi chính quốc đã thành công" },
+        { key: "B", text: "Là phong trào độc lập hoàn toàn, không có liên hệ hay tác động gì tới cách mạng vô sản ở chính quốc" },
+        { key: "C", text: "Quan hệ chặt chẽ, tác động qua lại, không lệ thuộc và có khả năng chủ động giành thắng lợi trước chính quốc", correct: true }
       ],
-      q2: "Hình tượng sáng tạo xuất sắc nào của Bác chứng minh luận điểm này?",
-      opts2: [
-        { key: "A", text: "Hình tượng 'Con đỉa hai vòi': Thuộc địa là nguồn sống béo bở nuôi đế quốc; chặt đứt vòi thuộc địa sẽ làm đế quốc suy sụp và cách mạng thắng lợi trước!", correct: true },
-        { key: "B", text: "Hình tượng chiếc lá vàng rơi mùa thu trôi theo dòng nước." },
-        { key: "C", text: "Hình tượng cỗ xe ngựa chạy trên đường bằng phẳng." }
-      ],
-      summary: "Tính chủ động: Hình tượng con đỉa hai vòi — Khả năng chủ động giành thắng lợi trước chính quốc"
+      summary: "Tính chủ động: Hình tượng con đỉa hai vòi — Khả năng chủ động giành thắng lợi trước chính quốc",
+      lesson: {
+        badge: "BÀI HỌC CỐT LÕI // 1 TRANG TOÀN DIỆN",
+        title: "Tính chủ động của Cách mạng thuộc địa & Luận điểm hình tượng 'Con rắn hai vòi'",
+        html: `
+          <!-- HÀNG 1: ĐỘT PHÁ LÝ LUẬN VỀ TÍNH CHỦ ĐỘNG -->
+          <div class="strat-grid-2col" style="margin-bottom: 12px;">
+            <div class="strat-card-box soft-amber">
+              <h4>1. QUAN ĐIỂM TỪNG TỒN TẠI</h4>
+              <p>Do chưa đánh giá đầy đủ tiềm lực của cách mạng thuộc địa, có lúc Quốc tế Cộng sản cho rằng:</p>
+              <div class="strat-quote-box">
+                <div class="strat-quote-text">“Cách mạng thuộc địa phải phụ thuộc vào thắng lợi của cách mạng vô sản ở chính quốc.”</div>
+              </div>
+              <p style="font-size: 13px; margin: 0; color: #7F1D1D;"><strong>Hậu quả:</strong> Quan điểm này dẫn đến tư tưởng thụ động: <em>Chính quốc chưa thắng → Thuộc địa chưa thể giải phóng</em>, làm giảm tính chủ động của các dân tộc thuộc địa.</p>
+            </div>
+
+            <div class="strat-card-box soft-green">
+              <h4>2. QUAN ĐIỂM ĐỘT PHÁ CỦA HỒ CHÍ MINH</h4>
+              <p>Hồ Chí Minh nhìn nhận: Cách mạng thuộc địa và cách mạng vô sản ở chính quốc có mối quan hệ biện chứng:</p>
+              <div class="strat-flow-pills" style="margin: 6px 0;">
+                <span class="strat-flow-node">QUAN HỆ CHẶT CHẼ</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node">TÁC ĐỘNG QUA LẠI</span>
+                <span class="strat-flow-arrow">➔</span>
+                <span class="strat-flow-node highlight">HỖ TRỢ LẪN NHAU</span>
+              </div>
+              <ul style="margin: 0;">
+                <li>Nhưng: <strong>Không phải quan hệ lệ thuộc, phụ thuộc một chiều.</strong></li>
+                <li>Do đó: <strong>Cách mạng thuộc địa có khả năng chủ động giành thắng lợi.</strong></li>
+                <li>Thậm chí: <strong>Có thể giành thắng lợi trước cách mạng vô sản ở chính quốc.</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- HÀNG 2: HÌNH TƯỢNG CON RẮN HAI VÒI -->
+          <div class="strat-card-box soft-blue">
+            <h4>3. HÌNH TƯỢNG KINH ĐIỂN CỦA HỒ CHÍ MINH: "CON RẮN / CON ĐỈA HAI VÒI"</h4>
+            <p style="font-size: 13px; margin-bottom: 10px;">Hồ Chí Minh ví chủ nghĩa tư bản như một con rắn (con đỉa) có hai vòi:</p>
+            
+            <div class="strat-leech-grid">
+              <div class="leech-wing-box">
+                <span class="leech-wing-tag">VÒI 1: CHÍNH QUỐC</span>
+                <p style="font-size: 13px; margin: 0; line-height: 1.45;">Bám vào giai cấp vô sản và nhân dân lao động ở chính quốc để bóc lột giá trị thặng dư.</p>
+              </div>
+
+              <div class="leech-center">
+                <div class="leech-center-badge">CHỦ NGHĨA ĐẾ QUỐC</div>
+                <small style="font-size: 11px; color: #7F1D1D; font-weight: 700;">(Con rắn có hai vòi)</small>
+              </div>
+
+              <div class="leech-wing-box highlight">
+                <span class="leech-wing-tag">VÒI 2: THUỘC ĐỊA</span>
+                <p style="font-size: 13px; margin: 0; line-height: 1.45;">Bám vào các dân tộc thuộc địa để vơ vét tài nguyên và bóc lột nhân công rẻ mạt.</p>
+              </div>
+            </div>
+
+            <div class="strat-quote-box green-quote" style="margin-top: 10px;">
+              <div class="strat-quote-text">“Muốn tiêu diệt chủ nghĩa đế quốc không thể chỉ tập trung vào một phía, phải chặt đứt cả hai vòi. Cách mạng thuộc địa có vai trò rất quan trọng trong việc cùng cách mạng ở chính quốc đánh đổ chủ nghĩa đế quốc.”</div>
+              <div class="strat-quote-author">— HỒ CHÍ MINH (BÁO LE PARIA)</div>
+            </div>
+          </div>
+        `,
+        takeaway: "Cách mạng giải phóng dân tộc ở thuộc địa không thụ động chờ đợi chính quốc mà hoàn toàn có khả năng chủ động đứng lên giành thắng lợi trước, đồng thời giúp đỡ cách mạng vô sản ở chính quốc cùng đánh đổ chủ nghĩa đế quốc.",
+        speech: "Quyết sách thứ năm là sáng tạo lý luận độc đáo bậc nhất của Bác. Trước đây Quốc tế Cộng sản từng cho rằng thuộc địa phải phụ thuộc vào thắng lợi của chính quốc, dễ gây tư tưởng thụ động chờ đợi. Bác Hồ khẳng định hai cuộc cách mạng có quan hệ chặt chẽ, tác động qua lại, hỗ trợ lẫn nhau nhưng không lệ thuộc. Thuộc địa hoàn toàn có thể chủ động giành thắng lợi trước. Bác ví chủ nghĩa tư bản như con rắn có hai vòi: một vòi ở chính quốc, một vòi ở thuộc địa. Muốn tiêu diệt đế quốc thì không thể chỉ đánh một phía mà phải chặt cả hai vòi. Thực tiễn thắng lợi của Cách mạng Tháng Tám năm 1945 tại Việt Nam đã chứng minh tính tiên tri thiên tài của Bác."
+      }
     }
   };
 
@@ -421,54 +676,58 @@ const Deck = (function () {
     1: {
       badge: "THỬ THÁCH 01 // BỐI CẢNH LỊCH SỬ",
       img: "assets/images/ch1_nongnghiep.jpg",
-      caption: "Cảnh nông thôn miền Bắc thời kỳ đầu khôi phục kinh tế — Xuất phát điểm nước nông nghiệp lạc hậu bỏ qua TBCN",
-      title: "Đặc Điểm Lớn Nhất Của Thời Kỳ Quá Độ Lên CNXH Ở Việt Nam?",
-      desc: "Việt Nam bước vào công cuộc xây dựng CNXH trong hoàn cảnh lịch sử vô cùng đặc biệt. Bạn xác định đặc điểm bao trùm là gì?",
+      caption: "Nông thôn miền Bắc thời kỳ đầu khôi phục kinh tế — Xuất phát điểm nông nghiệp lạc hậu tiến thẳng lên CNXH",
+      title: "Đặc điểm lớn nhất của thời kỳ quá độ lên CNXH ở Việt Nam?",
+      desc: "Việt Nam bước vào thời kỳ quá độ lên CNXH từ một nền kinh tế nông nghiệp lạc hậu, cơ sở vật chất và lực lượng sản xuất còn hạn chế.",
       options: [
-        { key: "A", text: "Đã có nền đại công nghiệp phát triển và cơ sở vật chất kỹ thuật dồi dào từ trước." },
-        { key: "B", text: "Từ một nước nông nghiệp lạc hậu tiến thẳng lên CNXH, bỏ qua giai đoạn phát triển tư bản chủ nghĩa.", correct: true },
+        { key: "A", text: "Từ một nước nông nghiệp lạc hậu tiến thẳng lên CNXH, bỏ qua giai đoạn phát triển tư bản chủ nghĩa.", correct: true },
+        { key: "B", text: "Đã có sẵn nền đại công nghiệp phát triển và cơ sở vật chất kỹ thuật dồi dào từ trước." },
         { key: "C", text: "Chỉ cần sao chép y nguyên lộ trình của các quốc gia công nghiệp phát triển ở châu Âu." }
       ],
-      feedback: "HOÀN TOÀN CHUẨN XÁC! Đây chính là đặc điểm to lớn nhất chi phối toàn bộ bước đi, hình thức và biện pháp xây dựng CNXH tại Việt Nam."
+      chot: "Xuất phát điểm thấp → không thể áp dụng máy móc mô hình nước khác → phải có bước đi phù hợp với Việt Nam.",
+      speech: "Ở câu đầu tiên, chúng ta cần xác định điểm xuất phát của Việt Nam. Việt Nam bước vào thời kỳ quá độ lên CNXH từ một nền kinh tế nông nghiệp lạc hậu, cơ sở vật chất và lực lượng sản xuất còn hạn chế. Vì vậy, điểm đặc biệt là Việt Nam tiến lên CNXH, bỏ qua chế độ tư bản chủ nghĩa, chứ không có sẵn nền đại công nghiệp như một số nước phát triển. Điều này tạo ra một bài toán rất lớn: nếu xuất phát điểm còn thấp thì Việt Nam phải lựa chọn bước đi như thế nào để vừa phát triển kinh tế, vừa xây dựng CNXH?"
     },
     2: {
-      badge: "THỬ THÁCH 02 // CƠ CẤU KINH TẾ",
+      badge: "THỬ THÁCH 02 // NÔNG NGHIỆP & CÔNG NGHIỆP",
       img: "assets/images/ch2_cong_nong.jpg",
-      caption: "Công nhân và nông dân liên kết sản xuất — Lấy nông nghiệp làm mặt trận hàng đầu, công nghiệp phục vụ nông nghiệp",
-      title: "Xử Lý Mối Quan Hệ Giữa Nông Nghiệp Và Công Nghiệp Ra Sao?",
-      desc: "Trong bối cảnh đất nước vừa thoát khỏi chiến tranh, đa số người dân sống dựa vào nông nghiệp.",
+      caption: "Liên minh công nông sản xuất — Nông nghiệp là nền tảng, công nghiệp là động lực hỗ trợ nhau",
+      title: "Xử lý mối quan hệ giữa nông nghiệp và công nghiệp ra sao?",
+      desc: "Sau khi xác định Việt Nam là một nước nông nghiệp, bài toán đặt ra: Chúng ta có nên bỏ nông nghiệp để tập trung ngay vào công nghiệp nặng không?",
       options: [
-        { key: "A", text: "Tập trung toàn lực phát triển công nghiệp nặng ngay lập tức, bỏ qua nông thôn." },
-        { key: "B", text: "Lấy nông nghiệp làm mặt trận hàng đầu, phục vụ đời sống dân sinh và làm tiền đề phát triển công nghiệp.", correct: true },
-        { key: "C", text: "Chỉ phát triển thương mại dịch vụ tiêu dùng đơn thuần." }
+        { key: "A", text: "Tập trung toàn lực phát triển công nghiệp nặng ngay lập tức, xem nhẹ vai trò của nông thôn." },
+        { key: "B", text: "Chỉ phát triển thương mại dịch vụ tiêu dùng đơn thuần, tách rời nông nghiệp và công nghiệp." },
+        { key: "C", text: "Lấy nông nghiệp làm mặt trận hàng đầu, phục vụ đời sống dân sinh và làm tiền đề phát triển công nghiệp.", correct: true }
       ],
-      feedback: "CHÍNH XÁC! Bác chỉ rõ: 'Nông nghiệp là mặt trận hàng đầu'; công nghiệp và nông nghiệp là hai chân của nền kinh tế, phải bước đều nhau."
+      chot: "Nông nghiệp là nền tảng, công nghiệp là động lực; hai bên phải hỗ trợ nhau.",
+      speech: "Sau khi xác định Việt Nam là một nước nông nghiệp, câu hỏi tiếp theo là: chúng ta có nên bỏ nông nghiệp để tập trung ngay vào công nghiệp nặng không? Theo tư tưởng Hồ Chí Minh, câu trả lời là không. Người xác định nông nghiệp là mặt trận hàng đầu, đồng thời nhấn mạnh mối quan hệ giữa nông nghiệp và công nghiệp. Nông nghiệp vừa bảo đảm đời sống nhân dân, vừa cung cấp nguyên liệu và tạo cơ sở cho công nghiệp phát triển. Vì vậy, hai lĩnh vực này không tách rời mà phải hỗ trợ lẫn nhau, trong đó phát triển nông nghiệp là cơ sở quan trọng để thúc đẩy công nghiệp."
     },
     3: {
       badge: "THỬ THÁCH 03 // ĐỘNG LỰC CON NGƯỜI",
       img: "assets/images/ch3_dongluc.jpg",
-      caption: "Phong trào thi đua yêu nước — Bác Hồ gặp mặt các đại biểu anh hùng chiến sĩ thi đua toàn quốc",
-      title: "Đâu Là Động Lực Quyết Định Thúc Đẩy Nhân Dân Thi Đua Xây Dựng?",
-      desc: "Chính sách được đề ra nhưng người dân chưa thực sự hăng hái tham gia sản xuất.",
+      caption: "Phong trào thi đua yêu nước — Nhân dân vừa là mục tiêu, vừa là động lực của công cuộc xây dựng CNXH",
+      title: "Đâu là động lực quyết định thúc đẩy nhân dân thi đua xây dựng?",
+      desc: "Có chính sách đúng thôi chưa đủ. Muốn xây dựng đất nước thì nhân dân vừa là mục tiêu, vừa là động lực của công cuộc xây dựng CNXH.",
       options: [
-        { key: "A", text: "Chỉ áp dụng mệnh lệnh hành chính ép buộc và xử phạt nghiêm ngặt." },
+        { key: "A", text: "Chỉ áp dụng mệnh lệnh hành chính ép buộc, kỷ luật thép và xử phạt nghiêm ngặt." },
         { key: "B", text: "Kết hợp hài hòa giữa lợi ích tập thể và lợi ích thiết thực của người lao động; phát huy quyền làm chủ của nhân dân.", correct: true },
-        { key: "C", text: "Trông chờ hoàn toàn vào sự chi viện từ các tổ chức bên ngoài." }
+        { key: "C", text: "Trông chờ hoàn toàn vào sự chi viện từ bên ngoài mà không cần phát huy nội lực nhân dân." }
       ],
-      feedback: "CHUẨN XÁC! Trong tư tưởng Bác, nhân dân vừa là mục tiêu vừa là động lực quyết định. Phải chăm lo lợi ích thiết thực của người lao động."
+      chot: "Muốn dân làm → phải để dân làm chủ và thấy được lợi ích thiết thực.",
+      speech: "Nhưng có chính sách đúng thôi thì chưa đủ. Muốn xây dựng đất nước thì phải có con người tham gia. Theo Hồ Chí Minh, nhân dân vừa là mục tiêu, vừa là động lực của công cuộc xây dựng CNXH. Điều đó có nghĩa là xây dựng CNXH cuối cùng phải hướng tới việc nâng cao đời sống của nhân dân. Đồng thời, chính nhân dân là lực lượng trực tiếp tham gia xây dựng đất nước. Vì vậy, không thể chỉ dùng mệnh lệnh hay ép buộc. Phải phát huy quyền làm chủ và quan tâm đến lợi ích thiết thực của người lao động. Khi người dân thấy được lợi ích của mình gắn với lợi ích chung, họ sẽ có động lực tham gia và đóng góp."
     },
     4: {
       badge: "THỬ THÁCH 04 // PHƯƠNG CHÂM & BÀI HỌC",
       img: "assets/images/ch4_tietkiem.jpg",
-      caption: "Bác Hồ làm việc giản dị tại nhà sàn Hà Nội — Tấm gương mẫu mực về Cần, Kiệm, Liêm, Chính, chống giặc nội xâm",
-      title: "Phương Châm Hành Động Và Bài Học Chống 'Giặc Nội Xâm'?",
-      desc: "Để bảo vệ thành quả cách mạng và giữ vững niềm tin của nhân dân đối với chế độ mới.",
+      caption: "Chủ tịch Hồ Chí Minh bên bàn làm việc — Mẫu mực về cần kiệm liêm chính, kiên quyết chống 'giặc nội xâm'",
+      title: "Để bảo vệ thành quả cách mạng và giữ vững niềm tin của nhân dân đối với chế độ mới, cần phương châm nào?",
+      desc: "Đây là câu quan trọng nhất, vì nó tổng hợp những bài toán trước: Xây dựng CNXH gắn liền với xây dựng bộ máy trong sạch.",
       options: [
-        { key: "A", text: "Chủ quan nóng vội, đốt cháy giai đoạn và che giấu các biểu hiện quan liêu tiêu cực." },
-        { key: "B", text: "Tiến dần từng bước vững chắc; kiên quyết chống tham ô, lãng phí, quan liêu — thứ 'giặc nội xâm' nguy hiểm.", correct: true },
-        { key: "C", text: "Chỉ chú trọng phát triển kinh tế mà buông lỏng việc giáo dục đạo đức cán bộ đảng viên." }
+        { key: "A", text: "Tiến dần từng bước vững chắc; kiên quyết chống tham ô, lãng phí, quan liêu – thứ “giặc nội xâm” nguy hiểm.", correct: true },
+        { key: "B", text: "Chủ quan nóng vội, đốt cháy giai đoạn; chỉ lo tăng trưởng kinh tế bề nổi mà xem nhẹ xây dựng bộ máy trong sạch." },
+        { key: "C", text: "Thỏa hiệp, che giấu các biểu hiện quan liêu tiêu cực và thói đặc quyền đặc lợi trong bộ máy." }
       ],
-      feedback: "XUẤT SẮC! Bác dạy: Xây dựng CNXH phải 'dần dần, thận trọng, từng bước', đồng thời phải quét sạch nạn tham ô, lãng phí, quan liêu."
+      chot: "Xây dựng phải từng bước; quản lý phải trong sạch; nhân dân phải có niềm tin.",
+      speech: "Qua ba thử thách trước, chúng ta đã thấy Việt Nam có xuất phát điểm thấp, phải phát triển phù hợp với thực tế và đặc biệt phải phát huy vai trò của nhân dân. Vậy quá trình đó phải diễn ra như thế nào? Hồ Chí Minh nhấn mạnh phải tiến dần từng bước, vững chắc, không chủ quan nóng vội. Đồng thời, Người đặc biệt quan tâm đến việc chống tham ô, lãng phí và quan liêu. Người coi đây là những thứ có thể làm suy yếu bộ máy, làm thất thoát nguồn lực và ảnh hưởng đến niềm tin của nhân dân. Vì vậy, xây dựng CNXH không chỉ là phát triển kinh tế mà còn phải xây dựng một bộ máy trong sạch, phát huy đạo đức của cán bộ và giữ vững niềm tin của nhân dân."
     }
   };
 
@@ -477,31 +736,27 @@ const Deck = (function () {
     {
       id: "c-321",
       targetSlot: 3,
-      code: "Mục 3.2.1",
       title: "CHỦ NGHĨA XÃ HỘI",
-      img: "assets/images/pillar_eco_nhamay.jpg",
+      img: "assets/images/pillar_eco_nhamay.jpg?v=4",
       role: "Mục tiêu lý tưởng & Đích đến bảo vệ độc lập"
     },
     {
       id: "c-311",
       targetSlot: 1,
-      code: "Mục 3.1.1",
       title: "ĐỘC LẬP DÂN TỘC",
-      img: "assets/images/hotspot1_1919.jpg",
+      img: "assets/images/hotspot1_1919.jpg?v=4",
       role: "Tiền đề xuất phát & Quyền thiêng liêng"
     },
     {
       id: "c-322",
       targetSlot: 4,
-      code: "Mục 3.2.2",
       title: "XÂY DỰNG TẠI VN",
-      img: "assets/images/ch2_cong_nong.jpg",
+      img: "assets/images/ch2_cong_nong.jpg?v=4",
       role: "Vận dụng thực tiễn & Bước đi thận trọng"
     },
     {
       id: "c-312",
       targetSlot: 2,
-      code: "Mục 3.1.2",
       title: "CÁCH MẠNG GPDT",
       img: "assets/images/strat4_vnttgpq.jpg",
       role: "Con đường vô sản & Bạo lực cách mạng"
@@ -527,6 +782,50 @@ const Deck = (function () {
         }
       }
       this.goToSlide(startSlide);
+
+      // Hỗ trợ tham số URL nhảy thẳng vào thử thách của Tân (ví dụ: ?ch=2 hoặc ?ch=1&ans=1)
+      const urlParams = new URLSearchParams(window.location.search);
+      const chParam = parseInt(urlParams.get('ch'), 10);
+      if (chParam >= 1 && chParam <= 4) {
+        this.renderChallengeStage(chParam);
+        if (urlParams.get('ans')) {
+          setTimeout(() => {
+            const data = CHALLENGES[chParam];
+            const btns = document.querySelectorAll('.stage-opt-btn');
+            data.options.forEach((o, idx) => {
+              if (o.correct && btns[idx]) btns[idx].click();
+            });
+          }, 80);
+        }
+      }
+
+      // Hỗ trợ mở trực tiếp Điểm tư liệu qua URL (ví dụ: ?hotspot=4&seek=50)
+      const hpParam = parseInt(urlParams.get('hotspot'), 10);
+      if (hpParam >= 1 && hpParam <= 4) {
+        this.goToSlide(2);
+        setTimeout(() => {
+          this.openHotspot(hpParam);
+          const seekParam = parseFloat(urlParams.get('seek'));
+          if (!isNaN(seekParam) && seekParam > 0) {
+            setTimeout(() => {
+              const vid = document.getElementById('hotspot-video-player');
+              if (vid) {
+                const applySeek = () => {
+                  vid.currentTime = seekParam;
+                  this.updateVideoProgress('hotspot-video-player');
+                  const statusEl = document.getElementById('video-status-text');
+                  if (statusEl) statusEl.textContent = `Đang ở đoạn ${this.formatTime(seekParam)} / ${this.formatTime(vid.duration || 112.5)}`;
+                };
+                if (vid.readyState >= 1) {
+                  applySeek();
+                } else {
+                  vid.addEventListener('loadedmetadata', applySeek, { once: true });
+                }
+              }
+            }, 80);
+          }
+        }, 120);
+      }
     },
 
     // Chuyển Slide
@@ -577,6 +876,11 @@ const Deck = (function () {
           p.classList.remove('active');
         }
       });
+
+      // Tự động render thử thách khi vào Slide 8
+      if (index === 8) {
+        this.renderChallengeStage(State.lv4.currentIdx || 1);
+      }
     },
 
     nextSlide() {
@@ -603,7 +907,22 @@ const Deck = (function () {
           return;
         }
 
-        if (isModalOpen) return;
+        if (isModalOpen) {
+          const vid = document.getElementById('hotspot-video-player');
+          if (vid) {
+            if (e.key === 'ArrowLeft') {
+              e.preventDefault();
+              Deck.seekVideo('hotspot-video-player', -5);
+            } else if (e.key === 'ArrowRight') {
+              e.preventDefault();
+              Deck.seekVideo('hotspot-video-player', 5);
+            } else if (e.key === ' ' || e.key === 'k' || e.key === 'K') {
+              e.preventDefault();
+              Deck.toggleVideoPlay('hotspot-video-player');
+            }
+          }
+          return;
+        }
 
         if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
           e.preventDefault();
@@ -637,6 +956,7 @@ const Deck = (function () {
 
     // Đóng mở Hộp thoại
     closeModal(id) {
+      if (this._autoAdvanceTimer) clearTimeout(this._autoAdvanceTimer);
       AudioFX.click();
       const el = document.getElementById(id);
       if (el) {
@@ -648,33 +968,188 @@ const Deck = (function () {
       }
     },
 
-    // Điều khiển video thông minh
+    // Điều khiển video thông minh & Tua video (Seekbar, Controls, Timeline)
+    formatTime(sec) {
+      if (!sec || isNaN(sec) || sec < 0) return '00:00';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    },
+
     toggleVideoPlay(videoId) {
       const vid = document.getElementById(videoId);
-      const btn = document.getElementById('btn-video-toggle');
-      const status = document.getElementById('video-status-text');
       if (!vid) return;
-
       if (vid.paused) {
         vid.play().catch(() => {});
-        if (btn) btn.textContent = 'Tạm dừng video';
-        if (status) status.textContent = 'Đang phát video tư liệu lịch sử';
       } else {
         vid.pause();
-        if (btn) btn.textContent = 'Phát tiếp video';
-        if (status) status.textContent = 'Đã tạm dừng video';
       }
     },
 
+    seekVideo(videoId, offsetSeconds) {
+      AudioFX.click();
+      const vid = document.getElementById(videoId);
+      if (!vid) return;
+      const maxDur = vid.duration && !isNaN(vid.duration) && vid.duration > 0 ? vid.duration : 112.5;
+      const target = Math.max(0, Math.min(maxDur, (vid.currentTime || 0) + offsetSeconds));
+
+      const doSeek = () => {
+        try {
+          vid.currentTime = target;
+        } catch (e) {
+          console.warn('Seek error:', e);
+        }
+        const statusEl = document.getElementById('video-status-text');
+        if (statusEl) {
+          statusEl.textContent = `Đã tua ${offsetSeconds > 0 ? '+' : ''}${offsetSeconds}s (đến ${this.formatTime(target)})`;
+        }
+        this.updateVideoProgress(videoId);
+      };
+
+      if (vid.readyState >= 1) {
+        doSeek();
+      } else {
+        vid.addEventListener('loadedmetadata', doSeek, { once: true });
+        if (vid.load) vid.load();
+      }
+    },
+
+    onVideoSeekInput(videoId, percentVal) {
+      const vid = document.getElementById(videoId);
+      if (!vid || !vid.duration) return;
+      const targetTime = (parseFloat(percentVal) / 100) * vid.duration;
+      vid.currentTime = targetTime;
+      const currTimeEl = document.getElementById('video-curr-time');
+      if (currTimeEl) currTimeEl.textContent = this.formatTime(targetTime);
+      const slider = document.getElementById('video-seek-slider');
+      if (slider) {
+        slider.style.background = `linear-gradient(to right, #38BDF8 0%, #38BDF8 ${percentVal}%, #334155 ${percentVal}%, #334155 100%)`;
+      }
+      const statusEl = document.getElementById('video-status-text');
+      if (statusEl) {
+        statusEl.textContent = `Đang kéo tua đến: ${this.formatTime(targetTime)}`;
+      }
+    },
+
+    onVideoSeekChange(videoId, percentVal) {
+      const vid = document.getElementById(videoId);
+      if (!vid || !vid.duration) return;
+      const targetTime = (parseFloat(percentVal) / 100) * vid.duration;
+      vid.currentTime = targetTime;
+      const statusEl = document.getElementById('video-status-text');
+      if (statusEl) {
+        statusEl.textContent = `Đã chuyển đến: ${this.formatTime(targetTime)}`;
+      }
+    },
+
+    cycleVideoSpeed(videoId) {
+      AudioFX.click();
+      const vid = document.getElementById(videoId);
+      const btn = document.getElementById('btn-video-speed');
+      if (!vid) return;
+      const speeds = [1.0, 1.25, 1.5, 2.0];
+      const curRate = vid.playbackRate || 1.0;
+      let nextIdx = speeds.indexOf(curRate) + 1;
+      if (nextIdx >= speeds.length || nextIdx < 0) nextIdx = 0;
+      const newRate = speeds[nextIdx];
+      vid.playbackRate = newRate;
+      if (btn) btn.textContent = `${newRate.toFixed(newRate === 1.0 ? 1 : 2).replace(/\.0$/, '.0')}x`;
+      const statusEl = document.getElementById('video-status-text');
+      if (statusEl) statusEl.textContent = `Tốc độ phát: ${newRate}x`;
+    },
+
     restartVideo(videoId) {
+      AudioFX.click();
       const vid = document.getElementById(videoId);
       if (!vid) return;
       vid.currentTime = 0;
       vid.play().catch(() => {});
-      const btn = document.getElementById('btn-video-toggle');
-      const status = document.getElementById('video-status-text');
-      if (btn) btn.textContent = 'Tạm dừng video';
-      if (status) status.textContent = 'Đang phát lại từ đầu';
+      const statusEl = document.getElementById('video-status-text');
+      if (statusEl) statusEl.textContent = 'Đang phát lại từ đầu (00:00)';
+    },
+
+    updateVideoProgress(videoId) {
+      const vid = document.getElementById(videoId);
+      if (!vid || !vid.duration) return;
+      const slider = document.getElementById('video-seek-slider');
+      const currTimeEl = document.getElementById('video-curr-time');
+      const totalTimeEl = document.getElementById('video-total-time');
+      const percent = (vid.currentTime / vid.duration) * 100;
+      if (slider && !slider.matches(':active')) {
+        slider.value = percent;
+        slider.style.background = `linear-gradient(to right, #38BDF8 0%, #38BDF8 ${percent}%, #334155 ${percent}%, #334155 100%)`;
+      }
+      if (currTimeEl) currTimeEl.textContent = this.formatTime(vid.currentTime);
+      if (totalTimeEl && (totalTimeEl.textContent === '00:00' || !totalTimeEl.dataset.ready)) {
+        totalTimeEl.textContent = this.formatTime(vid.duration);
+        totalTimeEl.dataset.ready = 'true';
+      }
+    },
+
+    setupVideoPlayer(videoId) {
+      const vid = document.getElementById(videoId);
+      if (!vid) return;
+
+      const btnToggle = document.getElementById('btn-video-toggle');
+      const statusEl = document.getElementById('video-status-text');
+      const overlayEl = document.getElementById('video-play-overlay');
+      const totalTimeEl = document.getElementById('video-total-time');
+
+      vid.ontimeupdate = () => {
+        this.updateVideoProgress(videoId);
+      };
+
+      vid.onseeking = () => {
+        const statusEl = document.getElementById('video-status-text');
+        if (statusEl) statusEl.textContent = `Đang chuyển đến: ${this.formatTime(vid.currentTime)}`;
+      };
+
+      vid.onseeked = () => {
+        this.updateVideoProgress(videoId);
+        const statusEl = document.getElementById('video-status-text');
+        if (statusEl) statusEl.textContent = `Đã chuyển đến: ${this.formatTime(vid.currentTime)}`;
+      };
+
+      vid.onloadedmetadata = () => {
+        if (totalTimeEl) {
+          totalTimeEl.textContent = this.formatTime(vid.duration);
+          totalTimeEl.dataset.ready = 'true';
+        }
+        this.updateVideoProgress(videoId);
+      };
+
+      vid.oncanplay = () => {
+        if (totalTimeEl) totalTimeEl.textContent = this.formatTime(vid.duration);
+      };
+
+      vid.onplay = () => {
+        if (btnToggle) {
+          btnToggle.innerHTML = '⏸ Tạm dừng';
+          btnToggle.style.background = '#FDE047';
+        }
+        if (statusEl) statusEl.textContent = 'Đang phát video tư liệu lịch sử';
+        if (overlayEl) overlayEl.style.opacity = '0';
+      };
+
+      vid.onpause = () => {
+        if (btnToggle) {
+          btnToggle.innerHTML = '▶ Phát tiếp';
+          btnToggle.style.background = 'var(--accent-orange)';
+        }
+        if (statusEl) statusEl.textContent = 'Đã tạm dừng (Kéo thanh trượt hoặc bấm ±10s để tua)';
+        if (overlayEl) overlayEl.style.opacity = '1';
+      };
+
+      vid.onended = () => {
+        if (btnToggle) {
+          btnToggle.innerHTML = 'Phát lại';
+          btnToggle.style.background = 'var(--accent-green)';
+        }
+        if (statusEl) statusEl.textContent = 'Video đã kết thúc. Bấm xem lại hoặc tua lại.';
+        if (overlayEl) overlayEl.style.opacity = '1';
+      };
+
+      this.updateVideoProgress(videoId);
     },
 
     // =============================================================
@@ -724,21 +1199,57 @@ const Deck = (function () {
         `;
         if (data.videoSrc) {
           mediaHtml = `
-            <div class="video-smart-card" style="background: #0B0F19; border-radius: 8px; overflow: hidden; margin-bottom: 14px; border: 2px solid var(--border-dark); box-shadow: var(--shadow-sm);">
-              <video id="hotspot-video-player" playsinline preload="metadata" controls style="width: 100%; max-height: 400px; display: block; background: #000; cursor: pointer;" onclick="Deck.toggleVideoPlay('hotspot-video-player')">
-                <source src="${data.videoSrc}" type="video/mp4">
-                Trình duyệt không hỗ trợ phát video MP4.
-              </video>
-              <div class="video-smart-toolbar" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; background: #1E293B; border-top: 1px solid #334155;">
-                <button type="button" id="btn-video-toggle" class="btn btn-primary" style="font-size: 13px; font-weight: 700; padding: 6px 16px; background: var(--accent-orange); color: #000; border-color: #000; box-shadow: 2px 2px 0px #000;" onclick="Deck.toggleVideoPlay('hotspot-video-player')">
-                  Phát video
-                </button>
-                <span id="video-status-text" style="font-size: 13px; color: #CBD5E1; font-weight: 600; flex: 1; text-align: center;">
-                  Bấm để bật hoặc tạm dừng video
-                </span>
-                <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px; background: #334155; color: #FFF; border-color: #475569;" onclick="Deck.restartVideo('hotspot-video-player')">
-                  Xem lại từ đầu
-                </button>
+            <div class="video-smart-card">
+              <div class="video-container" onclick="Deck.toggleVideoPlay('hotspot-video-player')" title="Bấm vào video để Phát / Tạm dừng">
+                <video id="hotspot-video-player" playsinline preload="auto">
+                  <source src="${data.videoSrc}" type="video/mp4">
+                  Trình duyệt không hỗ trợ phát video MP4.
+                </video>
+                <div id="video-play-overlay" class="video-play-overlay">
+                  <div class="video-play-bubble">▶</div>
+                </div>
+              </div>
+
+              <div class="video-controls-panel">
+                <!-- Thanh trượt tua video (Scrubber / Timeline) -->
+                <div class="video-scrubber-row">
+                  <span id="video-curr-time" class="video-time-label">00:00</span>
+                  <div class="video-slider-wrap">
+                    <input type="range" id="video-seek-slider" class="video-seek-slider" min="0" max="100" value="0" step="0.1"
+                           aria-label="Thanh kéo tua video"
+                           oninput="Deck.onVideoSeekInput('hotspot-video-player', this.value)"
+                           onchange="Deck.onVideoSeekChange('hotspot-video-player', this.value)">
+                  </div>
+                  <span id="video-total-time" class="video-time-label">01:52</span>
+                </div>
+
+                <!-- Thanh công cụ điều khiển và tua nhanh/lùi -->
+                <div class="video-smart-toolbar">
+                  <div class="video-btn-group-left">
+                    <button type="button" id="btn-video-toggle" class="btn btn-primary btn-video-action" onclick="Deck.toggleVideoPlay('hotspot-video-player')">
+                      ▶ Phát video
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-seek-step" title="Tua lùi 10 giây (hoặc phím ◀)" onclick="Deck.seekVideo('hotspot-video-player', -10)">
+                      -10s
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-seek-step" title="Tua tới 10 giây (hoặc phím ▶)" onclick="Deck.seekVideo('hotspot-video-player', 10)">
+                      +10s
+                    </button>
+                  </div>
+
+                  <span id="video-status-text" class="video-status-info">
+                    Kéo thanh trượt hoặc bấm ±10s để tua video
+                  </span>
+
+                  <div class="video-btn-group-right">
+                    <button type="button" id="btn-video-speed" class="btn btn-secondary btn-speed" onclick="Deck.cycleVideoSpeed('hotspot-video-player')" title="Đổi tốc độ phát">
+                      1.0x
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-restart" onclick="Deck.restartVideo('hotspot-video-player')" title="Xem lại từ đầu">
+                      Xem lại
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           `;
@@ -760,24 +1271,8 @@ const Deck = (function () {
 
         if (data.videoSrc) {
           setTimeout(() => {
-            const vid = document.getElementById('hotspot-video-player');
-            const btn = document.getElementById('btn-video-toggle');
-            const status = document.getElementById('video-status-text');
-            if (vid && btn && status) {
-              vid.onplay = () => {
-                btn.textContent = 'Tạm dừng video';
-                status.textContent = 'Đang phát video tư liệu lịch sử';
-              };
-              vid.onpause = () => {
-                btn.textContent = 'Phát tiếp video';
-                status.textContent = 'Đã tạm dừng video';
-              };
-              vid.onended = () => {
-                btn.textContent = 'Phát lại video';
-                status.textContent = 'Video đã kết thúc';
-              };
-            }
-          }, 50);
+            Deck.setupVideoPlayer('hotspot-video-player');
+          }, 40);
         }
       }
       // MÀN HÌNH 2: THỬ THÁCH NHANH KIỂM TRA NHẬN THỨC
@@ -807,6 +1302,8 @@ const Deck = (function () {
       }
       // MÀN HÌNH 3: ĐÚC KẾT BÀI HỌC (CARD VIEW PAGINATION)
       else if (step === 3) {
+        if (!State.lv1.hasVisitedStep3) State.lv1.hasVisitedStep3 = {};
+        State.lv1.hasVisitedStep3[hpId] = true;
         const pages = data.cardPages;
         const page = pages[currentCardIdx] || pages[0];
         const isLastPage = currentCardIdx === pages.length - 1;
@@ -887,6 +1384,8 @@ const Deck = (function () {
     answerHotspot(hpId, isCorrect, btnEl) {
       const fb = document.getElementById('hp-fb');
       if (!fb) return;
+      const data = HOTSPOTS[hpId];
+      if (!data) return;
 
       // Lưu trạng thái trả lời của người dùng
       State.lv1.quizStatus[hpId] = isCorrect;
@@ -905,13 +1404,29 @@ const Deck = (function () {
         fb.style.display = 'block';
         fb.style.background = '#F0FDF4';
         fb.style.borderColor = '#16A34A';
-        fb.innerHTML = `
-          <strong style="color: #166534; font-size: 14px; display: block; margin-bottom: 6px;">✓ Chính xác! Bạn đã tìm ra manh mối quan trọng.</strong>
-          <span style="color: #14532D; font-size: 13px;">Hãy cùng khám phá nội dung bài học để hiểu rõ hơn nhé!</span>
-          <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="Deck.renderHotspotStep(${hpId}, 3, 0)">
-            TIẾP TỤC: KHÁM PHÁ BÀI HỌC (BƯỚC 3) ➔
-          </button>
-        `;
+
+        const hasVisitedStep3 = State.lv1.hasVisitedStep3 && State.lv1.hasVisitedStep3[hpId];
+        const lastPageIdx = (data.cardPages && data.cardPages.length > 0) ? data.cardPages.length - 1 : 0;
+
+        if (hasVisitedStep3) {
+          // Người dùng quay lại thử sức và trả lời đúng -> Hiển thị nút đến Bức tranh toàn cảnh, KHÔNG tự ý nhảy
+          fb.innerHTML = `
+            <strong style="color: #166534; font-size: 14px; display: block; margin-bottom: 6px;">✓ Hoàn toàn chính xác! Bạn đã vượt qua thử thách nhận thức.</strong>
+            <span style="color: #14532D; font-size: 13px;">Manh mối tư tưởng đã được kích hoạt! Bấm nút bên dưới khi bạn sẵn sàng xem Bức tranh toàn cảnh.</span>
+            <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="Deck.renderHotspotStep(${hpId}, 3, ${lastPageIdx})">
+              TIẾP TỤC: XEM BỨC TRANH TOÀN CẢNH & HOÀN THÀNH ➔
+            </button>
+          `;
+        } else {
+          // Lần đầu trả lời đúng -> Hiển thị nút, KHÔNG tự ý nhảy
+          fb.innerHTML = `
+            <strong style="color: #166534; font-size: 14px; display: block; margin-bottom: 6px;">✓ Chính xác! Bạn đã tìm ra manh mối quan trọng.</strong>
+            <span style="color: #14532D; font-size: 13px;">Hãy cùng khám phá nội dung bài học để hiểu rõ hơn nhé!</span>
+            <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="Deck.renderHotspotStep(${hpId}, 3, 0)">
+              TIẾP TỤC: KHÁM PHÁ BÀI HỌC (BƯỚC 3) ➔
+            </button>
+          `;
+        }
       } else {
         AudioFX.error();
         btnEl.classList.add('wrong');
@@ -957,118 +1472,137 @@ const Deck = (function () {
       const modal = document.getElementById('lv2-modal');
       if (!modal) return;
       modal.style.display = 'flex';
-      this.renderStrategyStep(nodeId, 1);
+      
+      // Nếu đã từng trả lời đúng, mở ngay trang luận giải chi tiết; nếu chưa thì mở câu hỏi
+      const step = State.lv2.choices[nodeId] ? 2 : 1;
+      this.renderStrategyStep(nodeId, step);
     },
 
     renderStrategyStep(nodeId, step) {
       const data = STRATEGIES[nodeId];
+      if (!data) return;
+
       const badgeEl = document.getElementById('m2-badge');
       if (badgeEl) badgeEl.textContent = `QUYẾT SÁCH 0${nodeId} // ${data.name}`;
+
       const content = document.getElementById('m2-content');
       if (!content) return;
 
+      const isAnswered = !!State.lv2.choices[nodeId];
+
+      // Thanh tab phân luồng điều hướng Neo-Brutalist (2 bước: Câu hỏi -> Đúng 1 Trang bài học toàn diện)
       const stepPills = `
-        <div class="modal-step-flow">
-          <span class="modal-step-badge ${step === 1 ? 'active' : 'done'}">CÂU 1: CHỌN QUYẾT SÁCH CHIẾN LƯỢC</span>
-          <span class="modal-step-badge ${step === 2 ? 'active' : ''}">CÂU 2: CHỌN LUẬN CỨ GIẢI THÍCH</span>
+        <div class="strat-step-nav">
+          <button type="button" class="strat-step-tab ${step === 1 ? 'active' : (isAnswered ? 'done' : '')}" onclick="Deck.renderStrategyStep(${nodeId}, 1)">
+            ${isAnswered ? '✓ ' : ''}BƯỚC 1: THỬ THÁCH NHẬN THỨC
+          </button>
+          <button type="button" class="strat-step-tab ${step === 2 ? 'active' : ''} ${!isAnswered ? 'disabled' : ''}" onclick="${isAnswered ? `Deck.renderStrategyStep(${nodeId}, 2)` : ''}">
+            ${isAnswered ? '★ ' : ''}BƯỚC 2: BÀI HỌC TOÀN DIỆN (1 TRANG)
+          </button>
         </div>
       `;
 
-      // Ảnh tư liệu lịch sử cho quyết sách
-      const imageBlock = `
-        <div class="inspect-img-wrap" style="height: 180px; margin-bottom: 8px;">
-          <img src="${data.img}" alt="${data.caption}" class="inspect-img">
-        </div>
-        <div style="font-style: italic; font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; text-align: center;">
-          <strong>Tư liệu lịch sử:</strong> ${data.caption}
-        </div>
-      `;
-
+      // BƯỚC 1: 1 CÂU HỎI TRẮC NGHIỆM DUY NHẤT
       if (step === 1) {
+        const imageBlock = `
+          <div class="inspect-img-wrap" style="height: 190px; margin-bottom: 8px;">
+            <img src="${data.img}" alt="${data.caption}" class="inspect-img">
+          </div>
+          <div style="font-style: italic; font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; text-align: center;">
+            <strong>Tư liệu lịch sử:</strong> ${data.caption}
+          </div>
+        `;
+
         let optsHtml = '';
-        data.opts1.forEach(opt => {
+        data.options.forEach(opt => {
+          const isChosen = State.lv2.choices[nodeId] === opt.key;
           optsHtml += `
-            <button class="stage-opt-btn" onclick="Deck.pickStrategyStep1(${nodeId}, '${opt.key}', ${opt.correct || false}, this)">
+            <button class="stage-opt-btn ${isChosen ? 'correct' : ''}" onclick="Deck.pickStrategyAnswer(${nodeId}, '${opt.key}', ${opt.correct || false}, this)">
               <span class="brutal-badge badge-green">${opt.key}</span>
               <span>${opt.text}</span>
             </button>
           `;
         });
 
-        content.innerHTML = `
-          ${stepPills}
-          ${imageBlock}
-          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px; line-height: 1.4;">${data.q1}</h3>
-          <div class="stage-options-grid">${optsHtml}</div>
-          <div id="strat-fb" style="display: none; margin-top: 14px;"></div>
-        `;
-      } else if (step === 2) {
-        let optsHtml = '';
-        data.opts2.forEach(opt => {
-          optsHtml += `
-            <button class="stage-opt-btn" onclick="Deck.pickStrategyStep2(${nodeId}, '${opt.key}', ${opt.correct || false}, this)">
-              <span class="brutal-badge badge-purple">${opt.key}</span>
-              <span>${opt.text}</span>
+        const feedbackHtml = isAnswered ? `
+          <div id="strat-fb" class="stage-feedback-box" style="display: block; background: #F0FDF4; border-color: #16A34A; margin-top: 14px;">
+            <strong style="color: #166534; font-size: 14px; display: block; margin-bottom: 4px;">✓ BẠN ĐÃ TRẢ LỜI CHÍNH XÁC!</strong>
+            <div style="font-size: 13px; margin-bottom: 12px; color: #14532D;">${data.summary}</div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="Deck.renderStrategyStep(${nodeId}, 2)">
+              BẮT ĐẦU TÌM HIỂU BÀI HỌC TOÀN DIỆN (BƯỚC 2) ➔
             </button>
-          `;
-        });
+          </div>
+        ` : `
+          <div id="strat-fb" style="display: none; margin-top: 14px;"></div>
+        `;
 
         content.innerHTML = `
           ${stepPills}
           ${imageBlock}
-          <div style="background: #ECFDF5; border-left: 4px solid #10B981; padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: #065F46;">
-            ✓ Bạn đã chọn quyết sách đúng! Bây giờ hãy chọn luận cứ giải thích chuẩn xác theo tư tưởng Bác:
+          <div style="background: #F8FAFC; border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 14px;">
+            <span class="brutal-badge badge-blue" style="margin-bottom: 6px; display: inline-block;">CÂU HỎI TRỌNG TÂM</span>
+            <h3 style="font-size: 16px; font-weight: 800; margin: 0; line-height: 1.45; color: #0F172A;">${data.q}</h3>
           </div>
-          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px; line-height: 1.4;">${data.q2}</h3>
           <div class="stage-options-grid">${optsHtml}</div>
-          <div id="strat-fb" style="display: none; margin-top: 14px;"></div>
+          ${feedbackHtml}
+        `;
+      }
+      // BƯỚC 2: BÀI HỌC TOÀN DIỆN & KẾT LUẬN CỐT LÕI (ĐÚNG 1 TRANG DUY NHẤT)
+      else if (step === 2) {
+        content.innerHTML = `
+          ${stepPills}
+          <div class="strat-section-header">
+            <span class="brutal-badge badge-green">${data.lesson.badge}</span>
+            <h3>${data.lesson.title}</h3>
+          </div>
+
+          <div style="animation: fadeIn 0.25s ease;">
+            ${data.lesson.html}
+          </div>
+
+          <div class="strat-takeaway-box">
+            <div class="strat-takeaway-header">★ BÀI HỌC KẾT LUẬN CỐT LÕI</div>
+            <div class="strat-takeaway-body">${data.lesson.takeaway}</div>
+          </div>
+
+          <div class="strat-footer-btns">
+            <button class="btn btn-secondary" onclick="Deck.renderStrategyStep(${nodeId}, 1)">
+              ◀ Xem lại câu hỏi
+            </button>
+            <button class="btn btn-primary" onclick="Deck.confirmStrategyChoice(${nodeId})">
+              ✓ XÁC NHẬN VÀO BẢNG CHIẾN LƯỢC (HOÀN THÀNH) ➔
+            </button>
+          </div>
         `;
       }
     },
 
-    pickStrategyStep1(nodeId, key, isCorrect, btnEl) {
-      const fb = document.getElementById('strat-fb');
-      if (!fb) return;
-
-      if (isCorrect) {
-        AudioFX.success();
-        btnEl.classList.add('correct');
-        fb.className = 'stage-feedback-box';
-        fb.style.display = 'block';
-        fb.innerHTML = `
-          <strong>QUYẾT SÁCH HOÀN TOÀN CHÍNH XÁC! ✓</strong><br>
-          <button class="btn btn-primary" style="margin-top: 10px; width: 100%;" onclick="Deck.renderStrategyStep(${nodeId}, 2)">
-            TIẾP TỤC: CHỌN LUẬN CỨ GIẢI THÍCH (CÂU 2) ➔
-          </button>
-        `;
-      } else {
-        AudioFX.error();
-        btnEl.classList.add('wrong');
-        fb.className = 'stage-feedback-box';
-        fb.style.background = '#FEE2E2';
-        fb.style.borderColor = '#DC2626';
-        fb.style.display = 'block';
-        fb.innerHTML = `<strong>LỰA CHỌN CHƯA PHÙ HỢP!</strong> Vui lòng xem lại bài học lịch sử và chọn lại đường lối đúng đắn.`;
-      }
-    },
-
-    pickStrategyStep2(nodeId, key, isCorrect, btnEl) {
+    pickStrategyAnswer(nodeId, key, isCorrect, btnEl) {
       const fb = document.getElementById('strat-fb');
       if (!fb) return;
       const data = STRATEGIES[nodeId];
 
+      // Gỡ bỏ trạng thái của các nút khác trong lưới
+      const allBtns = document.querySelectorAll('.stage-opt-btn');
+      allBtns.forEach(b => {
+        b.classList.remove('correct');
+        b.classList.remove('wrong');
+      });
+
       if (isCorrect) {
-        AudioFX.fanfare();
+        AudioFX.success();
         btnEl.classList.add('correct');
         State.lv2.choices[nodeId] = key;
 
         fb.className = 'stage-feedback-box';
         fb.style.display = 'block';
+        fb.style.background = '#F0FDF4';
+        fb.style.borderColor = '#16A34A';
         fb.innerHTML = `
-          <strong>LUẬN CỨ HOÀN TOÀN CHUẨN XÁC! ✓</strong><br>
-          <div style="margin-top: 4px; font-size: 13px; color: #166534;">${data.summary}</div>
-          <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="Deck.confirmStrategyChoice(${nodeId})">
-            XÁC NHẬN VÀO BẢNG CHIẾN LƯỢC ➔
+          <strong style="color: #166534; font-size: 14px; display: block; margin-bottom: 4px;">QUYẾT SÁCH HOÀN TOÀN CHÍNH XÁC! ✓</strong>
+          <div style="font-size: 13px; margin-bottom: 12px; color: #14532D;">${data.summary}</div>
+          <button class="btn btn-primary" style="width: 100%;" onclick="Deck.renderStrategyStep(${nodeId}, 2)">
+            BẮT ĐẦU TÌM HIỂU BÀI HỌC TOÀN DIỆN (BƯỚC 2) ➔
           </button>
         `;
       } else {
@@ -1078,16 +1612,19 @@ const Deck = (function () {
         fb.style.background = '#FEE2E2';
         fb.style.borderColor = '#DC2626';
         fb.style.display = 'block';
-        fb.innerHTML = `<strong>LUẬN CỨ CHƯA ĐÚNG!</strong> Hãy liên hệ quan điểm của Chủ tịch Hồ Chí Minh trong giáo trình.`;
+        fb.innerHTML = `
+          <strong style="color: #991B1B; font-size: 14px; display: block; margin-bottom: 4px;">LỰA CHỌN CHƯA PHÙ HỢP!</strong>
+          <span style="color: #7F1D1D; font-size: 13px;">Hãy liên hệ bối cảnh lịch sử và quan điểm cốt lõi của Chủ tịch Hồ Chí Minh trong giáo trình để chọn lại đáp án đúng đắn nhé!</span>
+        `;
       }
     },
 
     confirmStrategyChoice(nodeId) {
-      AudioFX.click();
+      AudioFX.fanfare();
       const card = document.getElementById(`scard-${nodeId}`);
       if (card) card.classList.add('selected');
       const choiceEl = document.getElementById(`schoice-${nodeId}`);
-      if (choiceEl) choiceEl.innerHTML = `<strong>✓ ĐÃ THIẾT LẬP</strong>`;
+      if (choiceEl) choiceEl.innerHTML = `<strong>✓ ĐÃ XÁC LẬP</strong>`;
 
       const completed = Object.keys(State.lv2.choices).length;
       const countEl = document.getElementById('lv2-stat-count');
@@ -1096,7 +1633,6 @@ const Deck = (function () {
       this.closeModal('lv2-modal');
 
       if (completed === 5) {
-        AudioFX.fanfare();
         const btn = document.getElementById('btn-reveal-strategy');
         if (btn) {
           btn.disabled = false;
@@ -1206,13 +1742,15 @@ const Deck = (function () {
 
       if (!title || !badge || !desc) return;
 
+      // LUÔN ĐỒNG BỘ 4 THANH TIẾN ĐỘ THỜI GIAN THỰC CHÍNH XÁC THEO NGUỒN LỰC ĐÃ KÉO
+      this.setBars(pol, eco, cul, soc);
+
       // 1. Trạng thái ban đầu: Tổng 0
       if (total === 0) {
         title.textContent = 'HỆ THỐNG CHỜ PHÂN BỔ NGUỒN LỰC';
         badge.className = 'sim-status-badge pending';
         badge.textContent = 'CHƯA PHÂN BỔ ĐỦ 100 ĐNL';
         desc.innerHTML = 'Kéo các thanh trượt bên trái hoặc bấm vào các nút kịch bản thử nghiệm để quan sát hệ thống phân tích và đánh giá phản hồi ngay lập tức.';
-        this.setBars(0, 0, 0, 0);
         if (actionBtn) {
           actionBtn.className = 'btn btn-secondary btn-full';
           actionBtn.innerHTML = 'CẦN PHÂN BỔ VỪA ĐÚNG 100 ĐNL ĐỂ XÁC NHẬN';
@@ -1238,12 +1776,6 @@ const Deck = (function () {
           desc.innerHTML = `Tổng nguồn lực phân bổ đang vượt quá 100 ĐNL (thừa <strong>${Math.abs(rem)} ĐNL</strong>). Vui lòng giảm bớt các thanh trượt về đúng hạn mức!`;
         }
 
-        const estPol = Math.min(95, Math.round(pol * 1.8 + soc * 0.4));
-        const estEco = Math.min(95, Math.round(eco * 2.0));
-        const estCul = Math.min(95, Math.round(cul * 2.2));
-        const estSoc = Math.min(95, Math.round(soc * 1.8 + eco * 0.3));
-        this.setBars(estPol, estEco, estCul, estSoc);
-
         if (actionBtn) {
           actionBtn.className = 'btn btn-secondary btn-full';
           actionBtn.innerHTML = `CẦN PHÂN BỔ VỪA ĐÚNG 100 ĐNL (ĐANG CÓ: ${total}/100)`;
@@ -1254,61 +1786,56 @@ const Deck = (function () {
         return;
       }
 
-      // 3. Đúng 100 ĐNL: Đánh giá Ma trận Đánh đổi
+      // 3. Đúng 100 ĐNL: Đánh giá Ma trận Đánh đổi theo đúng thực tế phân bổ
       if (eco >= 55) {
-        title.textContent = 'DỒN HẾT CHO KINH TẾ — BỎ QUÊN CÔNG BẰNG XÃ HỘI';
+        title.textContent = 'ƯU TIÊN TĂNG TRƯỞNG KINH TẾ ĐƠN THUẦN — NGUY CƠ BẤT BÌNH ĐẲNG';
         badge.className = 'sim-status-badge failed';
         badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
-        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Của cải làm ra nhiều nhưng người giàu thì ngày càng giàu, người nghèo thì chịu thiệt thòi; thiếu công bằng xã hội, đạo đức và tình nghĩa giữa con người bị xem nhẹ khi ai nấy chỉ mải chạy theo tiền bạc.<br><em><strong>Lời Bác dạy:</strong> Kinh tế phải phát triển vững vàng, nhưng thành quả làm ra phải đem lại ấm no cho tất cả mọi người, chứ không thể để số ít giàu sang còn đa số chịu vất vả.</em>';
-        this.setBars(35, 95, 25, 30);
+        desc.innerHTML = `<strong>Phân tích định hướng khi Kinh tế chiếm ${eco}% (${eco} ĐNL):</strong> Khi dồn phần lớn nguồn lực để thúc đẩy tăng trưởng kinh tế đơn thuần mà xem nhẹ các mặt khác, của cải vật chất có thể gia tăng nhưng khoảng cách giàu nghèo sẽ nới rộng; đời sống văn hóa, đạo đức tinh thần dễ bị xói mòn do lối sống thực dụng chạy theo vật chất.<br><em><strong>Lời Bác dạy:</strong> Bác khẳng định kinh tế là nền tảng của xã hội, nhưng mục tiêu của CNXH là đem lại đời sống ấm no, tự do, hạnh phúc cho toàn thể nhân dân — chứ không vì sự giàu sang của một thiểu số. Phát triển kinh tế phải luôn gắn liền với tiến bộ, công bằng xã hội và bồi đắp văn hóa.</em>`;
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
           actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ DỒN TIỀN LÀM KINH TẾ (CHƯA ĐẠT) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ ƯU TIÊN MẠNH KINH TẾ (CHƯA CÂN BẰNG) ]';
       }
       else if (soc >= 55) {
-        title.textContent = 'CHƯA LÀM ĐÃ LO CHIA ĐỀU — CÙNG NHAU NGHÈO ĐI';
+        title.textContent = 'DỒN LỰC CHO PHÚC LỢI KHI NỀN KINH TẾ CHƯA ĐỦ LỰC';
         badge.className = 'sim-status-badge failed';
         badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
-        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Khi chưa làm ra nhiều của cải mà đã lo chia đều tiền của và trợ cấp. Người chăm chỉ cũng hưởng bằng người lười biếng, sinh ra thói ỷ lại, người tài không còn động lực phấn đấu, cuối cùng đất nước cạn kiệt ngân sách và cùng nhau nghèo đi.<br><em><strong>Lời Bác dạy:</strong> Bác khẳng định nguyên tắc công bằng rất rõ ràng: "Làm nhiều hưởng nhiều, làm ít hưởng ít, không làm không hưởng". Phải cùng nhau lao động sản xuất tạo ra của cải trước thì mới có cái để chăm lo cuộc sống ấm no cho dân.</em>';
-        this.setBars(50, 20, 40, 45);
+        desc.innerHTML = `<strong>Phân tích định hướng khi Xã hội chiếm ${soc}% (${soc} ĐNL):</strong> Chăm lo an sinh và phúc lợi xã hội là bản chất ưu việt của CNXH, nhưng nếu mở rộng bao cấp, bình quân khi nguồn của cải tích lũy chưa đủ lớn thì dễ làm cạn kiệt ngân sách quốc gia và triệt tiêu động lực thi đua sáng tạo của người lao động.<br><em><strong>Lời Bác dạy:</strong> Bác căn dặn nguyên tắc công bằng rất rõ: "Làm nhiều hưởng nhiều, làm ít hưởng ít, không làm không hưởng". Phải tích cực lao động sản xuất, tăng gia tiết kiệm tạo ra của cải dồi dào trước thì chính sách an sinh xã hội mới bền vững và thực chất.</em>`;
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
           actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ CHƯA LÀM ĐÃ LO CHIA ĐỀU (CHƯA ĐẠT) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ PHÚC LỢI VƯỢT KHẢ NĂNG (CHƯA CÂN BẰNG) ]';
       }
       else if (pol >= 55) {
-        title.textContent = 'BỘ MÁY QUẢN LÝ QUÁ CỒNG KỀNH — XA RỜI NGƯỜI DÂN';
+        title.textContent = 'TẬP TRUNG BỘ MÁY HÀNH CHÍNH — NGUY CƠ QUAN LIÊU, MỆNH LỆNH';
         badge.className = 'sim-status-badge failed';
         badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
-        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Tiêu tốn quá nhiều tiền của vào bộ máy quản lý bàn giấy cồng kềnh. Cán bộ xa dân, chỉ biết ngồi phòng lạnh ra lệnh áp đặt từ trên xuống mà không lắng nghe dân, làm thui chột tinh thần chủ động và sáng tạo của người dân.<br><em><strong>Lời Bác dạy:</strong> Bác căn dặn: "Cán bộ là người đầy tớ phục vụ nhân dân, chứ không phải quan cách mạng để đè đầu cưỡi cổ dân". Xã hội muốn phát triển thì mọi việc phải để người dân tự giác bàn bạc, thực hiện và kiểm tra.</em>';
-        this.setBars(45, 25, 35, 25);
+        desc.innerHTML = `<strong>Phân tích định hướng khi Chính trị chiếm ${pol}% (${pol} ĐNL):</strong> Việc dồn quá nhiều nguồn lực vào bộ máy quản lý hành chính dễ dẫn đến tình trạng quan liêu, cồng kềnh, mệnh lệnh hành chính xa rời đời sống nhân dân, làm suy giảm tính năng động, sáng tạo và quyền làm chủ thực sự của người dân.<br><em><strong>Lời Bác dạy:</strong> Bác căn dặn: "Các cơ quan của Chính phủ đều là đầy tớ của dân, chứ không phải là quan cách mạng để đè đầu cưỡi cổ dân". Quyền làm chủ của nhân dân phải được thực thi sinh động trong đời sống, không thể thay thế bằng mệnh lệnh hành chính xơ cứng.</em>`;
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
           actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ BỘ MÁY QUẢN LÝ CỒNG KỀNH (CHƯA ĐẠT) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ BỘ MÁY QUẢN LÝ CỒNG KỀNH (CHƯA CÂN BẰNG) ]';
       }
       else if (cul >= 55) {
-        title.textContent = 'CHỈ NÓI ĐẠO LÝ SUÔNG — THIẾU CƠM ĂN ÁO MẶC';
+        title.textContent = 'CHÚ TRỌNG VĂN HÓA ĐƠN THUẦN — THIẾU NỀN TẢNG VẬT CHẤT';
         badge.className = 'sim-status-badge failed';
         badge.textContent = 'CẢNH BÁO MẤT CÂN ĐỐI ✕';
-        desc.innerHTML = '<strong>Thực tế sẽ ra sao?</strong> Suốt ngày chỉ mở lớp học lý thuyết và kêu gọi đạo đức suông nhưng bỏ quên việc làm ăn sản xuất. Khi người dân còn đói ăn, thiếu mặc thì những lời đạo lý suông không thể giúp cuộc sống tốt đẹp hơn.<br><em><strong>Lời Bác dạy:</strong> Bác nhắc nhở chân lý rất mộc mạc: "Có thực mới vực được đạo" — Muốn nhân dân tin tưởng và yên tâm xây dựng đời sống mới, trước hết chính quyền phải lo cho dân có đủ cơm ăn, áo ấm và chỗ ở đàng hoàng.</em>';
-        this.setBars(40, 20, 85, 35);
+        desc.innerHTML = `<strong>Phân tích định hướng khi Văn hóa chiếm ${cul}% (${cul} ĐNL):</strong> Đề cao giáo dục và bồi dưỡng tư tưởng là rất quý báu, nhưng nếu tách rời nhiệm vụ sản xuất kinh tế thì đời sống vật chất không được đảm bảo, lý tưởng giáo dục thiếu chỗ dựa thực tế để phát huy hiệu quả.<br><em><strong>Lời Bác dạy:</strong> Bác khẳng định chân lý sâu sắc mà giản dị: "Có thực mới vực được đạo" — Trước hết phải chăm lo cho dân có đủ cơm ăn, áo ấm, việc làm ổn định thì mới có điều kiện nâng cao dân trí và xây dựng nền văn hóa mới.</em>`;
         if (actionBtn) {
           actionBtn.className = 'btn btn-danger btn-full';
           actionBtn.innerHTML = '✕ PHÂN BỔ BỊ LỆCH — HÃY ĐIỀU CHỈNH LẠI';
         }
-        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ CHỈ NÓI ĐẠO LÝ SUÔNG (CHƯA ĐẠT) ]';
+        if (leftBuildBtn) leftBuildBtn.innerHTML = '[ THIẾU NỀN TẢNG VẬT CHẤT (CHƯA CÂN BẰNG) ]';
       }
       else if (eco >= 20 && eco <= 40 && pol >= 15 && pol <= 35 && cul >= 15 && cul <= 30 && soc >= 20 && soc <= 35) {
         title.textContent = 'MÔ HÌNH HÀI HÒA THEO ĐÚNG TƯ TƯỞNG BÁC HỒ';
         badge.className = 'sim-status-badge success';
         badge.textContent = 'XUẤT SẮC: PHÁT TRIỂN TOÀN DIỆN & BỀN VỮNG ✓';
-        desc.innerHTML = '<strong>Bài học cốt lõi từ Bác:</strong> Phát triển đất nước phải kết hợp nhịp nhàng cả 4 mặt:<br>• <strong>Chính trị:</strong> Nhân dân thực sự làm chủ, chính quyền gần gũi và vì dân phục vụ.<br>• <strong>Kinh tế:</strong> Lao động sản xuất giỏi để đất nước giàu có, no đủ của cải.<br>• <strong>Văn hóa:</strong> Mở mang trường học, nâng cao hiểu biết và sống có đạo đức.<br>• <strong>Xã hội:</strong> Công bằng, chăm lo y tế, giúp đỡ người nghèo, không ai bị bỏ rơi.';
-        this.setBars(90, 85, 85, 95);
+        desc.innerHTML = `<strong>Mô hình phân bổ đạt chuẩn: Chính trị ${pol}% - Kinh tế ${eco}% - Văn hóa ${cul}% - Xã hội ${soc}%!</strong><br><strong>Bài học cốt lõi từ Bác:</strong> Phát triển đất nước phải kết hợp nhịp nhàng cả 4 mặt:<br>• <strong>Chính trị (${pol}%):</strong> Nhân dân thực sự làm chủ, chính quyền gần gũi và vì dân phục vụ.<br>• <strong>Kinh tế (${eco}%):</strong> Lao động sản xuất giỏi để đất nước giàu có, no đủ của cải.<br>• <strong>Văn hóa (${cul}%):</strong> Mở mang trường học, nâng cao hiểu biết và sống có đạo đức.<br>• <strong>Xã hội (${soc}%):</strong> Công bằng, chăm lo y tế, giúp đỡ người nghèo, không ai bị bỏ rơi.`;
         if (actionBtn) {
           actionBtn.className = 'btn btn-primary btn-full';
           actionBtn.innerHTML = 'XÁC NHẬN MÔ HÌNH ĐẠT CHUẨN ➔ TIẾN VÀO CHẶNG 4 ➔';
@@ -1321,8 +1848,7 @@ const Deck = (function () {
         title.textContent = 'MÔ HÌNH CHƯA CÂN BẰNG HỢP LÝ';
         badge.className = 'sim-status-badge pending';
         badge.textContent = 'CẦN ĐIỀU CHỈNH LẠI ✕';
-        desc.innerHTML = 'Bốn trụ cột đang bị lệch. Gợi ý từ Bác Hồ: Hãy đầu tư Kinh tế làm nền tảng (khoảng 25–35 điểm), giữ Chính trị dân chủ vì dân (20–30 điểm), bồi dưỡng Văn hóa con người (15–25 điểm) và chăm lo Đời sống xã hội (20–30 điểm).';
-        this.setBars(Math.min(pol + 20, 75), Math.min(eco + 20, 75), Math.min(cul + 20, 75), Math.min(soc + 20, 75));
+        desc.innerHTML = `Phân bổ hiện tại (Chính trị ${pol}%, Kinh tế ${eco}%, Văn hóa ${cul}%, Xã hội ${soc}%) chưa thật sự hài hòa. Gợi ý từ Bác Hồ: Hãy đầu tư Kinh tế làm nền tảng (khoảng 25–35 điểm), giữ Chính trị dân chủ vì dân (20–30 điểm), bồi dưỡng Văn hóa con người (15–25 điểm) và chăm lo Đời sống xã hội (20–30 điểm).`;
         if (actionBtn) {
           actionBtn.className = 'btn btn-secondary btn-full';
           actionBtn.innerHTML = 'CHƯA CÂN BẰNG — HÃY ĐIỀU CHỈNH LẠI TỶ LỆ';
@@ -1369,14 +1895,29 @@ const Deck = (function () {
       const mbSoc = document.getElementById('mb-soc');
       const bfSoc = document.getElementById('bf-soc');
 
-      if (mbPol) mbPol.textContent = `${p}%`;
-      if (bfPol) bfPol.style.width = `${p}%`;
-      if (mbEco) mbEco.textContent = `${e}%`;
-      if (bfEco) bfEco.style.width = `${e}%`;
-      if (mbCul) mbCul.textContent = `${c}%`;
-      if (bfCul) bfCul.style.width = `${c}%`;
-      if (mbSoc) mbSoc.textContent = `${s}%`;
-      if (bfSoc) bfSoc.style.width = `${s}%`;
+      const items = [
+        { mb: mbPol, bf: bfPol, val: p, safeMin: 15, safeMax: 35 },
+        { mb: mbEco, bf: bfEco, val: e, safeMin: 20, safeMax: 40 },
+        { mb: mbCul, bf: bfCul, val: c, safeMin: 15, safeMax: 30 },
+        { mb: mbSoc, bf: bfSoc, val: s, safeMin: 20, safeMax: 35 }
+      ];
+
+      items.forEach(item => {
+        if (item.mb) item.mb.textContent = `${item.val}%`;
+        if (item.bf) {
+          const w = Math.min(100, Math.max(0, item.val));
+          item.bf.style.width = `${w}%`;
+          if (item.val === 0) {
+            item.bf.style.background = '#64748B';
+          } else if (item.val >= 50) {
+            item.bf.style.background = '#EF4444'; // Đỏ: Quá đà, áp đảo
+          } else if (item.val < item.safeMin) {
+            item.bf.style.background = '#F59E0B'; // Vàng cam: Thiếu hụt
+          } else {
+            item.bf.style.background = '#4ADE80'; // Xanh lá: Hài hòa
+          }
+        }
+      });
     },
 
     // =============================================================
@@ -1427,23 +1968,38 @@ const Deck = (function () {
       if (isCorrect) {
         AudioFX.success();
         btnEl.classList.add('correct');
+        // Disable other buttons once correct
+        document.querySelectorAll('.stage-opt-btn').forEach(b => {
+          if (b !== btnEl) b.style.opacity = '0.5';
+          b.disabled = true;
+        });
         fb.className = 'stage-feedback-box';
         fb.style.display = 'block';
         fb.innerHTML = `
-          <strong>QUYẾT SÁCH CHÍNH XÁC! ✓</strong><br>
-          <span>${data.feedback}</span><br>
-          <button class="btn btn-primary" style="margin-top: 12px;" onclick="Deck.nextChallenge(${chId})">
-            ${chId < 4 ? 'TIẾP TỤC THỬ THÁCH TIẾP THEO ➔' : 'HOÀN THÀNH ➔ XEM TỔNG HỢP NGUYÊN TẮC CỐT LÕI ➔'}
+          <div class="ch-feedback-header">
+            <span class="ch-correct-badge">QUYẾT SÁCH CHÍNH XÁC! ✓</span>
+          </div>
+          <div class="ch-takeaway-box">
+            <div class="ch-takeaway-label">🎯 CHỐT KIẾN THỨC CỐT LÕI:</div>
+            <div class="ch-takeaway-text">“${data.chot}”</div>
+          </div>
+          <details class="ch-speech-details">
+            <summary class="ch-speech-summary">🎙️ Lời thoại thuyết trình gợi ý cho Tân (Bấm để xem)</summary>
+            <div class="ch-speech-body">“${data.speech}”</div>
+          </details>
+          <button class="btn btn-primary btn-large" style="margin-top: 12px; width: 100%; justify-content: center;" onclick="Deck.nextChallenge(${chId})">
+            ${chId < 4 ? `TIẾP TỤC ➔ THỬ THÁCH 0${chId + 1} ➔` : 'HOÀN THÀNH ➔ XEM TỔNG HỢP NGUYÊN TẮC CỐT LÕI ➔'}
           </button>
         `;
       } else {
         AudioFX.error();
         btnEl.classList.add('wrong');
-        fb.className = 'stage-feedback-box';
-        fb.style.background = '#FEE2E2';
-        fb.style.borderColor = '#DC2626';
+        fb.className = 'stage-feedback-box ch-wrong-box';
         fb.style.display = 'block';
-        fb.innerHTML = `<strong>CHƯA PHÙ HỢP!</strong> Quyết sách này có nguy cơ nóng vội, đốt cháy giai đoạn hoặc giáo điều. Hãy chọn lại!`;
+        fb.innerHTML = `
+          <div style="font-weight: 800; color: #DC2626; margin-bottom: 4px;">❌ CHƯA PHÙ HỢP!</div>
+          <div style="font-size: 13px; color: #991B1B;">Quyết sách này có nguy cơ nóng vội, đốt cháy giai đoạn hoặc chưa sát thực tiễn Việt Nam. Bạn hãy thảo luận và lựa chọn lại!</div>
+        `;
       }
     },
 
@@ -1452,7 +2008,7 @@ const Deck = (function () {
       if (currentId < 4) {
         this.renderChallengeStage(currentId + 1);
       } else {
-        this.goToSlide(9); // Slide 9 là Đúc kết Mục 3.2.2
+        this.goToSlide(9); // Slide 9 là Tổng kết tri thức cốt lõi
       }
     },
 
@@ -1485,8 +2041,7 @@ const Deck = (function () {
         html += `
           <div class="chain-pool-card ${isPlaced ? 'placed' : ''} ${isSelected ? 'selected' : ''}" id="pcard-${card.id}" onclick="Deck.selectChainCard('${card.id}')">
             <img src="${card.img}" alt="${card.title}" class="pool-card-thumb">
-            <span class="pool-card-code">${card.code}</span>
-            <div class="pool-card-name">${card.title}</div>
+            <div class="pool-card-name" style="margin-top: 6px;">${card.title}</div>
             <small style="font-size: 10px; color: var(--text-secondary); margin-top: 2px;">${isPlaced ? '✓ Đã ghép vào chuỗi' : 'Click để chọn thẻ'}</small>
           </div>
         `;
@@ -1514,7 +2069,7 @@ const Deck = (function () {
         banner.style.background = '#FEF3C7';
         banner.style.borderColor = '#D97706';
         banner.style.color = '#92400E';
-        banner.innerHTML = `<strong>ĐÃ CHỌN THẺ [${card.code}: ${card.title}]</strong>. Mời bạn bấm vào 1 trong 4 ô Mắt xích bên trên để ghép vào!`;
+        banner.innerHTML = `<strong>ĐÃ CHỌN THẺ [${card.title}]</strong>. Mời bạn bấm vào 1 trong 4 ô Mắt xích bên trên để ghép vào!`;
       }
     },
 
@@ -1555,7 +2110,7 @@ const Deck = (function () {
         if (dropZone) {
           dropZone.innerHTML = `
             <img src="${card.img}" alt="${card.title}" class="slot-thumb-preview">
-            <strong style="color: #15803D; font-size: 11px; display: block;">✓ ${card.code}: ${card.title}</strong>
+            <strong style="color: #15803D; font-size: 11px; display: block;">✓ ${card.title}</strong>
           `;
         }
 
@@ -1568,7 +2123,7 @@ const Deck = (function () {
           banner.style.background = '#DCFCE7';
           banner.style.borderColor = '#16A34A';
           banner.style.color = '#14532D';
-          banner.innerHTML = `<strong>GHÉP CHUẨN XÁC! ✓</strong> Thẻ [${card.code}: ${card.title}] đã khớp hoàn hảo vào ${slotEl.querySelector('.slot-role-title').textContent}!`;
+          banner.innerHTML = `<strong>GHÉP CHUẨN XÁC! ✓</strong> Thẻ [${card.title}] đã khớp hoàn hảo vào ${slotEl.querySelector('.slot-role-title').textContent}!`;
         }
 
         // Kiểm tra xem đã đủ 4/4 ô chưa

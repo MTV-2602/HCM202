@@ -33,10 +33,13 @@
   --shadow-hard: 3px 3px 0px #000000;
   --shadow-hard-hover: 5px 5px 0px #000000;
   --shadow-hard-active: 1px 1px 0px #000000;
+  --shadow-sm: 2px 2px 0px #000000;
 
-  /* Typography */
-  --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-display: 'Space Grotesk', monospace;
+  /* Typography - 100% Chuẩn Tiếng Việt, không lỗi dấu, không lệch font */
+  --font-main: 'Be Vietnam Pro', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+  --font-serif: 'Lora', 'Times New Roman', serif;
+  --font-sans: 'Be Vietnam Pro', 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slide: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -66,7 +69,7 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url('assets/images/hinh-anh-hoa-sen-va-bac-ho-inkythuatso-06-09-25-42.jpg?v=20260913_7');
+  background-image: url('assets/images/bg_hoasen_bacho.jpg?v=20260913_8');
   background-position: center top 30px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -885,19 +888,68 @@ body:has(#slide-0.active)::before {
   color: var(--text-muted);
 }
 
+.sim-presets-deck {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #F8FAFC;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
 .presets-label {
+  font-family: var(--font-display);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: var(--text-muted);
   width: 100%;
   margin-bottom: 2px;
+}
+
+.preset-btn {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  background: #FFFFFF;
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.85);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.preset-btn:hover {
+  background: var(--accent-yellow);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000;
+}
+
+.preset-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000;
 }
 
 .preset-btn.btn-reset {
   background: #FEE2E2;
   border-color: #DC2626;
   color: #991B1B;
+  box-shadow: 2px 2px 0px #DC2626;
 }
+
+.preset-btn.btn-reset:hover {
+  background: #FECACA;
+  color: #7F1D1D;
+  box-shadow: 3px 3px 0px #DC2626;
+}
+
 
 /* Standby Console View */
 .standby-radar-box {
@@ -1020,10 +1072,14 @@ body:has(#slide-0.active)::before {
   background: #FFF;
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 36px;
+  padding: 20px 28px;
   box-shadow: 6px 6px 0px #000;
-  max-width: 960px;
+  max-width: 980px;
   margin: 0 auto;
+}
+
+#slide-8 .slide-header {
+  margin-bottom: 12px;
 }
 
 .challenge-stage-tag {
@@ -1035,35 +1091,37 @@ body:has(#slide-0.active)::before {
   padding: 3px 8px;
   border-radius: 4px;
   display: inline-block;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .challenge-stage-title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  line-height: 1.35;
 }
 
 .challenge-stage-context {
   background: #FAF9F6;
   border-left: 4px solid var(--accent-purple);
-  padding: 12px 18px;
-  font-size: 14.5px;
+  padding: 8px 14px;
+  font-size: 13.5px;
   color: var(--text-secondary);
-  margin-bottom: 20px;
+  margin-bottom: 12px;
+  line-height: 1.45;
 }
 
 .challenge-stage-question {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .stage-options-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
-  margin-bottom: 18px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .stage-opt-btn {
@@ -1074,13 +1132,13 @@ body:has(#slide-0.active)::before {
   background: #FAF9F6;
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-sm);
-  padding: 12px 18px;
+  padding: 9px 14px;
   cursor: pointer;
   box-shadow: 2px 2px 0px #000;
   text-align: left;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
-  line-height: 1.45;
+  line-height: 1.38;
   transition: all var(--transition-fast);
 }
 .stage-opt-btn:hover {
@@ -1100,10 +1158,88 @@ body:has(#slide-0.active)::before {
 .stage-feedback-box {
   background: #F0FDF4;
   border: var(--border-width) solid #16A34A;
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
   font-size: 13.5px;
-  margin-bottom: 16px;
+  margin-top: 14px;
+  box-shadow: 3px 3px 0px #166534;
+  animation: slideUp 0.25s ease;
+}
+
+.stage-feedback-box.ch-wrong-box {
+  background: #FEF2F2;
+  border-color: #DC2626;
+  box-shadow: 3px 3px 0px #991B1B;
+}
+
+.ch-feedback-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ch-correct-badge {
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #15803D;
+  background: #DCFCE7;
+  border: 1.5px solid #16A34A;
+  padding: 3px 10px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.ch-takeaway-box {
+  background: #FFF;
+  border: 1.5px solid #16A34A;
+  border-left: 5px solid #16A34A;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0 10px;
+}
+
+.ch-takeaway-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  color: #166534;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+
+.ch-takeaway-text {
+  font-size: 14px;
+  font-weight: 800;
+  color: #14532D;
+  line-height: 1.4;
+}
+
+.ch-speech-details {
+  background: #FFFBEB;
+  border: 1.5px dashed #D97706;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  font-size: 12.5px;
+}
+
+.ch-speech-summary {
+  font-weight: 700;
+  color: #92400E;
+  cursor: pointer;
+  outline: none;
+}
+
+.ch-speech-body {
+  margin-top: 6px;
+  color: #78350F;
+  line-height: 1.5;
+  font-style: italic;
+  padding-left: 6px;
+  border-left: 2px solid #F59E0B;
 }
 
 /* Slide 9: K04 Cards */
@@ -1526,7 +1662,7 @@ body:has(#slide-0.active)::before {
 }
 
 .modal-body-content {
-  padding: 24px 28px;
+  padding: 18px 24px;
 }
 
 /* 3-Step Hotspot Modal Flow */
@@ -1548,6 +1684,228 @@ body:has(#slide-0.active)::before {
   height: 100%;
   object-fit: contain;
   background: #111827;
+}
+
+/* ==========================================================================
+   SMART VIDEO PLAYER CONTROLS (SEEKBAR, TIMELINE, SCRUBBER)
+   ========================================================================== */
+.video-smart-card {
+  background: #0B0F19;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: var(--border-width) solid #000;
+  box-shadow: var(--shadow-hard);
+}
+
+.video-container {
+  position: relative;
+  background: #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-container video {
+  width: 100%;
+  max-height: 340px;
+  display: block;
+  background: #000;
+}
+
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.video-play-bubble {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.85);
+  border: 2.5px solid #FFF;
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #FFF;
+  padding-left: 4px;
+  transition: transform 0.15s ease;
+}
+
+.video-container:hover .video-play-bubble {
+  transform: scale(1.1);
+  background: rgba(37, 99, 235, 0.9);
+}
+
+.video-controls-panel {
+  background: #0F172A;
+  border-top: 2px solid #1E293B;
+  padding: 12px 18px;
+}
+
+.video-scrubber-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.video-time-label {
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #94A3B8;
+  min-width: 46px;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.video-slider-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.video-seek-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #334155;
+  outline: none;
+  cursor: pointer;
+  transition: height 0.15s ease;
+}
+
+.video-seek-slider:hover {
+  height: 10px;
+}
+
+.video-seek-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #38BDF8;
+  border: 2px solid #FFF;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.video-seek-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  background: #60A5FA;
+}
+
+.video-seek-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #38BDF8;
+  border: 2px solid #FFF;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+
+.video-smart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.video-btn-group-left,
+.video-btn-group-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-video-action {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  padding: 6px 16px !important;
+  background: var(--accent-orange) !important;
+  color: #000 !important;
+  border-color: #000 !important;
+  box-shadow: 2px 2px 0px #000 !important;
+  min-width: 115px;
+}
+
+.btn-seek-step {
+  font-family: var(--font-display, var(--font-main)) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  padding: 6px 14px !important;
+  background: #1E293B !important;
+  color: #F8FAFC !important;
+  border: 1.5px solid #334155 !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: 2px 2px 0px #000 !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn-seek-step:hover {
+  background: #334155 !important;
+  color: #38BDF8 !important;
+  border-color: #38BDF8 !important;
+  transform: translateY(-1px);
+}
+
+.video-status-info {
+  font-size: 12.5px;
+  color: #CBD5E1;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+  min-width: 180px;
+}
+
+.btn-speed {
+  font-family: var(--font-display) !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  padding: 6px 10px !important;
+  background: #1E293B !important;
+  color: #38BDF8 !important;
+  border-color: #0284C7 !important;
+  box-shadow: 2px 2px 0px #000 !important;
+}
+
+.btn-restart {
+  font-family: var(--font-main) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 6px 14px !important;
+  background: #1E293B !important;
+  color: #E2E8F0 !important;
+  border: 1.5px solid #334155 !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: 2px 2px 0px #000 !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-restart:hover {
+  background: #334155 !important;
+  color: #38BDF8 !important;
+  border-color: #38BDF8 !important;
+  transform: translateY(-1px);
 }
 
 .modal-step-flow {
@@ -1613,7 +1971,7 @@ body:has(#slide-0.active)::before {
   padding: 22px 26px;
 }
 .story-card-item h4 {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 15px;
   font-weight: 800;
   color: #92400E;
@@ -1680,6 +2038,448 @@ body:has(#slide-0.active)::before {
   color: var(--text-secondary);
 }
 
+/* ==========================================================================
+   CHẶNG 2: BẢNG QUYẾT SÁCH CHIẾN LƯỢC (THỊNH) — MODAL DETAIL & LUẬN GIẢI
+   ========================================================================== */
+.strat-step-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.strat-step-tab {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border-color);
+  background: #F3F4F6;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.strat-step-tab:hover {
+  background: #E5E7EB;
+  color: #000;
+  transform: translateY(-1px);
+}
+
+.strat-step-tab.active {
+  background: var(--accent-green);
+  color: #064E3B;
+  border: var(--border-width) solid #064E3B;
+  box-shadow: 2px 2px 0px #064E3B;
+}
+
+.strat-step-tab.done {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1.5px solid #16A34A;
+}
+
+.strat-step-tab.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.strat-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.strat-section-header h3 {
+  font-family: var(--font-main);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Modal Chặng 2 (Thịnh) tối ưu độ rộng và chiều cao cho bố cục 1 trang */
+#lv2-modal {
+  padding: 12px;
+}
+
+#lv2-modal .modal-box {
+  max-width: 1060px;
+  width: 96vw;
+  max-height: 95vh;
+}
+
+#lv2-modal .modal-bar {
+  padding: 8px 18px;
+}
+
+#lv2-modal .modal-body-content {
+  padding: 12px 18px 16px;
+}
+
+.strat-step-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.strat-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 6px;
+}
+
+.strat-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .strat-grid-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.strat-card-box {
+  background: #FFFFFF;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: 3px 3px 0px #000;
+}
+
+.strat-card-box.soft-green {
+  background: #F0FDF4;
+  border-color: #16A34A;
+  box-shadow: 3px 3px 0px #166534;
+}
+
+.strat-card-box.soft-amber {
+  background: #FFFBEB;
+  border-color: #D97706;
+  box-shadow: 3px 3px 0px #92400E;
+}
+
+.strat-card-box.soft-blue {
+  background: #EFF6FF;
+  border-color: #2563EB;
+  box-shadow: 3px 3px 0px #1E40AF;
+}
+
+.strat-card-box h4 {
+  font-family: var(--font-main);
+  font-size: 13.5px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px dashed var(--border-color);
+  padding-bottom: 4px;
+}
+
+.strat-card-box p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 6px;
+  color: #1F2937;
+}
+
+.strat-card-box ul {
+  padding-left: 18px;
+  margin: 4px 0 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1F2937;
+}
+
+.strat-card-box li {
+  margin-bottom: 3px;
+}
+
+.strat-quote-box {
+  background: #FEF3C7;
+  border-left: 4px solid #D97706;
+  border-top: 1.5px solid #D97706;
+  border-right: 1.5px solid #D97706;
+  border-bottom: 1.5px solid #D97706;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  box-shadow: 2px 2px 0px #92400E;
+}
+
+.strat-quote-box.green-quote {
+  background: #DCFCE7;
+  border-color: #15803D;
+  box-shadow: 2px 2px 0px #166534;
+}
+
+.strat-quote-text {
+  font-family: var(--font-serif, var(--font-main));
+  font-size: 13.5px;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.55;
+  color: #78350F;
+}
+
+.strat-quote-box.green-quote .strat-quote-text {
+  color: #064E3B;
+}
+
+.strat-quote-author {
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-align: right;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+  color: #92400E;
+}
+
+.strat-quote-box.green-quote .strat-quote-author {
+  color: #047857;
+}
+
+/* Sơ đồ tiến trình quy trình tập hợp */
+.strat-flow-pills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+  background: #F8FAFC;
+  border: 1.5px dashed var(--border-color);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.strat-flow-node {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  background: #FFF;
+  color: var(--text-primary);
+  border: 1.5px solid #000;
+  padding: 4px 10px;
+  border-radius: 6px;
+  box-shadow: 1.5px 1.5px 0px #000;
+}
+
+.strat-flow-node.highlight {
+  background: var(--accent-yellow);
+  color: #000;
+}
+
+.strat-flow-arrow {
+  font-weight: 900;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+/* Bảng đối chiếu lực lượng và hình thức */
+.strat-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  background: #FFF;
+  border: 2px solid #000;
+  box-shadow: 2.5px 2.5px 0px #000;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.strat-table th,
+.strat-table td {
+  border: 1.5px solid #CBD5E1;
+  padding: 6px 9px;
+  font-size: 12px;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.strat-table th {
+  background: #1E293B;
+  color: #FFF;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.strat-table tr:nth-child(even) {
+  background: #F8FAFC;
+}
+
+/* Sơ đồ Hai vòi của chủ nghĩa đế quốc */
+.strat-leech-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+@media (max-width: 640px) {
+  .strat-leech-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leech-center {
+  text-align: center;
+  padding: 8px 12px;
+  background: #FEE2E2;
+  border: 2px solid #DC2626;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px #991B1B;
+}
+
+.leech-center-badge {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #991B1B;
+}
+
+.leech-wing-box {
+  background: #FFF;
+  border: 1.5px solid #000;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0px #000;
+}
+
+.leech-wing-box.highlight {
+  background: #ECFDF5;
+  border-color: #10B981;
+  box-shadow: 2px 2px 0px #047857;
+}
+
+.leech-wing-tag {
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  display: inline-block;
+  padding: 2px 6px;
+  background: #E2E8F0;
+  border-radius: 4px;
+}
+
+.leech-wing-box.highlight .leech-wing-tag {
+  background: #A7F3D0;
+  color: #064E3B;
+}
+
+/* Hộp chốt kết luận chiến lược */
+.strat-takeaway-box {
+  background: #ECFDF5;
+  border: 2px solid #10B981;
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-top: 10px;
+  box-shadow: 2.5px 2.5px 0px #047857;
+}
+
+.strat-takeaway-header {
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 800;
+  color: #065F46;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.strat-takeaway-body {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #064E3B;
+}
+
+/* Hộp kịch bản thuyết trình của Thịnh (dạng Accordion đóng mở linh hoạt) */
+.strat-speech-accordion {
+  background: #FFFBEB;
+  border: 1.5px solid #F59E0B;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  box-shadow: 2px 2px 0px #B45309;
+  overflow: hidden;
+}
+
+.strat-speech-summary {
+  font-family: var(--font-main);
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #B45309;
+  padding: 6px 10px;
+  cursor: pointer;
+  background: #FEF3C7;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s ease;
+}
+
+.strat-speech-summary:hover {
+  background: #FDE68A;
+}
+
+.strat-speech-summary::-webkit-details-marker {
+  display: none;
+}
+
+.strat-speech-accordion[open] .strat-speech-summary {
+  border-bottom: 1px dashed #F59E0B;
+}
+
+.strat-speech-body {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #78350F;
+  font-style: italic;
+  padding: 8px 12px;
+}
+
+
+/* Thanh điều hướng footer của modal */
+.strat-footer-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1.5px solid var(--border-color);
+}
+
+
 /* Cover Hero Portrait */
 .cover-portrait-badge {
   display: inline-flex;
@@ -1745,15 +2545,17 @@ body:has(#slide-0.active)::before {
 .slider-meta-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 .pillar-thumb {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   border-radius: 6px;
-  object-fit: cover;
+  object-fit: contain;
+  background: #0f172a;
   border: 1.5px solid #000;
-  box-shadow: 1px 1px 0px #000;
+  box-shadow: 2px 2px 0px #000;
+  padding: 1px;
 }
 
 /* Level 4 Challenge Visual Layout */
@@ -1768,17 +2570,19 @@ body:has(#slide-0.active)::before {
 }
 .ch-img-wrap {
   width: 100%;
-  height: 175px;
+  height: 160px;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: var(--border-width) solid var(--border-color);
   box-shadow: 3px 3px 0px #000;
-  background: #111827;
+  background: #0f172a;
 }
 .ch-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #0f172a;
+  padding: 2px;
 }
 .ch-caption {
   font-size: 11.5px;
@@ -1879,11 +2683,13 @@ body:has(#slide-0.active)::before {
 }
 .slot-thumb-preview {
   width: 100%;
-  height: 55px;
-  object-fit: cover;
+  height: 85px;
+  object-fit: contain;
   border-radius: 4px;
-  border: 1px solid #000;
+  border: 1.5px solid #000;
   margin-bottom: 4px;
+  background: #0f172a;
+  padding: 2px;
 }
 
 .chain-arrow-symbol {
@@ -1908,7 +2714,7 @@ body:has(#slide-0.active)::before {
   margin-bottom: 12px;
 }
 .chain-pool-title {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 13px;
   font-weight: 800;
   color: #92400E;
@@ -1948,11 +2754,24 @@ body:has(#slide-0.active)::before {
 }
 .pool-card-thumb {
   width: 100%;
-  height: 60px;
-  object-fit: cover;
+  height: 85px;
+  object-fit: contain;
   border-radius: 4px;
-  border: 1px solid #000;
+  border: 1.5px solid #000;
   margin-bottom: 6px;
+  background: #0f172a;
+  padding: 2px;
+}
+
+/* Định vị tiêu điểm ảnh lịch sử thông minh (tránh bị cắt đầu / tiêu đề / góc quan trọng) */
+img[src*="strat4_vnttgpq"] {
+  object-position: top center !important;
+}
+img[src*="ch3_dongluc"] {
+  object-position: bottom center !important;
+}
+img[src*="hotspot4_thongnhat"] {
+  object-position: center 30% !important;
 }
 .pool-card-code {
   font-family: var(--font-display);
