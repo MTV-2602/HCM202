@@ -49,7 +49,7 @@ const Deck = (function () {
   // --- TRẠNG THÁI TOÀN CỤC BÀI THUYẾT TRÌNH ---
   const State = {
     currentSlide: 0,
-    totalSlides: 14,
+    totalSlides: 15,
 
     // Chặng 1: My
     lv1: {
@@ -83,6 +83,26 @@ const Deck = (function () {
     chain: {
       selectedCardId: null,
       slots: { 1: null, 2: null, 3: null, 4: null }
+    },
+
+    // Slide 12: Mini game 4 nhóm & Trao thưởng MoMo
+    minigame: {
+      momoQRs: {
+        first: localStorage.getItem('hcm_momo_first') || '',
+        second: localStorage.getItem('hcm_momo_second') || ''
+      },
+      teams: [
+        { id: 1, name: "Nhóm 1", score: 0, correct: 0 },
+        { id: 2, name: "Nhóm 2", score: 0, correct: 0 },
+        { id: 3, name: "Nhóm 3", score: 0, correct: 0 },
+        { id: 4, name: "Nhóm 4", score: 0, correct: 0 }
+      ],
+      selectedTeamId: 1,
+      boxes: [],
+      activeBoxIdx: null,
+      assembledWords: [],
+      remainingWords: [],
+      isAnswerRevealed: false
     }
   };
 
@@ -763,6 +783,74 @@ const Deck = (function () {
     }
   ];
 
+  // --- DỮ LIỆU 8 CÂU HỎI SẮP XẾP TỪ (MINI GAME 4 NHÓM) ---
+  const MINIGAME_QUESTIONS = [
+    {
+      id: 1,
+      topic: "Độc lập dân tộc (Chánh cương vắn tắt 1930)",
+      prompt: "Theo Chánh cương vắn tắt năm 1930, mục tiêu chính trị nào thể hiện trực tiếp nhiệm vụ giải phóng dân tộc?",
+      words: ["cho", "được", "Nam", "hoàn toàn", "nước", "làm", "độc lập"],
+      answer: "Làm cho nước Nam được hoàn toàn độc lập.",
+      hint: "Bắt đầu bằng từ hành động: 'Làm cho...'"
+    },
+    {
+      id: 2,
+      topic: "Chân lý độc lập tự do",
+      prompt: "Hãy hoàn thành chân lý nổi tiếng của Hồ Chí Minh về giá trị của độc lập dân tộc.",
+      words: ["hơn", "gì", "tự", "không", "độc", "có", "lập", "do", "quý"],
+      answer: "Không có gì quý hơn độc lập, tự do.",
+      hint: "Lời kêu gọi chống Mỹ cứu nước ngày 17/7/1966"
+    },
+    {
+      id: 3,
+      topic: "Bản chất nền độc lập chân chính",
+      prompt: "Nền độc lập mà Hồ Chí Minh hướng tới phải khác với thứ “độc lập tự do” giả hiệu của chủ nghĩa thực dân ở điểm nào?",
+      words: ["triệt", "hoàn", "thực", "và", "toàn", "sự", "để"],
+      answer: "Thực sự, hoàn toàn và triệt để.",
+      hint: "Ba tính từ khẳng định tính triệt để của độc lập"
+    },
+    {
+      id: 4,
+      topic: "Chăm lo đời sống nhân dân sau Cách mạng Tháng Tám",
+      prompt: "Sau Cách mạng tháng Tám, Hồ Chí Minh đặt ra những yêu cầu thiết thực nào để bảo đảm đời sống nhân dân?",
+      words: ["có chỗ ở", "cho dân", "học hành", "có ăn", "làm cho dân", "có mặc", "làm cho dân", "làm cho dân", "làm cho dân"],
+      answer: "Làm cho dân có ăn, làm cho dân có mặc, làm cho dân có chỗ ở, làm cho dân có học hành.",
+      hint: "Bốn nhu cầu thiết yếu: Ăn, Mặc, Ở, Học"
+    },
+    {
+      id: 5,
+      topic: "Độc lập gắn liền thống nhất & toàn vẹn lãnh thổ",
+      prompt: "Tư tưởng xuyên suốt của Hồ Chí Minh về độc lập dân tộc và lãnh thổ là gì?",
+      words: ["với", "độc lập dân tộc", "thống nhất", "gắn liền", "toàn vẹn lãnh thổ", "và"],
+      answer: "Độc lập dân tộc gắn liền với thống nhất và toàn vẹn lãnh thổ.",
+      hint: "'Sông có thể cạn, núi có thể mòn, song chân lý ấy không bao giờ thay đổi'"
+    },
+    {
+      id: 6,
+      topic: "Mục tiêu xây dựng Chủ nghĩa xã hội",
+      prompt: "Hãy sắp xếp các từ sau để hoàn thành quan điểm của Hồ Chí Minh về mục tiêu xây dựng chủ nghĩa xã hội.",
+      words: ["mạnh", "nước", "dân", "giàu", "xã hội", "chủ nghĩa"],
+      answer: "Dân giàu, nước mạnh, xã hội chủ nghĩa.",
+      hint: "Bắt đầu bằng yếu tố 'Dân...'"
+    },
+    {
+      id: 7,
+      topic: "Bản chất của Chủ nghĩa xã hội",
+      prompt: "Hãy sắp xếp các từ sau để hoàn thành quan điểm của Hồ Chí Minh về bản chất của chủ nghĩa xã hội.",
+      words: ["ấm no", "nhân dân", "được", "hạnh phúc", "có", "tự do"],
+      answer: "Nhân dân được ấm no, hạnh phúc, có tự do.",
+      hint: "Chủ nghĩa xã hội là làm sao cho nhân dân..."
+    },
+    {
+      id: 8,
+      topic: "Động lực xây dựng Chủ nghĩa xã hội",
+      prompt: "Hãy sắp xếp các từ sau để thể hiện quan điểm của Hồ Chí Minh về động lực xây dựng chủ nghĩa xã hội.",
+      words: ["nhân dân", "là", "động lực", "chủ yếu", "của", "cách mạng"],
+      answer: "Nhân dân là động lực chủ yếu của cách mạng.",
+      hint: "Sức mạnh vô địch thuộc về ai?"
+    }
+  ];
+
   // --- CONTROLLER ĐIỀU KHIỂN GIAO DIỆN & TƯƠNG TÁC ---
   return {
     init() {
@@ -771,6 +859,7 @@ const Deck = (function () {
       this.initLevel3Inputs();
       this.renderChallengeStage(1);
       this.renderChainPool();
+      this.initMiniGame();
 
       // Hỗ trợ nhảy trực tiếp tới slide qua URL hash (ví dụ: #slide-13)
       const hash = window.location.hash;
@@ -869,7 +958,7 @@ const Deck = (function () {
       // Cập nhật thanh bước nhảy nhanh
       const pills = document.querySelectorAll('.step-pill');
       pills.forEach((p, idx) => {
-        const slideMap = [0, 2, 4, 6, 8, 10, 12, 13];
+        const slideMap = [0, 2, 4, 6, 8, 10, 11, 12, 13, 14];
         if (slideMap[idx] === index || (idx > 0 && index >= slideMap[idx] && (idx === slideMap.length - 1 || index < slideMap[idx + 1]))) {
           p.classList.add('active');
         } else {
@@ -880,6 +969,11 @@ const Deck = (function () {
       // Tự động render thử thách khi vào Slide 8
       if (index === 8) {
         this.renderChallengeStage(State.lv4.currentIdx || 1);
+      }
+
+      // Tự động render Mini Game khi vào Slide 12
+      if (index === 12) {
+        this.renderMiniGameBoard();
       }
     },
 
@@ -904,6 +998,9 @@ const Deck = (function () {
         if (e.key === 'Escape') {
           this.closeModal('lv1-modal');
           this.closeModal('lv2-modal');
+          this.closeMiniGameQuizModal();
+          this.closeModal('minigame-momo-config-modal');
+          this.closeModal('minigame-momo-reward-modal');
           return;
         }
 
@@ -2205,6 +2302,496 @@ const Deck = (function () {
       if (ultimateDest) ultimateDest.style.display = 'none';
 
       this.renderChainPool();
+    },
+
+    // =============================================================
+    // SLIDE 12: MINI GAME TRANH TÀI 4 NHÓM & NHẬN THƯỞNG MOMO
+    // =============================================================
+    initMiniGame() {
+      // Xáo trộn ngẫu nhiên thứ tự 8 câu hỏi vào 8 hộp
+      const qIds = [1, 2, 3, 4, 5, 6, 7, 8].sort(() => Math.random() - 0.5);
+      
+      State.minigame.boxes = [];
+      for (let i = 0; i < 8; i++) {
+        // Điểm số ngẫu nhiên thật từ 1 đến 10 điểm theo yêu cầu
+        const randomPts = Math.floor(Math.random() * 10) + 1;
+        State.minigame.boxes.push({
+          boxId: i + 1,
+          qId: qIds[i],
+          points: randomPts,
+          status: 'unopened',
+          winnerTeamName: ''
+        });
+      }
+    },
+
+    renderMiniGameBoard() {
+      const sbEl = document.getElementById('mg-scoreboard');
+      const bxEl = document.getElementById('mg-boxes-container');
+      if (!sbEl || !bxEl) return;
+
+      // Render Bảng điểm 4 nhóm
+      let sbHtml = '';
+      State.minigame.teams.forEach(team => {
+        const isActive = team.id === State.minigame.selectedTeamId;
+        sbHtml += `
+          <div class="team-score-card ${isActive ? 'active-team' : ''}" onclick="Deck.selectMiniGameTeam(${team.id})">
+            <div class="team-badge-header">
+              <span>👥</span>
+              <strong>${team.name}</strong>
+            </div>
+            <div class="team-score-val">${team.score}</div>
+            <div class="team-correct-stat">Đã giải đúng: ${team.correct} câu</div>
+            <div style="font-size: 11px; margin-top: 4px; color: ${isActive ? '#2563EB' : '#94A3B8'}; font-weight: 700;">
+              ${isActive ? '👉 Đội đang trả lời' : 'Click để chọn đội'}
+            </div>
+          </div>
+        `;
+      });
+      sbEl.innerHTML = sbHtml;
+
+      // Render 8 Hộp câu hỏi bí ẩn
+      let bxHtml = '';
+      State.minigame.boxes.forEach((box, idx) => {
+        if (box.status === 'completed') {
+          bxHtml += `
+            <div class="mg-box-card completed" title="Đã hoàn thành">
+              <div class="mg-box-icon">✓</div>
+              <div class="mg-box-number">HỘP 0${box.boxId}</div>
+              <div style="font-size: 13px; font-weight: 800; color: #166534; margin-bottom: 4px;">
+                ${box.winnerTeamName} (+${box.points}đ)
+              </div>
+              <span class="mg-box-points-preview" style="background: #16A34A;">ĐÃ GIẢI MÃ</span>
+            </div>
+          `;
+        } else if (box.status === 'skipped') {
+          bxHtml += `
+            <div class="mg-box-card skipped" title="Đã bỏ qua">
+              <div class="mg-box-icon">✕</div>
+              <div class="mg-box-number">HỘP 0${box.boxId}</div>
+              <div style="font-size: 12px; color: #64748B; margin-bottom: 4px;">Chưa nhóm nào giải được</div>
+              <span class="mg-box-points-preview" style="background: #64748B;">BỎ QUA (${box.points}đ)</span>
+            </div>
+          `;
+        } else {
+          bxHtml += `
+            <div class="mg-box-card" onclick="Deck.openMiniGameBox(${idx})">
+              <div class="mg-box-icon">🎁</div>
+              <div class="mg-box-number">HỘP 0${box.boxId}</div>
+              <span class="mg-box-points-preview">RANDOM: 1 - 10 ĐIỂM</span>
+              <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px; font-weight: 600;">
+                Click để mở câu hỏi ➔
+              </div>
+            </div>
+          `;
+        }
+      });
+      bxEl.innerHTML = bxHtml;
+
+      // Tự động vinh danh nếu tất cả 8 hộp đã mở xong
+      const allDone = State.minigame.boxes.length === 8 && State.minigame.boxes.every(b => b.status !== 'unopened');
+      if (allDone) {
+        this.openVictoryPodium();
+      }
+    },
+
+    openMiniGameBox(boxIdx) {
+      AudioFX.click();
+      const box = State.minigame.boxes[boxIdx];
+      if (!box || box.status !== 'unopened') return;
+
+      State.minigame.activeBoxIdx = boxIdx;
+      const q = MINIGAME_QUESTIONS.find(item => item.id === box.qId);
+      if (!q) return;
+
+      // Chuẩn bị danh sách từ xáo trộn
+      State.minigame.assembledWords = [];
+      State.minigame.remainingWords = q.words.map((w, i) => ({ id: i, text: w })).sort(() => Math.random() - 0.5);
+      State.minigame.isAnswerRevealed = false;
+
+      // Cập nhật tiêu đề modal
+      const titleEl = document.getElementById('mg-modal-title');
+      if (titleEl) {
+        titleEl.textContent = `HỘP CÂU HỎI SỐ 0${box.boxId} // CHỦ ĐỀ: ${q.topic.toUpperCase()}`;
+      }
+
+      this.renderMiniGameQuestion();
+      const modal = document.getElementById('minigame-quiz-modal');
+      if (modal) modal.style.display = 'flex';
+    },
+
+    renderMiniGameQuestion() {
+      const bodyEl = document.getElementById('mg-quiz-modal-body');
+      if (!bodyEl) return;
+
+      const boxIdx = State.minigame.activeBoxIdx;
+      if (boxIdx === null) return;
+      const box = State.minigame.boxes[boxIdx];
+      const q = MINIGAME_QUESTIONS.find(item => item.id === box.qId);
+      if (!q) return;
+
+      const currentTeam = State.minigame.teams.find(t => t.id === State.minigame.selectedTeamId) || State.minigame.teams[0];
+
+      // Đội đang chọn selector
+      let teamSelectorHtml = '';
+      State.minigame.teams.forEach(t => {
+        const isSel = t.id === State.minigame.selectedTeamId;
+        teamSelectorHtml += `
+          <button type="button" class="mg-team-btn ${isSel ? 'selected' : ''}" onclick="Deck.selectMiniGameTeam(${t.id})">
+            ${isSel ? '👉 ' : ''}${t.name} (${t.score}đ)
+          </button>
+        `;
+      });
+
+      // Các từ đã ghép
+      let assembledHtml = '';
+      if (State.minigame.assembledWords.length === 0) {
+        assembledHtml = `<span class="mg-assembled-placeholder">[ CHƯA CHỌN TỪ NÀO // CLICK CÁC TỪ BÊN DƯỚI ĐỂ XẾP THÀNH CÂU HOÀN CHỈNH ]</span>`;
+      } else {
+        State.minigame.assembledWords.forEach((wordObj, aIdx) => {
+          assembledHtml += `
+            <div class="mg-word-chip assembled" onclick="Deck.removeMiniGameWord(${aIdx})" title="Click để gỡ từ này">
+              ${wordObj.text} ✕
+            </div>
+          `;
+        });
+      }
+
+      // Các từ còn lại trong kho
+      let poolHtml = '';
+      if (State.minigame.remainingWords.length === 0) {
+        poolHtml = `<span style="color: #64748B; font-size: 13px; font-style: italic;">(Đã xếp hết tất cả các từ vào câu)</span>`;
+      } else {
+        State.minigame.remainingWords.forEach((wordObj, rIdx) => {
+          poolHtml += `
+            <div class="mg-word-chip" onclick="Deck.selectMiniGameWord(${rIdx})" title="Click để đưa từ này lên câu">
+              ${wordObj.text}
+            </div>
+          `;
+        });
+      }
+
+      bodyEl.innerHTML = `
+        <div class="mg-quiz-header">
+          <div>
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">
+              HỘP CÂU HỎI 0${box.boxId}
+            </span>
+            <div style="font-size: 13px; font-weight: 800; color: #1E40AF; margin-top: 2px;">
+              ${q.topic}
+            </div>
+          </div>
+          <div class="mg-quiz-points-badge">
+            🎲 ĐIỂM THƯỞNG: +${box.points} ĐIỂM
+          </div>
+        </div>
+
+        <div class="mg-question-prompt">
+          ${q.prompt}
+        </div>
+
+        <div class="mg-team-selector-row">
+          <strong style="font-size: 13px; color: #92400E; display: flex; align-items: center; gap: 4px;">
+            <span>🎯</span> ĐỘI ĐANG GIÀNH QUYỀN TRẢ LỜI:
+          </strong>
+          ${teamSelectorHtml}
+        </div>
+
+        <div style="margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+          <strong style="font-size: 13.5px; color: #1E3A8A;">CÂU TRẢ LỜI ĐANG XẾP:</strong>
+          <button type="button" class="btn btn-secondary" style="font-size: 11px; padding: 4px 10px;" onclick="Deck.resetMiniGameWords()">
+            ↺ Xếp lại từ đầu
+          </button>
+        </div>
+
+        <div class="mg-assembled-zone">
+          ${assembledHtml}
+        </div>
+
+        <div style="margin-bottom: 6px;">
+          <strong style="font-size: 13px; color: var(--text-secondary);">KHO TỪ CHO SẴN (CLICK TỪNG TỪ ĐỂ ĐƯA LÊN CÂU):</strong>
+        </div>
+        <div class="mg-words-pool">
+          ${poolHtml}
+        </div>
+
+        <div id="mg-wrong-alert-box" style="display: none; background: #FEF2F2; border: 2px solid #DC2626; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; color: #991B1B; font-size: 14px; font-weight: 800;">
+          <!-- Injected when wrong -->
+        </div>
+
+        ${State.minigame.isAnswerRevealed ? `
+          <div class="mg-answer-reveal-box">
+            <strong style="color: #065F46; display: block; margin-bottom: 4px;">✓ ĐÁP ÁN CHUẨN XÁC:</strong>
+            <div style="font-size: 16px; font-weight: 800; color: #064E3B;">${q.answer}</div>
+            <div style="font-size: 12px; color: #047857; margin-top: 4px;">Gợi ý: ${q.hint}</div>
+          </div>
+        ` : ''}
+
+        <div class="mg-action-buttons-row">
+          <button type="button" class="btn btn-secondary" style="font-size: 12.5px;" onclick="Deck.toggleMiniGameAnswer()">
+            ${State.minigame.isAnswerRevealed ? 'Ẩn đáp án chuẩn' : '👁️ Xem đáp án chuẩn'}
+          </button>
+          <button type="button" class="btn btn-secondary" style="font-size: 12.5px; background: #F1F5F9; color: #475569;" onclick="Deck.skipMiniGameQuestion()">
+            ⏭️ Bỏ qua câu này
+          </button>
+          <button type="button" class="btn btn-primary" style="background: #DC2626; border-color: #000;" onclick="Deck.submitMiniGameAnswer(false)">
+            ✕ SAI (NHƯỜNG LƯỢT CHO ĐỘI KHÁC)
+          </button>
+          <button type="button" class="btn btn-primary" style="background: #16A34A; border-color: #000; font-size: 14px;" onclick="Deck.submitMiniGameAnswer(true)">
+            ✓ ĐÚNG (+${box.points} ĐIỂM CHO ${currentTeam.name.toUpperCase()}) ➔
+          </button>
+        </div>
+      `;
+    },
+
+    selectMiniGameTeam(teamId) {
+      AudioFX.click();
+      State.minigame.selectedTeamId = teamId;
+      // Cập nhật scoreboard ngoài trang
+      const sbCards = document.querySelectorAll('.team-score-card');
+      State.minigame.teams.forEach((t, i) => {
+        if (sbCards[i]) {
+          if (t.id === teamId) {
+            sbCards[i].classList.add('active-team');
+          } else {
+            sbCards[i].classList.remove('active-team');
+          }
+        }
+      });
+      // Nếu đang mở modal thì re-render
+      const modal = document.getElementById('minigame-quiz-modal');
+      if (modal && modal.style.display !== 'none') {
+        this.renderMiniGameQuestion();
+      }
+    },
+
+    selectMiniGameWord(rIdx) {
+      AudioFX.click();
+      if (rIdx >= 0 && rIdx < State.minigame.remainingWords.length) {
+        const removed = State.minigame.remainingWords.splice(rIdx, 1)[0];
+        State.minigame.assembledWords.push(removed);
+        this.renderMiniGameQuestion();
+      }
+    },
+
+    removeMiniGameWord(aIdx) {
+      AudioFX.click();
+      if (aIdx >= 0 && aIdx < State.minigame.assembledWords.length) {
+        const removed = State.minigame.assembledWords.splice(aIdx, 1)[0];
+        State.minigame.remainingWords.push(removed);
+        this.renderMiniGameQuestion();
+      }
+    },
+
+    resetMiniGameWords() {
+      AudioFX.click();
+      const boxIdx = State.minigame.activeBoxIdx;
+      if (boxIdx === null) return;
+      const box = State.minigame.boxes[boxIdx];
+      const q = MINIGAME_QUESTIONS.find(item => item.id === box.qId);
+      if (!q) return;
+
+      State.minigame.assembledWords = [];
+      State.minigame.remainingWords = q.words.map((w, i) => ({ id: i, text: w })).sort(() => Math.random() - 0.5);
+      this.renderMiniGameQuestion();
+    },
+
+    toggleMiniGameAnswer() {
+      AudioFX.click();
+      State.minigame.isAnswerRevealed = !State.minigame.isAnswerRevealed;
+      this.renderMiniGameQuestion();
+    },
+
+    submitMiniGameAnswer(isCorrect) {
+      const boxIdx = State.minigame.activeBoxIdx;
+      if (boxIdx === null) return;
+      const box = State.minigame.boxes[boxIdx];
+      const team = State.minigame.teams.find(t => t.id === State.minigame.selectedTeamId);
+      if (!box || !team) return;
+
+      if (isCorrect) {
+        AudioFX.fanfare();
+        team.score += box.points;
+        team.correct += 1;
+        box.status = 'completed';
+        box.winnerTeamName = team.name;
+
+        // Đóng modal sau 200ms và render lại bảng
+        setTimeout(() => {
+          this.closeMiniGameQuizModal();
+          this.renderMiniGameBoard();
+        }, 200);
+      } else {
+        // Trả lời sai: không đóng câu hỏi, thông báo nhường lượt cho đội khác
+        AudioFX.error();
+        const alertBox = document.getElementById('mg-wrong-alert-box');
+        if (alertBox) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = `
+            ✕ <strong>${team.name.toUpperCase()}</strong> trả lời chưa chính xác!
+            <div style="font-weight: 500; font-size: 13px; margin-top: 2px;">
+              Quyền trả lời được nhường lại cho các nhóm khác! Xin mời người điều phối bấm chọn nhóm tiếp theo ở thanh trên.
+            </div>
+          `;
+        }
+      }
+    },
+
+    skipMiniGameQuestion() {
+      AudioFX.click();
+      const boxIdx = State.minigame.activeBoxIdx;
+      if (boxIdx === null) return;
+      const box = State.minigame.boxes[boxIdx];
+      if (box) {
+        box.status = 'skipped';
+      }
+      this.closeMiniGameQuizModal();
+      this.renderMiniGameBoard();
+    },
+
+    closeMiniGameQuizModal() {
+      const modal = document.getElementById('minigame-quiz-modal');
+      if (modal) modal.style.display = 'none';
+      State.minigame.activeBoxIdx = null;
+    },
+
+    // Cài đặt mã Momo
+    openMomoConfigModal() {
+      AudioFX.click();
+      this.updateMomoPreviews();
+      const modal = document.getElementById('minigame-momo-config-modal');
+      if (modal) modal.style.display = 'flex';
+    },
+
+    handleMomoUpload(rank, event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        State.minigame.momoQRs[rank] = dataUrl;
+        localStorage.setItem('hcm_momo_' + rank, dataUrl);
+        this.updateMomoPreviews();
+        AudioFX.success();
+      };
+      reader.readAsDataURL(file);
+    },
+
+    getMomoQRImage(rank) {
+      if (State.minigame.momoQRs[rank]) {
+        return State.minigame.momoQRs[rank];
+      }
+      // SVG Placeholder MoMo mẫu đẹp mắt
+      const label = rank === 'first' ? 'GIẢI NHẤT' : 'GIẢI NHÌ';
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" width="280" height="280">
+          <rect width="280" height="280" fill="#D82D8B" rx="16"/>
+          <rect x="20" y="20" width="240" height="240" fill="#FFFFFF" rx="12"/>
+          <rect x="40" y="40" width="60" height="60" fill="#D82D8B"/>
+          <rect x="50" y="50" width="40" height="40" fill="#FFFFFF"/>
+          <rect x="60" y="60" width="20" height="20" fill="#D82D8B"/>
+          <rect x="180" y="40" width="60" height="60" fill="#D82D8B"/>
+          <rect x="190" y="50" width="40" height="40" fill="#FFFFFF"/>
+          <rect x="200" y="60" width="20" height="20" fill="#D82D8B"/>
+          <rect x="40" y="180" width="60" height="60" fill="#D82D8B"/>
+          <rect x="50" y="190" width="40" height="40" fill="#FFFFFF"/>
+          <rect x="60" y="200" width="20" height="20" fill="#D82D8B"/>
+          <circle cx="140" cy="140" r="28" fill="#D82D8B"/>
+          <text x="140" y="146" fill="#FFFFFF" font-size="13" font-weight="bold" text-anchor="middle" font-family="sans-serif">momo</text>
+          <rect x="45" y="244" width="190" height="24" fill="#000000" rx="6"/>
+          <text x="140" y="260" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">MÃ THƯỞNG ${label}</text>
+        </svg>
+      `;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    },
+
+    updateMomoPreviews() {
+      const p1 = document.getElementById('momo-preview-first');
+      const p2 = document.getElementById('momo-preview-second');
+      if (p1) {
+        p1.innerHTML = `<img src="${this.getMomoQRImage('first')}" style="width: 100%; height: 100%; object-fit: contain;">`;
+      }
+      if (p2) {
+        p2.innerHTML = `<img src="${this.getMomoQRImage('second')}" style="width: 100%; height: 100%; object-fit: contain;">`;
+      }
+    },
+
+    // Bảng vinh danh & Trao thưởng
+    openVictoryPodium() {
+      AudioFX.fanfare();
+      const panel = document.getElementById('mg-victory-arena');
+      if (!panel) return;
+
+      // Xếp hạng 4 nhóm theo điểm (và số câu đúng)
+      const sorted = [...State.minigame.teams].sort((a, b) => b.score - a.score || b.correct - a.correct);
+
+      const podiumGrid = document.getElementById('mg-podium-grid');
+      if (podiumGrid) {
+        let phtml = '';
+        sorted.forEach((team, idx) => {
+          const rankNames = ['🥇 HẠNG 1 (QUÁN QUÂN)', '🥈 HẠNG 2 (Á QUÂN)', '🥉 HẠNG 3', '🎖️ HẠNG 4'];
+          const rankClasses = ['rank-1', 'rank-2', 'rank-3', 'rank-4'];
+          phtml += `
+            <div class="podium-card ${rankClasses[idx]}">
+              <span class="momo-claim-badge" style="margin-bottom: 6px;">${rankNames[idx]}</span>
+              <h3 style="font-size: 20px; font-weight: 900; margin: 4px 0;">${team.name}</h3>
+              <div style="font-size: 28px; font-weight: 900; color: #0F172A;">${team.score} đ</div>
+              <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;">Đúng ${team.correct} câu</div>
+            </div>
+          `;
+        });
+        podiumGrid.innerHTML = phtml;
+      }
+
+      // Cập nhật 2 ô nhận thưởng MoMo
+      const t1 = sorted[0];
+      const t2 = sorted[1];
+      const title1 = document.getElementById('momo-title-first');
+      const title2 = document.getElementById('momo-title-second');
+      if (title1 && t1) title1.textContent = `${t1.name.toUpperCase()} (${t1.score} ĐIỂM)`;
+      if (title2 && t2) title2.textContent = `${t2.name.toUpperCase()} (${t2.score} ĐIỂM)`;
+
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth' });
+    },
+
+    openMomoRewardModal(rank) {
+      AudioFX.fanfare();
+      const sorted = [...State.minigame.teams].sort((a, b) => b.score - a.score || b.correct - a.correct);
+      const team = rank === 'first' ? sorted[0] : sorted[1];
+      if (!team) return;
+
+      const badge = document.getElementById('mg-reward-modal-badge');
+      const heading = document.getElementById('mg-reward-team-heading');
+      const qrBox = document.getElementById('mg-reward-qr-box');
+
+      if (badge) badge.textContent = rank === 'first' ? '🥇 PHẦN THƯỞNG GIẢI NHẤT MOMO' : '🥈 PHẦN THƯỞNG GIẢI NHÌ MOMO';
+      if (heading) heading.textContent = `CHÚC MỪNG ${team.name.toUpperCase()}!`;
+      if (qrBox) {
+        qrBox.innerHTML = `
+          <img src="${this.getMomoQRImage(rank)}" alt="Mã QR MoMo ${rank}">
+          <div style="margin-top: 10px; font-weight: 800; font-size: 15px; color: #831843;">
+            MÃ NHẬN THƯỞNG MOMO: ${rank === 'first' ? 'GIẢI NHẤT' : 'GIẢI NHÌ'}
+          </div>
+        `;
+      }
+
+      const modal = document.getElementById('minigame-momo-reward-modal');
+      if (modal) modal.style.display = 'flex';
+    },
+
+    resetMiniGame() {
+      AudioFX.click();
+      State.minigame.teams.forEach(t => {
+        t.score = 0;
+        t.correct = 0;
+      });
+      State.minigame.selectedTeamId = 1;
+      this.initMiniGame();
+      const panel = document.getElementById('mg-victory-arena');
+      if (panel) panel.style.display = 'none';
+      this.renderMiniGameBoard();
     }
   };
 })();

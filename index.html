@@ -715,15 +715,83 @@
               Bốn nội dung tạo thành một mạch tư tưởng biện chứng không thể tách rời: <strong>Độc lập dân tộc là tiền đề để tiến lên Chủ nghĩa xã hội</strong>; và <strong>Chủ nghĩa xã hội là con đường duy nhất bảo đảm vững chắc nền độc lập và đem lại tự do ấm no thực sự cho toàn dân tộc</strong>.
             </p>
             <button class="btn btn-primary btn-hero" onclick="Deck.goToSlide(12)">
-              HOÀN THÀNH XUẤT SẮC BÀI THUYẾT TRÌNH ➔
+              HOÀN THÀNH BÀI HỌC • THAM GIA MINIGAME 4 NHÓM ➔
             </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 12: BẾ MẠC & CẢM ƠN -->
-    <section class="slide-view" id="slide-12" data-index="12" data-level="BẾ MẠC">
+    <!-- SLIDE 12: MINI GAME TRANH TÀI 4 NHÓM — ĐỐ VUI XẾP CHỮ TƯ TƯỞNG HỒ CHÍ MINH -->
+    <section class="slide-view" id="slide-12" data-index="12" data-level="MINIGAME">
+      <div class="slide-inner">
+        <div class="minigame-header-actions">
+          <div>
+            <span class="brutal-badge badge-yellow">MINI GAME TRANH TÀI • 4 NHÓM ĐỐ VUI TƯƠNG TÁC</span>
+            <h2 class="slide-hero-title" style="margin-top: 6px; margin-bottom: 4px;">ĐỐ VUI XẾP CHỮ TƯ TƯỞNG HỒ CHÍ MINH</h2>
+            <p class="slide-sub" style="margin-bottom: 0;">Mở 8 hộp câu hỏi bí ẩn với số điểm may mắn ngẫu nhiên (1-10đ). Xếp từ chuẩn xác để giành điểm và nhận thưởng MoMo!</p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-momo-config" onclick="Deck.openMomoConfigModal()">
+              🎁 CÀI ĐẶT MÃ THƯỞNG MOMO
+            </button>
+            <button class="btn btn-secondary" onclick="Deck.openVictoryPodium()">
+              🏆 BẢNG XẾP HẠNG & TRAO THƯỞNG
+            </button>
+          </div>
+        </div>
+
+        <!-- BẢNG ĐIỂM 4 NHÓM (SCOREBOARD) -->
+        <div class="minigame-scoreboard" id="mg-scoreboard">
+          <!-- Rendered dynamically by JS -->
+        </div>
+
+        <!-- LƯỚI 8 HỘP BÍ ẨN -->
+        <div class="minigame-boxes-grid" id="mg-boxes-container">
+          <!-- Rendered dynamically by JS -->
+        </div>
+
+        <!-- KHU VỰC VINH DANH & TRAO THƯỞNG MOMO -->
+        <div class="minigame-victory-panel" id="mg-victory-arena" style="display: none;">
+          <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 8px;">🎉 TỔNG KẾT & VINH DANH CÁC NHÓM XUẤT SẮC!</h2>
+          <p style="color: var(--text-secondary); font-size: 14px;">Chúc mừng các nhóm đã hoàn thành xuất sắc các thử thách nhận thức Tư tưởng Hồ Chí Minh!</p>
+
+          <div class="podium-grid" id="mg-podium-grid">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- 2 Ô NHẬN THƯỞNG MOMO THEO YÊU CẦU -->
+          <div class="momo-claim-arena">
+            <div class="momo-claim-card" id="momo-card-first" onclick="Deck.openMomoRewardModal('first')">
+              <span class="momo-claim-badge">🥇 GIẢI NHẤT</span>
+              <div class="momo-claim-title" id="momo-title-first">NHÓM ...</div>
+              <p style="font-size: 13px; color: #64748B; margin-bottom: 8px;">Phần thưởng cho đội Quán quân xuất sắc nhất</p>
+              <div class="momo-claim-cta">👉 NHẤP VÀO ĐÂY ĐỂ HIỆN MÃ MOMO QUÉT THƯỞNG 🎁</div>
+            </div>
+
+            <div class="momo-claim-card" id="momo-card-second" onclick="Deck.openMomoRewardModal('second')">
+              <span class="momo-claim-badge">🥈 GIẢI NHÌ</span>
+              <div class="momo-claim-title" id="momo-title-second">NHÓM ...</div>
+              <p style="font-size: 13px; color: #64748B; margin-bottom: 8px;">Phần thưởng cho đội Á quân tranh tài sôi nổi</p>
+              <div class="momo-claim-cta">👉 NHẤP VÀO ĐÂY ĐỂ HIỆN MÃ MOMO QUÉT THƯỞNG 🎁</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="Deck.resetMiniGame()">
+              🔄 CHƠI LẠI MINIGAME MỚI
+            </button>
+            <button class="btn btn-primary btn-large" onclick="Deck.goToSlide(13)">
+              TIẾP TỤC: ĐẾN PHẦN BẾ MẠC & CẢM ƠN ➔
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 13: BẾ MẠC & CẢM ƠN -->
+    <section class="slide-view" id="slide-13" data-index="13" data-level="BẾ MẠC">
       <div class="slide-inner text-center victory-layout">
         <h1 class="victory-title">CẢM ƠN THẦY CÔ VÀ CÁC BẠN ĐÃ LẮNG NGHE!</h1>
         <p class="victory-sub">Nhóm đã hệ thống hóa trọn vẹn Chương 3 môn Tư tưởng Hồ Chí Minh qua phương pháp thuyết trình tương tác đa chiều.</p>
@@ -755,15 +823,15 @@
           <button class="btn btn-secondary" onclick="Deck.goToSlide(0)">
             QUAY LẠI TRANG ĐẦU (BÌA BÁO CÁO) ↺
           </button>
-          <button class="btn btn-primary btn-large" onclick="Deck.goToSlide(13)">
+          <button class="btn btn-primary btn-large" onclick="Deck.goToSlide(14)">
             XEM BẢNG KÊ KHAI LIÊM CHÍNH HỌC THUẬT (AI) ➔
           </button>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 13: BẢNG KÊ KHAI LIÊM CHÍNH HỌC THUẬT (AI DECLARATION) -->
-    <section class="slide-view" id="slide-13" data-index="13" data-level="LIÊM CHÍNH">
+    <!-- SLIDE 14: BẢNG KÊ KHAI LIÊM CHÍNH HỌC THUẬT (AI DECLARATION) -->
+    <section class="slide-view" id="slide-14" data-index="14" data-level="LIÊM CHÍNH">
       <div class="slide-inner integrity-layout">
         <div class="slide-header text-center">
           <span class="brutal-badge badge-black">ĐẠI HỌC FPT • HỌC KỲ FA26 • MÔN TƯ TƯỞNG HỒ CHÍ MINH (HCM202)</span>
@@ -829,7 +897,7 @@
       <button class="ctrl-btn" id="ctrl-prev" onclick="Deck.prevSlide()">
         ◀ TRANG TRƯỚC
       </button>
-      <span class="slide-counter-badge" id="slide-counter-text">Trang 1 / 14</span>
+      <span class="slide-counter-badge" id="slide-counter-text">Trang 1 / 15</span>
       <button class="ctrl-btn" id="ctrl-next" onclick="Deck.nextSlide()">
         TRANG TIẾP ➔
       </button>
@@ -843,8 +911,10 @@
       <button class="step-pill" onclick="Deck.goToSlide(6)">Chặng 3</button>
       <button class="step-pill" onclick="Deck.goToSlide(8)">Chặng 4</button>
       <button class="step-pill" onclick="Deck.goToSlide(10)">Tranh luận</button>
-      <button class="step-pill" onclick="Deck.goToSlide(12)">Bế mạc</button>
-      <button class="step-pill" onclick="Deck.goToSlide(13)">Liêm chính</button>
+      <button class="step-pill" onclick="Deck.goToSlide(11)">Xâu chuỗi</button>
+      <button class="step-pill" onclick="Deck.goToSlide(12)">Minigame</button>
+      <button class="step-pill" onclick="Deck.goToSlide(13)">Bế mạc</button>
+      <button class="step-pill" onclick="Deck.goToSlide(14)">Liêm chính</button>
     </div>
 
     <div class="controls-right">
@@ -880,6 +950,92 @@
       </div>
       <div class="modal-body-content" id="m2-content">
         <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- CÁC MODAL MINI GAME TRANH TÀI 4 NHÓM & NHẬN THƯỞNG MOMO       -->
+  <!-- ============================================================= -->
+
+  <!-- Modal Câu Hỏi Đố Vui Xếp Chữ -->
+  <div class="modal-backdrop" id="minigame-quiz-modal" style="display: none;">
+    <div class="modal-box" style="max-width: 820px;">
+      <div class="modal-bar" style="background: #FEF08A; border-bottom: 2.5px solid #000;">
+        <span class="m-badge badge-black" id="mg-modal-title">HỘP CÂU HỎI SỐ ...</span>
+        <button class="m-close" onclick="Deck.closeMiniGameQuizModal()">✕</button>
+      </div>
+      <div class="modal-body-content mg-quiz-arena" id="mg-quiz-modal-body">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cài Đặt Tải Mã MoMo -->
+  <div class="modal-backdrop" id="minigame-momo-config-modal" style="display: none;">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-bar" style="background: #D82D8B; color: #FFF;">
+        <span class="m-badge" style="background: #FFF; color: #D82D8B;">⚙️ CÀI ĐẶT MÃ PHẦN THƯỞNG MOMO</span>
+        <button class="m-close" style="color: #000;" onclick="Deck.closeModal('minigame-momo-config-modal')">✕</button>
+      </div>
+      <div class="modal-body-content" style="padding: 24px;">
+        <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 20px;">
+          Tải lên ảnh mã QR MoMo của bạn để sẵn sàng trao thưởng cho <strong>Nhóm thứ nhất (Giải Nhất)</strong> và <strong>Nhóm thứ hai (Giải Nhì)</strong> khi kết thúc mini game. Mã được lưu tự động trên trình duyệt.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px;">
+          <!-- Khung Giải Nhất -->
+          <div style="border: 2px solid #D82D8B; border-radius: 8px; padding: 16px; text-align: center; background: #FDF2F8;">
+            <strong style="color: #831843; font-size: 15px; display: block; margin-bottom: 8px;">🥇 MÃ QR GIẢI NHẤT</strong>
+            <div id="momo-preview-first" style="width: 140px; height: 140px; margin: 0 auto 12px; border: 2px solid #000; border-radius: 6px; background: #FFF; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <!-- Preview img -->
+            </div>
+            <label class="btn btn-secondary" style="font-size: 12px; cursor: pointer; display: inline-block;">
+              📁 Chọn ảnh mã MoMo
+              <input type="file" accept="image/*" style="display: none;" onchange="Deck.handleMomoUpload('first', event)">
+            </label>
+          </div>
+
+          <!-- Khung Giải Nhì -->
+          <div style="border: 2px solid #D82D8B; border-radius: 8px; padding: 16px; text-align: center; background: #FDF2F8;">
+            <strong style="color: #831843; font-size: 15px; display: block; margin-bottom: 8px;">🥈 MÃ QR GIẢI NHÌ</strong>
+            <div id="momo-preview-second" style="width: 140px; height: 140px; margin: 0 auto 12px; border: 2px solid #000; border-radius: 6px; background: #FFF; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <!-- Preview img -->
+            </div>
+            <label class="btn btn-secondary" style="font-size: 12px; cursor: pointer; display: inline-block;">
+              📁 Chọn ảnh mã MoMo
+              <input type="file" accept="image/*" style="display: none;" onchange="Deck.handleMomoUpload('second', event)">
+            </label>
+          </div>
+        </div>
+
+        <div style="text-align: right;">
+          <button class="btn btn-primary" onclick="Deck.closeModal('minigame-momo-config-modal')">
+            ✓ ĐÃ LƯU XONG & TIẾP TỤC
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Hiện Mã MoMo Nhận Thưởng Cho Đội Quét -->
+  <div class="modal-backdrop" id="minigame-momo-reward-modal" style="display: none;">
+    <div class="modal-box" style="max-width: 520px; text-align: center;">
+      <div class="modal-bar" style="background: #D82D8B; color: #FFF;">
+        <span class="m-badge" style="background: #FFF; color: #D82D8B;" id="mg-reward-modal-badge">🎁 PHẦN THƯỞNG MOMO</span>
+        <button class="m-close" style="color: #000;" onclick="Deck.closeModal('minigame-momo-reward-modal')">✕</button>
+      </div>
+      <div class="modal-body-content momo-modal-body">
+        <h3 id="mg-reward-team-heading" style="font-size: 22px; font-weight: 900; color: #831843; margin-bottom: 6px;">CHÚC MỪNG NHÓM ...!</h3>
+        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 14px;">Mời đại diện nhóm bước lên quét mã MoMo để nhận phần thưởng xứng đáng!</p>
+
+        <div class="momo-qr-image-wrapper" id="mg-reward-qr-box">
+          <!-- Injected QR Image -->
+        </div>
+
+        <button class="btn btn-primary" style="margin-top: 14px; width: 100%;" onclick="Deck.closeModal('minigame-momo-reward-modal')">
+          ĐÃ QUÉT THÀNH CÔNG • ĐÓNG CỬA SỔ
+        </button>
       </div>
     </div>
   </div>

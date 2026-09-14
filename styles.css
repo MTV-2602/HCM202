@@ -2921,3 +2921,431 @@ img[src*="hotspot4_thongnhat"] {
   font-weight: 700;
 }
 
+/* ============================================================= */
+/* SLIDE 12: MINI GAME TRANH TÀI 4 NHÓM & NHẬN THƯỞNG MOMO       */
+/* ============================================================= */
+
+.minigame-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btn-momo-config {
+  background: #D82D8B;
+  color: #FFF;
+  border: var(--border-width) solid #000;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 3px 3px 0px #000;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-momo-config:hover {
+  background: #C2185B;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #000;
+}
+
+/* Scoreboard 4 Teams */
+.minigame-scoreboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.team-score-card {
+  background: #FFF;
+  border: var(--border-width) solid #000;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-hard);
+  text-align: center;
+  position: relative;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+.team-score-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #000;
+}
+.team-score-card.active-team {
+  border-color: #2563EB;
+  background: #EFF6FF;
+  box-shadow: 4px 4px 0px #1D4ED8;
+  transform: scale(1.02);
+}
+.team-score-card.active-team::after {
+  content: "ĐANG CHỌN";
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  background: #2563EB;
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1.5px solid #000;
+}
+
+.team-badge-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.team-score-val {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  color: #0F172A;
+  margin-bottom: 4px;
+}
+.team-correct-stat {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* 8 Question Boxes Grid */
+.minigame-boxes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 1040px;
+  margin: 0 auto 28px;
+}
+
+.mg-box-card {
+  background: #FFF;
+  border: var(--border-width) solid #000;
+  border-radius: var(--radius-md);
+  padding: 22px 16px;
+  box-shadow: var(--shadow-hard);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  position: relative;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.mg-box-card:hover:not(.completed):not(.skipped) {
+  transform: translate(-4px, -4px);
+  box-shadow: 7px 7px 0px #000;
+  background: var(--accent-yellow);
+}
+.mg-box-number {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  color: #000;
+  margin-bottom: 6px;
+}
+.mg-box-icon {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+.mg-box-points-preview {
+  display: inline-block;
+  background: #000;
+  color: #FFF;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.mg-box-card.completed {
+  background: #F0FDF4;
+  border-color: #16A34A;
+  box-shadow: 3px 3px 0px #166534;
+  cursor: default;
+}
+.mg-box-card.completed .mg-box-number {
+  color: #166534;
+}
+.mg-box-card.skipped {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+  color: #64748B;
+  box-shadow: 2px 2px 0px #94A3B8;
+  cursor: default;
+}
+
+/* Modal Question & Word Scramble Arena */
+.mg-quiz-arena {
+  text-align: left;
+}
+.mg-quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.mg-quiz-points-badge {
+  background: #FEF08A;
+  border: 2px solid #CA8A04;
+  color: #854D0E;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 15px;
+  box-shadow: 2px 2px 0px #854D0E;
+}
+.mg-question-prompt {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.5;
+  margin-bottom: 18px;
+  background: #F8FAFC;
+  border-left: 4px solid #2563EB;
+  padding: 12px 16px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Active Team Selector in Modal */
+.mg-team-selector-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  background: #FFFBEB;
+  border: 1.5px solid #F59E0B;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+}
+.mg-team-btn {
+  background: #FFF;
+  border: 2px solid #000;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #000;
+  transition: all var(--transition-fast);
+}
+.mg-team-btn.selected {
+  background: #2563EB;
+  color: #FFF;
+  border-color: #000;
+  box-shadow: 3px 3px 0px #000;
+  transform: translate(-1px, -1px);
+}
+
+/* Words pool and Assembled zone */
+.mg-assembled-zone {
+  min-height: 68px;
+  background: #FFF;
+  border: 2px dashed #3B82F6;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.mg-assembled-placeholder {
+  color: #94A3B8;
+  font-style: italic;
+  font-size: 13.5px;
+}
+
+.mg-word-chip {
+  background: #FFF;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: #000;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #000;
+  transition: all 0.1s ease;
+  user-select: none;
+}
+.mg-word-chip:hover {
+  background: var(--accent-yellow);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px #000;
+}
+.mg-word-chip.assembled {
+  background: #DBEAFE;
+  border-color: #1D4ED8;
+  color: #1E40AF;
+  box-shadow: 2px 2px 0px #1E40AF;
+}
+
+.mg-words-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 14px;
+  background: #F1F5F9;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #CBD5E1;
+}
+
+.mg-answer-reveal-box {
+  background: #ECFDF5;
+  border: 2px solid #10B981;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  color: #065F46;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.mg-action-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  border-top: 2px solid var(--border-color);
+  padding-top: 16px;
+}
+
+/* Victory Podium & Momo Claim Arena */
+.minigame-victory-panel {
+  background: #FFF;
+  border: 3px solid #000;
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: 6px 6px 0px #000;
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.podium-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.podium-card {
+  border: var(--border-width) solid #000;
+  border-radius: var(--radius-md);
+  padding: 18px 14px;
+  box-shadow: var(--shadow-hard);
+  text-align: center;
+}
+.podium-card.rank-1 {
+  background: #FEF08A;
+  border-color: #CA8A04;
+  box-shadow: 5px 5px 0px #854D0E;
+  transform: scale(1.05);
+}
+.podium-card.rank-2 {
+  background: #F1F5F9;
+  border-color: #64748B;
+  box-shadow: 4px 4px 0px #475569;
+}
+.podium-card.rank-3 {
+  background: #FED7AA;
+  border-color: #EA580C;
+}
+.podium-card.rank-4 {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.momo-claim-arena {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 28px 0;
+}
+
+.momo-claim-card {
+  background: #FFF;
+  border: 3px solid #D82D8B;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: 5px 5px 0px #831843;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+.momo-claim-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0px #831843;
+  background: #FDF2F8;
+}
+.momo-claim-badge {
+  display: inline-block;
+  background: #D82D8B;
+  color: #FFF;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.momo-claim-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #831843;
+  margin-bottom: 6px;
+}
+.momo-claim-cta {
+  font-size: 13px;
+  font-weight: 700;
+  color: #9D174D;
+  text-decoration: underline;
+}
+
+/* Momo QR Modal Display */
+.momo-modal-body {
+  text-align: center;
+  padding: 20px;
+}
+.momo-qr-image-wrapper {
+  max-width: 320px;
+  margin: 16px auto;
+  border: 3px solid #000;
+  border-radius: var(--radius-md);
+  padding: 10px;
+  background: #FFF;
+  box-shadow: 5px 5px 0px #000;
+}
+.momo-qr-image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
