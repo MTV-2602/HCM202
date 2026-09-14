@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&family=Lora:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="styles.css?v=20260914_1">
+  <link rel="stylesheet" href="styles.css?v=20260914_2">
 </head>
 <body class="presentation-mode">
 
@@ -937,7 +937,7 @@
 
   <!-- Modal Cài Đặt Thưởng (Có Chế Độ Bảo Mật) -->
   <div class="modal-backdrop" id="minigame-momo-config-modal" style="display: none;">
-    <div class="modal-box" style="max-width: 640px;">
+    <div class="modal-box" style="max-width: 480px;">
       <div class="modal-bar" style="background: #D82D8B; color: #FFF;">
         <span class="m-badge" style="background: #FFF; color: #D82D8B;">⚙️ CÀI ĐẶT THƯỞNG</span>
         <button class="m-close" style="color: #000;" onclick="Deck.closeModal('minigame-momo-config-modal')">✕</button>
@@ -950,28 +950,16 @@
           </button>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px;">
+        <div style="max-width: 320px; margin: 0 auto 20px;">
           <!-- Khung Giải Nhất -->
-          <div style="border: 2px solid #D82D8B; border-radius: 8px; padding: 16px; text-align: center; background: #FDF2F8;">
-            <strong style="color: #831843; font-size: 15px; display: block; margin-bottom: 8px;">🥇 GIẢI NHẤT</strong>
-            <div id="momo-preview-first" style="width: 140px; height: 140px; margin: 0 auto 12px; border: 2px solid #000; border-radius: 6px; background: #FFF; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+          <div style="border: 2px solid #D82D8B; border-radius: 8px; padding: 18px; text-align: center; background: #FDF2F8;">
+            <strong style="color: #831843; font-size: 15px; display: block; margin-bottom: 10px;">🥇 PHẦN QUÀ GIẢI NHẤT</strong>
+            <div id="momo-preview-first" style="width: 150px; height: 150px; margin: 0 auto 12px; border: 2px solid #000; border-radius: 6px; background: #FFF; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
               <!-- Preview img or security shield -->
             </div>
             <label class="btn btn-secondary" style="font-size: 12px; cursor: pointer; display: inline-block;">
               📁 Tải phần quà
               <input type="file" accept="image/*" style="display: none;" onchange="Deck.handleMomoUpload('first', event)">
-            </label>
-          </div>
-
-          <!-- Khung Giải Nhì -->
-          <div style="border: 2px solid #D82D8B; border-radius: 8px; padding: 16px; text-align: center; background: #FDF2F8;">
-            <strong style="color: #831843; font-size: 15px; display: block; margin-bottom: 8px;">🥈 GIẢI NHÌ</strong>
-            <div id="momo-preview-second" style="width: 140px; height: 140px; margin: 0 auto 12px; border: 2px solid #000; border-radius: 6px; background: #FFF; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
-              <!-- Preview img or security shield -->
-            </div>
-            <label class="btn btn-secondary" style="font-size: 12px; cursor: pointer; display: inline-block;">
-              📁 Tải phần quà
-              <input type="file" accept="image/*" style="display: none;" onchange="Deck.handleMomoUpload('second', event)">
             </label>
           </div>
         </div>
@@ -1002,20 +990,13 @@
           <!-- Rendered by JS -->
         </div>
 
-        <!-- 2 Ô NHẬN THƯỞNG MOMO THEO YÊU CẦU -->
+        <!-- Ô NHẬN THƯỞNG GIẢI NHẤT -->
         <div class="momo-claim-arena">
           <div class="momo-claim-card" id="momo-card-first" onclick="Deck.openMomoRewardModal('first')">
             <span class="momo-claim-badge">🥇 GIẢI NHẤT</span>
             <div class="momo-claim-title" id="momo-title-first">NHÓM ...</div>
-            <p style="font-size: 13px; color: #64748B; margin-bottom: 8px;">Phần thưởng cho đội Quán quân xuất sắc nhất</p>
-            <div class="momo-claim-cta">👉 NHẤP VÀO ĐÂY ĐỂ HIỆN MÃ MOMO QUÉT THƯỞNG 🎁</div>
-          </div>
-
-          <div class="momo-claim-card" id="momo-card-second" onclick="Deck.openMomoRewardModal('second')">
-            <span class="momo-claim-badge">🥈 GIẢI NHÌ</span>
-            <div class="momo-claim-title" id="momo-title-second">NHÓM ...</div>
-            <p style="font-size: 13px; color: #64748B; margin-bottom: 8px;">Phần thưởng cho đội Á quân tranh tài sôi nổi</p>
-            <div class="momo-claim-cta">👉 NHẤP VÀO ĐÂY ĐỂ HIỆN MÃ MOMO QUÉT THƯỞNG 🎁</div>
+            <p style="font-size: 13.5px; color: #64748B; margin-bottom: 8px;">Phần thưởng cho đội Quán quân xuất sắc nhất</p>
+            <div class="momo-claim-cta">👉 NHẤP VÀO ĐÂY ĐỂ HIỆN PHẦN QUÀ TRAO THƯỞNG 🎁</div>
           </div>
         </div>
 
@@ -1056,6 +1037,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260914_2"></script>
+  <script src="app.js?v=20260914_3"></script>
 </body>
 </html>

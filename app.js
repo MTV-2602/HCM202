@@ -88,8 +88,7 @@ const Deck = (function () {
     // Slide 12: Mini game 4 nhóm & Trao thưởng MoMo
     minigame: {
       momoQRs: {
-        first: localStorage.getItem('hcm_momo_first') || '',
-        second: localStorage.getItem('hcm_momo_second') || ''
+        first: localStorage.getItem('hcm_momo_first') || ''
       },
       teams: [
         { id: 1, name: "Nhóm 1", score: 0, correct: 0 },
@@ -2835,7 +2834,6 @@ const Deck = (function () {
 
     updateMomoPreviews() {
       const p1 = document.getElementById('momo-preview-first');
-      const p2 = document.getElementById('momo-preview-second');
       const isPeek = State.minigame.isMomoPeek;
 
       const renderBox = (rank) => {
@@ -2854,7 +2852,6 @@ const Deck = (function () {
       };
 
       if (p1) p1.innerHTML = renderBox('first');
-      if (p2) p2.innerHTML = renderBox('second');
     },
 
     // Bảng vinh danh & Trao thưởng (Mở Modal riêng biệt không làm rối bàn cờ)
@@ -2881,36 +2878,33 @@ const Deck = (function () {
         podiumGrid.innerHTML = phtml;
       }
 
-      // Cập nhật 2 ô nhận thưởng MoMo
+      // Cập nhật ô nhận thưởng Giải Nhất
       const t1 = sorted[0];
-      const t2 = sorted[1];
       const title1 = document.getElementById('momo-title-first');
-      const title2 = document.getElementById('momo-title-second');
       if (title1 && t1) title1.textContent = `${t1.name.toUpperCase()} (${t1.score} ĐIỂM)`;
-      if (title2 && t2) title2.textContent = `${t2.name.toUpperCase()} (${t2.score} ĐIỂM)`;
 
       // Mở modal trao thưởng riêng biệt
       const modal = document.getElementById('minigame-podium-modal');
       if (modal) modal.style.display = 'flex';
     },
 
-    openMomoRewardModal(rank) {
+    openMomoRewardModal(rank = 'first') {
       AudioFX.fanfare();
       const sorted = [...State.minigame.teams].sort((a, b) => b.score - a.score || b.correct - a.correct);
-      const team = rank === 'first' ? sorted[0] : sorted[1];
+      const team = sorted[0];
       if (!team) return;
 
       const badge = document.getElementById('mg-reward-modal-badge');
       const heading = document.getElementById('mg-reward-team-heading');
       const qrBox = document.getElementById('mg-reward-qr-box');
 
-      if (badge) badge.textContent = rank === 'first' ? '🥇 PHẦN THƯỞNG GIẢI NHẤT MOMO' : '🥈 PHẦN THƯỞNG GIẢI NHÌ MOMO';
+      if (badge) badge.textContent = '🥇 PHẦN THƯỞNG GIẢI NHẤT';
       if (heading) heading.textContent = `CHÚC MỪNG ${team.name.toUpperCase()}!`;
       if (qrBox) {
         qrBox.innerHTML = `
-          <img src="${this.getMomoQRImage(rank)}" alt="Mã QR MoMo ${rank}">
+          <img src="${this.getMomoQRImage('first')}" alt="Mã Phần Thưởng Giải Nhất">
           <div style="margin-top: 10px; font-weight: 800; font-size: 15px; color: #831843;">
-            MÃ NHẬN THƯỞNG MOMO: ${rank === 'first' ? 'GIẢI NHẤT' : 'GIẢI NHÌ'}
+            PHẦN QUÀ TRAO THƯỞNG: GIẢI NHẤT
           </div>
         `;
       }
