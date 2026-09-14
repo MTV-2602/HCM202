@@ -102,7 +102,15 @@ const Deck = (function () {
       activeBoxIdx: null,
       assembledWords: [],
       remainingWords: [],
-      isAnswerRevealed: false
+      isAnswerRevealed: false,
+      timer: {
+        seconds: 30,
+        intervalId: null,
+        isRunning: false,
+        isPaused: false
+      },
+      isMomoPeek: false,
+      feedbackBanner: null
     }
   };
 
@@ -1001,6 +1009,7 @@ const Deck = (function () {
           this.closeMiniGameQuizModal();
           this.closeModal('minigame-momo-config-modal');
           this.closeModal('minigame-momo-reward-modal');
+          this.closeModal('minigame-podium-modal');
           return;
         }
 
@@ -2308,17 +2317,27 @@ const Deck = (function () {
     // SLIDE 12: MINI GAME TRANH TÀI 4 NHÓM & NHẬN THƯỞNG MOMO
     // =============================================================
     initMiniGame() {
-      // Xáo trộn ngẫu nhiên thứ tự 8 câu hỏi vào 8 hộp
-      const qIds = [1, 2, 3, 4, 5, 6, 7, 8].sort(() => Math.random() - 0.5);
+      // Thuật toán xáo trộn ngẫu nhiên Fisher-Yates
+      const shuffle = (array) => {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      };
+
+      // Xáo trộn ngẫu nhiên 8 câu hỏi vào 8 hộp
+      const qIds = shuffle([1, 2, 3, 4, 5, 6, 7, 8]);
+      // Xáo trộn ngẫu nhiên tập điểm 1 đến 8 (mỗi hộp 1 số điểm độc nhất, KHÔNG trùng điểm nhau)
+      const pointsList = shuffle([1, 2, 3, 4, 5, 6, 7, 8]);
       
       State.minigame.boxes = [];
       for (let i = 0; i < 8; i++) {
-        // Điểm số ngẫu nhiên thật từ 1 đến 10 điểm theo yêu cầu
-        const randomPts = Math.floor(Math.random() * 10) + 1;
         State.minigame.boxes.push({
           boxId: i + 1,
           qId: qIds[i],
-          points: randomPts,
+          points: pointsList[i],
           status: 'unopened',
           winnerTeamName: ''
         });
@@ -2378,7 +2397,7 @@ const Deck = (function () {
             <div class="mg-box-card" onclick="Deck.openMiniGameBox(${idx})">
               <div class="mg-box-icon">🎁</div>
               <div class="mg-box-number">HỘP 0${box.boxId}</div>
-              <span class="mg-box-points-preview">RANDOM: 1 - 10 ĐIỂM</span>
+              <span class="mg-box-points-preview">RANDOM: 1 - 8 ĐIỂM</span>
               <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px; font-weight: 600;">
                 Click để mở câu hỏi ➔
               </div>
@@ -2408,6 +2427,7 @@ const Deck = (function () {
       State.minigame.assembledWords = [];
       State.minigame.remainingWords = q.words.map((w, i) => ({ id: i, text: w })).sort(() => Math.random() - 0.5);
       State.minigame.isAnswerRevealed = false;
+      State.minigame.feedbackBanner = null;
 
       // Cập nhật tiêu đề modal
       const titleEl = document.getElementById('mg-modal-title');
@@ -2418,6 +2438,80 @@ const Deck = (function () {
       this.renderMiniGameQuestion();
       const modal = document.getElementById('minigame-quiz-modal');
       if (modal) modal.style.display = 'flex';
+
+      // Bắt đầu đếm ngược 30 giây từ khi mở câu hỏi
+      this.startMiniGameTimer(30);
+    },
+
+    // Quản lý đồng hồ đếm ngược 30 giây
+    startMiniGameTimer(initialSec = 30) {
+      this.stopMiniGameTimer();
+      State.minigame.timer.seconds = initialSec;
+      State.minigame.timer.isRunning = true;
+      State.minigame.timer.isPaused = false;
+      this.updateTimerDisplay();
+
+      State.minigame.timer.intervalId = setInterval(() => {
+        if (!State.minigame.timer.isPaused && State.minigame.timer.isRunning) {
+          State.minigame.timer.seconds--;
+          this.updateTimerDisplay();
+
+          if (State.minigame.timer.seconds <= 0) {
+            this.stopMiniGameTimer();
+            this.handleMiniGameTimeout();
+          }
+        }
+      }, 1000);
+    },
+
+    stopMiniGameTimer() {
+      if (State.minigame.timer.intervalId) {
+        clearInterval(State.minigame.timer.intervalId);
+        State.minigame.timer.intervalId = null;
+      }
+      State.minigame.timer.isRunning = false;
+    },
+
+    toggleMiniGameTimerPause() {
+      AudioFX.click();
+      State.minigame.timer.isPaused = !State.minigame.timer.isPaused;
+      this.updateTimerDisplay();
+    },
+
+    resetMiniGameTimer(sec = 30) {
+      AudioFX.click();
+      this.startMiniGameTimer(sec);
+    },
+
+    updateTimerDisplay() {
+      const timerValEl = document.getElementById('mg-timer-val');
+      const timerBadgeEl = document.getElementById('mg-timer-badge');
+      const pauseBtnEl = document.getElementById('mg-timer-pause-btn');
+
+      const sec = State.minigame.timer.seconds;
+      if (timerValEl) timerValEl.textContent = `${sec}s`;
+      if (timerBadgeEl) {
+        if (sec <= 10 && sec > 0) {
+          timerBadgeEl.classList.add('urgent');
+        } else {
+          timerBadgeEl.classList.remove('urgent');
+        }
+      }
+      if (pauseBtnEl) {
+        pauseBtnEl.textContent = State.minigame.timer.isPaused ? '▶️ Tiếp tục' : '⏸️ Tạm dừng';
+      }
+    },
+
+    handleMiniGameTimeout() {
+      AudioFX.error();
+      const currentTeam = State.minigame.teams.find(t => t.id === State.minigame.selectedTeamId);
+      const teamName = currentTeam ? currentTeam.name.toUpperCase() : 'ĐỘI ĐANG TRẢ LỜI';
+
+      State.minigame.feedbackBanner = {
+        type: 'timeout',
+        html: `⏰ <strong>HẾT THỜI GIAN (30s)!</strong> <strong>${teamName}</strong> đã hết thời gian trả lời. Xin mời các nhóm khác giơ tay giành quyền! (Bấm chọn nhóm ở thanh trên để cấp lượt 30s mới)`
+      };
+      this.renderMiniGameQuestion();
     },
 
     renderMiniGameQuestion() {
@@ -2481,8 +2575,24 @@ const Deck = (function () {
               ${q.topic}
             </div>
           </div>
-          <div class="mg-quiz-points-badge">
-            🎲 ĐIỂM THƯỞNG: +${box.points} ĐIỂM
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <!-- Đồng hồ đếm ngược 30 giây -->
+            <div class="mg-timer-badge ${State.minigame.timer.seconds <= 10 && State.minigame.timer.seconds > 0 ? 'urgent' : ''}" id="mg-timer-badge" title="Thời gian còn lại cho đội trả lời">
+              <span>⏱️</span>
+              <span id="mg-timer-val">${State.minigame.timer.seconds}s</span>
+              <div class="mg-timer-controls">
+                <button type="button" class="mg-timer-btn" id="mg-timer-pause-btn" onclick="Deck.toggleMiniGameTimerPause()" title="Tạm dừng / Tiếp tục">
+                  ${State.minigame.timer.isPaused ? '▶️ Tiếp tục' : '⏸️ Tạm dừng'}
+                </button>
+                <button type="button" class="mg-timer-btn" onclick="Deck.resetMiniGameTimer(30)" title="Đặt lại 30 giây">
+                  ↺ 30s
+                </button>
+              </div>
+            </div>
+
+            <div class="mg-quiz-points-badge">
+              🎲 ĐIỂM THƯỞNG: +${box.points} ĐIỂM
+            </div>
           </div>
         </div>
 
@@ -2496,6 +2606,13 @@ const Deck = (function () {
           </strong>
           ${teamSelectorHtml}
         </div>
+
+        <!-- Banner thông báo khi Hết giờ hoặc Nhường lượt -->
+        ${State.minigame.feedbackBanner ? `
+          <div class="mg-verify-banner ${State.minigame.feedbackBanner.type}">
+            ${State.minigame.feedbackBanner.html}
+          </div>
+        ` : ''}
 
         <div style="margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
           <strong style="font-size: 13.5px; color: #1E3A8A;">CÂU TRẢ LỜI ĐANG XẾP:</strong>
@@ -2515,10 +2632,6 @@ const Deck = (function () {
           ${poolHtml}
         </div>
 
-        <div id="mg-wrong-alert-box" style="display: none; background: #FEF2F2; border: 2px solid #DC2626; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; color: #991B1B; font-size: 14px; font-weight: 800;">
-          <!-- Injected when wrong -->
-        </div>
-
         ${State.minigame.isAnswerRevealed ? `
           <div class="mg-answer-reveal-box">
             <strong style="color: #065F46; display: block; margin-bottom: 4px;">✓ ĐÁP ÁN CHUẨN XÁC:</strong>
@@ -2532,7 +2645,7 @@ const Deck = (function () {
             ${State.minigame.isAnswerRevealed ? 'Ẩn đáp án chuẩn' : '👁️ Xem đáp án chuẩn'}
           </button>
           <button type="button" class="btn btn-secondary" style="font-size: 12.5px; background: #F1F5F9; color: #475569;" onclick="Deck.skipMiniGameQuestion()">
-            ⏭️ Bỏ qua câu này
+            ⏭️ Bỏ qua
           </button>
           <button type="button" class="btn btn-primary" style="background: #DC2626; border-color: #000;" onclick="Deck.submitMiniGameAnswer(false)">
             ✕ SAI (NHƯỜNG LƯỢT CHO ĐỘI KHÁC)
@@ -2558,9 +2671,12 @@ const Deck = (function () {
           }
         }
       });
-      // Nếu đang mở modal thì re-render
+
+      // Nếu đang mở modal thì cấp 30s mới cho nhóm này và re-render
       const modal = document.getElementById('minigame-quiz-modal');
       if (modal && modal.style.display !== 'none') {
+        State.minigame.feedbackBanner = null;
+        this.startMiniGameTimer(30);
         this.renderMiniGameQuestion();
       }
     },
@@ -2579,6 +2695,7 @@ const Deck = (function () {
       if (aIdx >= 0 && aIdx < State.minigame.assembledWords.length) {
         const removed = State.minigame.assembledWords.splice(aIdx, 1)[0];
         State.minigame.remainingWords.push(removed);
+        State.minigame.feedbackBanner = null;
         this.renderMiniGameQuestion();
       }
     },
@@ -2593,6 +2710,7 @@ const Deck = (function () {
 
       State.minigame.assembledWords = [];
       State.minigame.remainingWords = q.words.map((w, i) => ({ id: i, text: w })).sort(() => Math.random() - 0.5);
+      State.minigame.feedbackBanner = null;
       this.renderMiniGameQuestion();
     },
 
@@ -2610,6 +2728,7 @@ const Deck = (function () {
       if (!box || !team) return;
 
       if (isCorrect) {
+        this.stopMiniGameTimer();
         AudioFX.fanfare();
         team.score += box.points;
         team.correct += 1;
@@ -2624,21 +2743,17 @@ const Deck = (function () {
       } else {
         // Trả lời sai: không đóng câu hỏi, thông báo nhường lượt cho đội khác
         AudioFX.error();
-        const alertBox = document.getElementById('mg-wrong-alert-box');
-        if (alertBox) {
-          alertBox.style.display = 'block';
-          alertBox.innerHTML = `
-            ✕ <strong>${team.name.toUpperCase()}</strong> trả lời chưa chính xác!
-            <div style="font-weight: 500; font-size: 13px; margin-top: 2px;">
-              Quyền trả lời được nhường lại cho các nhóm khác! Xin mời người điều phối bấm chọn nhóm tiếp theo ở thanh trên.
-            </div>
-          `;
-        }
+        State.minigame.feedbackBanner = {
+          type: 'wrong',
+          html: `✕ <strong>${team.name.toUpperCase()}</strong> trả lời chưa chính xác! Quyền trả lời được nhường lại cho các nhóm khác. Mời người điều phối bấm chọn nhóm tiếp theo ở thanh trên để cấp 30s mới!`
+        };
+        this.renderMiniGameQuestion();
       }
     },
 
     skipMiniGameQuestion() {
       AudioFX.click();
+      this.stopMiniGameTimer();
       const boxIdx = State.minigame.activeBoxIdx;
       if (boxIdx === null) return;
       const box = State.minigame.boxes[boxIdx];
@@ -2650,17 +2765,29 @@ const Deck = (function () {
     },
 
     closeMiniGameQuizModal() {
+      this.stopMiniGameTimer();
       const modal = document.getElementById('minigame-quiz-modal');
       if (modal) modal.style.display = 'none';
       State.minigame.activeBoxIdx = null;
+      State.minigame.feedbackBanner = null;
     },
 
-    // Cài đặt mã Momo
+    // Cài đặt mã Momo (kèm chế độ bảo mật chống quét trộm trên máy chiếu)
     openMomoConfigModal() {
       AudioFX.click();
       this.updateMomoPreviews();
       const modal = document.getElementById('minigame-momo-config-modal');
       if (modal) modal.style.display = 'flex';
+    },
+
+    toggleMomoPeek() {
+      AudioFX.click();
+      State.minigame.isMomoPeek = !State.minigame.isMomoPeek;
+      const btn = document.getElementById('btn-toggle-momo-peek');
+      if (btn) {
+        btn.textContent = State.minigame.isMomoPeek ? '🔒 Khóa lại' : '👁️ Hé xem';
+      }
+      this.updateMomoPreviews();
     },
 
     handleMomoUpload(rank, event) {
@@ -2682,7 +2809,7 @@ const Deck = (function () {
       if (State.minigame.momoQRs[rank]) {
         return State.minigame.momoQRs[rank];
       }
-      // SVG Placeholder MoMo mẫu đẹp mắt
+      // SVG Placeholder phần quà mẫu đẹp mắt
       const label = rank === 'first' ? 'GIẢI NHẤT' : 'GIẢI NHÌ';
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" width="280" height="280">
@@ -2700,7 +2827,7 @@ const Deck = (function () {
           <circle cx="140" cy="140" r="28" fill="#D82D8B"/>
           <text x="140" y="146" fill="#FFFFFF" font-size="13" font-weight="bold" text-anchor="middle" font-family="sans-serif">momo</text>
           <rect x="45" y="244" width="190" height="24" fill="#000000" rx="6"/>
-          <text x="140" y="260" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">MÃ THƯỞNG ${label}</text>
+          <text x="140" y="260" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">PHẦN QUÀ ${label}</text>
         </svg>
       `;
       return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
@@ -2709,20 +2836,30 @@ const Deck = (function () {
     updateMomoPreviews() {
       const p1 = document.getElementById('momo-preview-first');
       const p2 = document.getElementById('momo-preview-second');
-      if (p1) {
-        p1.innerHTML = `<img src="${this.getMomoQRImage('first')}" style="width: 100%; height: 100%; object-fit: contain;">`;
-      }
-      if (p2) {
-        p2.innerHTML = `<img src="${this.getMomoQRImage('second')}" style="width: 100%; height: 100%; object-fit: contain;">`;
-      }
+      const isPeek = State.minigame.isMomoPeek;
+
+      const renderBox = (rank) => {
+        const hasCustom = !!State.minigame.momoQRs[rank];
+        if (!isPeek) {
+          return `
+            <div class="momo-secure-shield">
+              <div class="momo-shield-icon">🔒</div>
+              <div class="momo-shield-title">${hasCustom ? 'ĐÃ LƯU PHẦN QUÀ' : 'CHƯA CÓ QUÀ'}</div>
+              <div class="momo-shield-sub">${hasCustom ? '✓ Đã tải quà lên thành công • Đang bảo mật' : 'Nhấn tải phần quà bên dưới'}</div>
+            </div>
+          `;
+        } else {
+          return `<img src="${this.getMomoQRImage(rank)}" style="width: 100%; height: 100%; object-fit: contain;">`;
+        }
+      };
+
+      if (p1) p1.innerHTML = renderBox('first');
+      if (p2) p2.innerHTML = renderBox('second');
     },
 
-    // Bảng vinh danh & Trao thưởng
+    // Bảng vinh danh & Trao thưởng (Mở Modal riêng biệt không làm rối bàn cờ)
     openVictoryPodium() {
       AudioFX.fanfare();
-      const panel = document.getElementById('mg-victory-arena');
-      if (!panel) return;
-
       // Xếp hạng 4 nhóm theo điểm (và số câu đúng)
       const sorted = [...State.minigame.teams].sort((a, b) => b.score - a.score || b.correct - a.correct);
 
@@ -2752,8 +2889,9 @@ const Deck = (function () {
       if (title1 && t1) title1.textContent = `${t1.name.toUpperCase()} (${t1.score} ĐIỂM)`;
       if (title2 && t2) title2.textContent = `${t2.name.toUpperCase()} (${t2.score} ĐIỂM)`;
 
-      panel.style.display = 'block';
-      panel.scrollIntoView({ behavior: 'smooth' });
+      // Mở modal trao thưởng riêng biệt
+      const modal = document.getElementById('minigame-podium-modal');
+      if (modal) modal.style.display = 'flex';
     },
 
     openMomoRewardModal(rank) {
@@ -2783,14 +2921,14 @@ const Deck = (function () {
 
     resetMiniGame() {
       AudioFX.click();
+      this.stopMiniGameTimer();
       State.minigame.teams.forEach(t => {
         t.score = 0;
         t.correct = 0;
       });
       State.minigame.selectedTeamId = 1;
       this.initMiniGame();
-      const panel = document.getElementById('mg-victory-arena');
-      if (panel) panel.style.display = 'none';
+      this.closeModal('minigame-podium-modal');
       this.renderMiniGameBoard();
     }
   };
