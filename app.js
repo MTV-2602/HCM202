@@ -2016,12 +2016,36 @@ const Deck = (function () {
     // TỔNG KẾT & TRANH LUẬN (ÁNH)
     // =============================================================
     selectBossPoll(optKey) {
-      AudioFX.success();
       State.boss.pollSelected = optKey;
-      document.querySelectorAll('.boss-card-choice').forEach(c => c.style.borderColor = 'var(--border-color)');
-      if (window.event && window.event.currentTarget) {
-        window.event.currentTarget.style.borderColor = '#2563EB';
+      const choices = document.querySelectorAll('.boss-card-choice');
+      choices.forEach(c => {
+        c.style.borderColor = 'var(--border-color)';
+        c.style.background = '#FFF';
+        c.style.boxShadow = 'var(--shadow-hard)';
+      });
+
+      const cardC = choices[2]; // Thẻ C: KẾT HỢP BIỆN CHỨNG CẢ HAI
+      if (optKey === 'C') {
+        AudioFX.success();
+        if (cardC) {
+          cardC.style.borderColor = '#16A34A';
+          cardC.style.background = '#F0FDF4';
+          cardC.style.boxShadow = '4px 4px 0px #166534';
+        }
+      } else {
+        AudioFX.error();
+        if (window.event && window.event.currentTarget) {
+          window.event.currentTarget.style.borderColor = '#DC2626';
+          window.event.currentTarget.style.background = '#FEF2F2';
+          window.event.currentTarget.style.boxShadow = '4px 4px 0px #991B1B';
+        }
+        if (cardC) {
+          cardC.style.borderColor = '#16A34A';
+          cardC.style.background = '#F0FDF4';
+          cardC.style.boxShadow = '4px 4px 0px #166534';
+        }
       }
+
       const revealBox = document.getElementById('boss-poll-reveal');
       if (revealBox) revealBox.style.display = 'block';
     },
